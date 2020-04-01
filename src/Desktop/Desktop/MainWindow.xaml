@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="670" Width="975" MinHeight="670" MinWidth="975">
     <Grid>
-        
+        <StackPanel Background="Aqua" HorizontalAlignment="Left" Width="250">
+            <ListBox/>
+        </StackPanel>
     </Grid>
 </Window>
