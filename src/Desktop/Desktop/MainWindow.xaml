@@ -5,10 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="670" Width="975" MinHeight="670" MinWidth="975">
+        Title="Gestor Ventas" Height="670" Width="975" MinHeight="670" MinWidth="975">
     <Grid>
-        <StackPanel Background="Aqua" HorizontalAlignment="Left" Width="250">
-            <ListBox/>
-        </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="717*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox Height="25" Text="Buscar..." VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
+        <ListBox ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,25" Grid.Row="0" Grid.Column="0">
+            <ListBoxItem>Item 1</ListBoxItem>
+            <ListBoxItem>Item 2</ListBoxItem>
+            <ListBoxItem>Item 3</ListBoxItem>
+            <ListBoxItem>Item 4</ListBoxItem>
+            <ListBoxItem>Item 5</ListBoxItem>
+            <ListBoxItem>Item 6</ListBoxItem>
+            <ListBoxItem>Item 7</ListBoxItem>
+            <ListBoxItem>Item 8</ListBoxItem>
+            <ListBoxItem>Item 9</ListBoxItem>
+            <ListBoxItem>Item 10</ListBoxItem>
+        </ListBox>
+        <Button Content="Nuevo" Height="25" VerticalAlignment="Bottom" Grid.Row="0" Grid.Column="0"/>
     </Grid>
 </Window>
