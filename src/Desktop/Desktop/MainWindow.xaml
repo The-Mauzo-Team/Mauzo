@@ -12,7 +12,7 @@
             <ColumnDefinition Width="717*"/>
         </Grid.ColumnDefinitions>
         <TextBox Height="32" Text="Buscar..." VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0" FontSize="14"/>
-        <ListBox HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,32" Grid.Row="0" Grid.Column="0">
+        <ListBox HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,32" Grid.Row="0" Grid.Column="0">
             <ListBoxItem>
                 <Grid>
                     <TextBlock TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left">Lidia Martínez</TextBlock>
