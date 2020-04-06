@@ -1,5 +1,5 @@
 # gestion-tiendas
-Proyecto para crear un pequeño gestor de tiendas usando Hibernate y TomEE como backend, y de frontend .net y windows forms.
+Proyecto para crear un pequeño gestor de tiendas usando PostgreSQL y TomEE como backend, y de frontend .Net y Windows Forms.
 
 ## Usuarios
 neirth como Sergio Martinez
