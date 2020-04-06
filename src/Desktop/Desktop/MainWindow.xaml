@@ -13,6 +13,12 @@
         </Grid.ColumnDefinitions>
         <TextBox Height="32" Text="Buscar..." VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0" FontSize="14"/>
         <ListBox HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,32" Grid.Row="0" Grid.Column="0">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Edit" Icon="1"/>
+                    <MenuItem Header="Return" Icon="2"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
             <ListBoxItem>
                 <Grid>
                     <TextBlock TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left">Lidia Martínez</TextBlock>
