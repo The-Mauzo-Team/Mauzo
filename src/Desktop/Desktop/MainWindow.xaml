@@ -6,6 +6,34 @@
         xmlns:local="clr-namespace:Desktop"
         mc:Ignorable="d"
         Title="Gestor Ventas" Height="670" Width="975" MinHeight="670" MinWidth="975">
+    <Window.Resources>
+        <!--MainMenuContextMenu-->
+        <ContextMenu x:Key="MenuItemContextMenu">
+            <MenuItem Header="Edit" Icon="1"/>
+            <MenuItem Header="Return" Icon="2"/>
+        </ContextMenu>
+        <!--SALE TEMPLATE-->
+        <DataTemplate x:Key="SaleMenuItem">
+            <Grid Background="Transparent" ContextMenu="{StaticResource MenuItemContextMenu}">
+                <TextBlock TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left">Lidia Martínez</TextBlock>
+                <Image Source="/resources/sale50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
+            </Grid>
+        </DataTemplate>
+        <!--EDIT TEMPLATE-->
+        <DataTemplate x:Key="EditMenuItem">
+            <Grid Background="Transparent" ContextMenu="{StaticResource MenuItemContextMenu}">
+                <TextBlock TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left">Sergio Martínez</TextBlock>
+                <Image Source="/resources/edit50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
+            </Grid>
+        </DataTemplate>
+        <!--RETURN TEMPLATE-->
+        <DataTemplate x:Key="ReturnMenuItem">
+            <Grid Background="Transparent">
+                <TextBlock TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left">Antonio Izquierdo</TextBlock>
+                <Image Source="/resources/return50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250"/>
@@ -13,42 +41,11 @@
         </Grid.ColumnDefinitions>
         <TextBox Height="32" Text="Buscar..." VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0" FontSize="14"/>
         <ListBox HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,32" Grid.Row="0" Grid.Column="0">
-            <ListBox.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Edit" Icon="1"/>
-                    <MenuItem Header="Return" Icon="2"/>
-                </ContextMenu>
-            </ListBox.ContextMenu>
-            <ListBoxItem>
-                <Grid>
-                    <TextBlock TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left">Lidia Martínez</TextBlock>
-                    <Image Source="/src/sale50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
-                </Grid>
-            </ListBoxItem>
-            <ListBoxItem>
-                <Grid>
-                    <TextBlock TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left">Sergio Martínez</TextBlock>
-                    <Image Source="/src/edit50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
-                </Grid>
-            </ListBoxItem>
-            <ListBoxItem>
-                <Grid>
-                    <TextBlock TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left">Sergio Martínez</TextBlock>
-                    <Image Source="/src/sale50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
-                </Grid>
-            </ListBoxItem>
-            <ListBoxItem>
-                <Grid>
-                    <TextBlock TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left">Antonio Izquierdo</TextBlock>
-                    <Image Source="/src/return50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
-                </Grid>
-            </ListBoxItem>
-            <ListBoxItem>
-                <Grid>
-                    <TextBlock TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left">Antonio Izquierdo</TextBlock>
-                    <Image Source="/src/sale50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
-                </Grid>
-            </ListBoxItem>
+            <ContentPresenter ContentTemplate="{StaticResource SaleMenuItem}"/>
+            <ContentPresenter ContentTemplate="{StaticResource EditMenuItem}"/>
+            <ContentPresenter ContentTemplate="{StaticResource SaleMenuItem}"/>
+            <ContentPresenter ContentTemplate="{StaticResource ReturnMenuItem}"/>
+            <ContentPresenter ContentTemplate="{StaticResource SaleMenuItem}"/>
         </ListBox>
         <Button Content="Nuevo" Height="32" VerticalAlignment="Bottom" Grid.Row="0" Grid.Column="0" FontSize="14"/>
     </Grid>
