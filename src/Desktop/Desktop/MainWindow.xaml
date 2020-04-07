@@ -9,8 +9,16 @@
     <Window.Resources>
         <!--MainMenuContextMenu-->
         <ContextMenu x:Key="MenuItemContextMenu">
-            <MenuItem Header="Edit" Icon="1"/>
-            <MenuItem Header="Return" Icon="2"/>
+            <MenuItem Header="Edit">
+                <MenuItem.Icon>
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text=" &#xE70F;"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Return">
+                <MenuItem.Icon>
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text=" &#xE777;"/>
+                </MenuItem.Icon>
+            </MenuItem>
         </ContextMenu>
         <!--SALE TEMPLATE-->
         <DataTemplate x:Key="SaleMenuItem">
