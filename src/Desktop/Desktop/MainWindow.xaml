@@ -24,21 +24,21 @@
         <DataTemplate x:Key="SaleMenuItem">
             <Grid Background="Transparent" ContextMenu="{StaticResource MenuItemContextMenu}">
                 <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left"/>
-                <Image Source="/resources/sale50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
+                <TextBlock Foreground="Green" FontSize="14" FontFamily="Segoe MDL2 Assets" Text="&#xE73E;" Height="16" HorizontalAlignment="Right" Margin="0,3,6,3"/>
             </Grid>
         </DataTemplate>
         <!--EDIT TEMPLATE-->
         <DataTemplate x:Key="EditMenuItem">
             <Grid Background="Transparent" ContextMenu="{StaticResource MenuItemContextMenu}">
                 <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left"/>
-                <Image Source="/resources/edit50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
+                <TextBlock Foreground="Orange" FontSize="14" FontFamily="Segoe MDL2 Assets" Text="&#xE70F;" Height="16" HorizontalAlignment="Right" Margin="0,3,6,3"/>
             </Grid>
         </DataTemplate>
         <!--RETURN TEMPLATE-->
         <DataTemplate x:Key="ReturnMenuItem">
             <Grid Background="Transparent">
                 <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="14" HorizontalAlignment="Left"/>
-                <Image Source="/resources/return50.png" Height="16" Width="20" HorizontalAlignment="Right" Margin="0,3,5,3"/>
+                <TextBlock Foreground="OrangeRed" FontSize="14" FontFamily="Segoe MDL2 Assets" Text="&#xE777;" Height="16" HorizontalAlignment="Right" Margin="0,3,6,3"/>
             </Grid>
         </DataTemplate>
     </Window.Resources>
