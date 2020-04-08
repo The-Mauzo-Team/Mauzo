@@ -1,11 +1,13 @@
-package io.GestionTiendas.Server.Helpers;
+package io.GestionTiendas.Server;
 
-import java.sql.SQLException;
-
+// Paquetes del framework estandar de java
 import java.util.List;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Collections;
+import java.sql.SQLException;
+
+// Paquetes del framework extendido de java
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -21,10 +23,20 @@ import io.jsonwebtoken.security.SignatureException;
 
 import io.GestionTiendas.Server.ServerApp;
 
-public class Utils {
+public class ServerUtils {
     public interface Content {
-        ResponseBuilder executeContent() throws SQLException;
+        /**
+         * Funcion lambda para permitir la personalizacion de instrucciones que se van a
+         * ejecutar en los metodos generic de este archivo de utilidades.
+         * 
+         * @return La respuesta del servidor preconstruida.
+         * @throws Exception Puede devolver cualquier tipo de excepcion que será
+         *                   capturado por los métodos generic.
+         */
+        ResponseBuilder executeContent() throws Exception;
     }
+
+    private static String base64Key = System.getenv("LOGIN_KEY");
 
     /**
      * Método para procesar y responder a una petición generica con las
@@ -49,10 +61,6 @@ public class Utils {
         ResponseBuilder response = null;
 
         try {
-            // Validamos la conexión con la base de datos.
-            if (ServerApp.getConnection() == null)
-                ServerApp.setConnection();
-
             // Lanzamos el resto de la secuencia a ejecutar.
             response = content.executeContent();
         } catch (SQLException e) {
@@ -96,10 +104,6 @@ public class Utils {
 
         if (isTokenLogged(token) != false) {
             try {
-                // Validamos la conexión con la base de datos.
-                if (ServerApp.getConnection() == null)
-                    ServerApp.setConnection();
-
                 // Lanzamos el resto de la secuencia a ejecutar.
                 response = content.executeContent();
             } catch (SQLException e) {
@@ -138,7 +142,8 @@ public class Utils {
      * @param content  Funcion lambda con todos los pasos a seguir.
      * @return La respuesta con la cual responderemos al cliente.
      */
-    public static Response genericAdminMethod(HttpServletRequest req, String paramId, String jsonData, Content content) {
+    public static Response genericAdminMethod(HttpServletRequest req, String paramId, String jsonData,
+            Content content) {
         // Obtenemos el token
         String token = getToken(req);
 
@@ -147,10 +152,6 @@ public class Utils {
 
         if (isTokenLogged(token) != false && isTokenAdmin(token) == true) {
             try {
-                // Validamos la conexión con la base de datos.
-                if (ServerApp.getConnection() == null)
-                    ServerApp.setConnection();
-
                 // Lanzamos el resto de la secuencia a ejecutar.
                 response = content.executeContent();
             } catch (SQLException e) {
@@ -169,8 +170,6 @@ public class Utils {
         // Lanzamos la respuesta.
         return response.build();
     }
-
-    private static String base64Key = System.getenv("LOGIN_KEY");
 
     /**
      * Método para recuperar el token recibido desde la cabecera AUTHENTICATOR el
@@ -253,10 +252,6 @@ public class Utils {
             // Obtenemos los datos del token.
             final Claims claims = jwtsParser.parseClaimsJws(token).getBody();
 
-            // Validamos la conexión con la base de datos.
-            if (ServerApp.getConnection() == null)
-                ServerApp.setConnection();
-
             // Ejecutamos la consulta de verificación.
             Statement st = ServerApp.getConnection().createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Users WHERE id = " + claims.getId());
@@ -279,5 +274,17 @@ public class Utils {
 
         // Devolvemos el estado del token esté como este.
         return returnVar;
+    }
+
+    /**
+     * Método para recuperar la llave que firma el Json Web Token que recibe el
+     * cliente, tambien sirve esta llave para validar si el token de seguridad no ha
+     * sido manipulado.
+     * 
+     * @return Llave en base64 del Json Web Token
+     */
+
+    public static String getBase64Key() {
+        return ServerUtils.base64Key;
     }
 }

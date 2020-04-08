@@ -1,0 +1,7 @@
+Version 0.0.2
+* Montar vista de inicio de sesion.
+* Arreglar la sincronizacion de la base de datos en el backend.
+
+Version 0.0.1
+* Migrar codigo del anterior proyecto a este.
+* Preparar interfaz tonta para el escritorio.
