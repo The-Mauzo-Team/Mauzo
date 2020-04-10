@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop"
         mc:Ignorable="d"
-        Title="Gestor Ventas" Height="670" Width="975" MinHeight="670" MinWidth="975">
+        Title="Mauzo Desktop" Height="670" Width="975" MinHeight="670" MinWidth="975">
     <Window.Resources>
         <!--MainMenuContextMenu-->
         <ContextMenu x:Key="MenuItemContextMenu">
