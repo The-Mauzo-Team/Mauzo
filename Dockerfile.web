@@ -17,7 +17,6 @@ RUN mkdir /app /app/bin /app/lib /app/conf
 COPY --from=builder /usr/src/app/target/Server-1.0.jar /app/bin/
 COPY --from=builder /tmp/lib /app/lib/
 
-
 VOLUME ["/app/logs"]
 
 EXPOSE 8080
