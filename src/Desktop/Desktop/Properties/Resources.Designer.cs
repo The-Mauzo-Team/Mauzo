@@ -8,10 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Desktop.Properties {
-    using System;
-    
-    
+namespace Desktop.Properties
+{
+
+
+    // Tenéis que hablarme de esto en clase
     /// <summary>
     ///   Clase de recurso fuertemente tipado, para buscar cadenas traducidas, etc.
     /// </summary>
