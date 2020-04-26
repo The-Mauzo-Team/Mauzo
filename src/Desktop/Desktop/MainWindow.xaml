@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop"
         mc:Ignorable="d"
-        Title="Gestor Ventas" Height="670" Width="975" MinHeight="670" MinWidth="975">
+        Title="Mauzo Desktop" Height="670" Width="975" MinHeight="670" MinWidth="975" Background="#FFF7F6F6">
     <Window.Resources>
+        <!-- MasterBackgroundColor & MasterForegroundColor -->
+        <SolidColorBrush x:Key="MasterBackgroundColor" Color="White" />
+        <SolidColorBrush x:Key="MasterForegroundColor" Color="Black" />
         <!--MainMenuContextMenu-->
         <ContextMenu x:Key="MenuItemContextMenu">
             <MenuItem Header="Edit">
@@ -42,64 +45,74 @@
             </Grid>
         </DataTemplate>
     </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="717*"/>
         </Grid.ColumnDefinitions>
-        <Border BorderBrush="LightSlateGray" BorderThickness="1" Grid.Row="0" Grid.Column="0">
-            <Grid Height="40" VerticalAlignment="Top" >
-                <TextBox Text="Buscar..." VerticalContentAlignment="Center" FontSize="14" Margin="5"/>
-                <Button Foreground="White" FontFamily="Segoe MDL2 Assets" Content="&#xE71E;" Margin="215,5,5,5">
+        <!--Master Grid-->
+        <Border x:Name="MasterGrid">
+            <Grid>
+                <Border Background="{StaticResource MasterBackgroundColor}" BorderThickness="1" Grid.Row="0" Grid.Column="0">
+                    <Grid Height="40" VerticalAlignment="Top" >
+                        <TextBox Foreground="{StaticResource MasterForegroundColor}" Text="Buscar..." VerticalContentAlignment="Center" FontSize="14" Margin="5"/>
+                        <Button Foreground="White" FontFamily="Segoe MDL2 Assets" Content="&#xE71E;" Margin="215,5,5,5">
+                            <Button.Background>
+                                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+                            </Button.Background>
+                        </Button>
+                    </Grid>
+                </Border>
+                <ListBox Background="{StaticResource MasterBackgroundColor}" Foreground="{StaticResource MasterForegroundColor}" BorderThickness="0" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,40" Grid.Row="0" Grid.Column="0">
+                    <ContentPresenter Content="Lidia Martínez" ContentTemplate="{StaticResource SaleMenuItem}"/>
+                    <ContentPresenter Content="Sergio Martínez" ContentTemplate="{StaticResource EditMenuItem}"/>
+                    <ContentPresenter Content="Sergio Martínez" ContentTemplate="{StaticResource SaleMenuItem}"/>
+                    <ContentPresenter Content="Antonio Izquierdo"  ContentTemplate="{StaticResource ReturnMenuItem}"/>
+                    <ContentPresenter Content="Antonio Izquierdo" ContentTemplate="{StaticResource SaleMenuItem}"/>
+                </ListBox>
+                <Button BorderThickness="0" Foreground="White" Content="Nuevo" Height="40" VerticalAlignment="Bottom" Grid.Row="0" Grid.Column="0" FontSize="14">
                     <Button.Background>
                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
                     </Button.Background>
                 </Button>
             </Grid>
         </Border>
-        <ListBox HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,40" Grid.Row="0" Grid.Column="0">
-            <ContentPresenter Content="Lidia Martínez" ContentTemplate="{StaticResource SaleMenuItem}"/>
-            <ContentPresenter Content="Sergio Martínez" ContentTemplate="{StaticResource EditMenuItem}"/>
-            <ContentPresenter Content="Sergio Martínez" ContentTemplate="{StaticResource SaleMenuItem}"/>
-            <ContentPresenter Content="Antonio Izquierdo"  ContentTemplate="{StaticResource ReturnMenuItem}"/>
-            <ContentPresenter Content="Antonio Izquierdo" ContentTemplate="{StaticResource SaleMenuItem}"/>
-        </ListBox>
-        <Button Foreground="White" Content="Nuevo" Height="40" VerticalAlignment="Bottom" Grid.Row="0" Grid.Column="0" FontSize="14">
-            <Button.Background>
-                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
-            </Button.Background>
-        </Button>
-        <Border BorderBrush="LightSlateGray" BorderThickness="0,1,0,0" Grid.Row="0" Grid.Column="1">
+        <!--Detail Grid-->
+        <Border x:Name="DetailGrid" BorderBrush="LightSlateGray" BorderThickness="0,0,0,0" Grid.Row="0" Grid.Column="1">
             <Grid>
-                <TextBlock Margin="53,32,536,0" FontSize="24" Height="32" VerticalAlignment="Top">Venta</TextBlock>
-                <Border BorderBrush="LightSlateGray" BorderThickness="1" Margin="53,69,0,0" HorizontalAlignment="Left" Width="619" Height="170" VerticalAlignment="Top">
-                    <Grid>
-                        <TextBlock Margin="18,10,0,0" FontSize="16" Text="Productos:" HorizontalAlignment="Left" Width="78" Height="28" VerticalAlignment="Top"></TextBlock>
-                        <Grid Height="40" VerticalAlignment="Top" >
-                            <TextBox Text="Buscar..." VerticalContentAlignment="Center" FontSize="14" Margin="18,40,0,-30" HorizontalAlignment="Left" Width="280"/>
-                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE71E;" Margin="267,40,0,-30" Background="{x:Null}" HorizontalAlignment="Left" Width="31"/>
-                            <TextBox Text="1" VerticalContentAlignment="Center" FontSize="14" Margin="319,40,0,-30" HorizontalAlignment="Left" Width="280"/>
+                <!--CENTER CONTENT-->
+                <Grid Width="700" HorizontalAlignment="Center">
+                    <TextBlock Margin="53,32,0,0" FontSize="24" VerticalAlignment="Top" HorizontalAlignment="Left">Venta</TextBlock>
+                    <Border BorderBrush="LightSlateGray" BorderThickness="1" Margin="53,69,0,0" HorizontalAlignment="Left" Width="619" Height="170" VerticalAlignment="Top">
+                        <Grid>
+                            <TextBlock Margin="18,10,0,0" FontSize="16" Text="Productos:" HorizontalAlignment="Left" Width="78" Height="28" VerticalAlignment="Top"></TextBlock>
+                            <Grid Height="40" VerticalAlignment="Top" >
+                                <TextBox Text="Buscar..." VerticalContentAlignment="Center" FontSize="14" Margin="18,40,0,-30" HorizontalAlignment="Left" Width="249"/>
+                                <Button FontFamily="Segoe MDL2 Assets" Content="&#xE71E;" Margin="267,40,0,-30" Background="{x:Null}" HorizontalAlignment="Left" Width="31"/>
+                                <TextBox Text="1" VerticalContentAlignment="Center" FontSize="14" Margin="319,40,0,-30" HorizontalAlignment="Left" Width="274"/>
+                            </Grid>
+                            <TextBlock Margin="320,10,211,0" FontSize="16" Height="28" VerticalAlignment="Top" Text="Cantidad:"/>
                         </Grid>
-                        <TextBlock Margin="320,10,211,0" FontSize="16" Height="28" VerticalAlignment="Top" Text="Cantidad:"/>
-                    </Grid>
-                </Border>
+                    </Border>
 
-                <TextBlock Margin="53,265,506,0" FontSize="24" Height="32" VerticalAlignment="Top">Descuentos</TextBlock>
-                <Border BorderBrush="LightSlateGray" BorderThickness="1" Margin="53,300,0,0" HorizontalAlignment="Left" Width="619" Height="218" VerticalAlignment="Top">
-                    <Grid Margin="0,0,0,-1">
-                        <TextBlock Margin="18,10,0,0" FontSize="16" Text="Código:" HorizontalAlignment="Left" Width="78" Height="28" VerticalAlignment="Top"></TextBlock>
-                        <Grid Height="40" VerticalAlignment="Top" >
-                            <TextBox Text="Buscar..." VerticalContentAlignment="Center" FontSize="14" Margin="18,40,0,-30" HorizontalAlignment="Left" Width="280"/>
-                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE71E;" Margin="267,40,0,-30" Background="{x:Null}" HorizontalAlignment="Left" Width="31"/>
-                            <TextBox Text="0,00€" VerticalContentAlignment="Center" FontSize="14" Margin="319,40,0,-30" HorizontalAlignment="Left" Width="280"/>
-                            <TextBox VerticalContentAlignment="Center" FontSize="14" Margin="18,114,0,-140" HorizontalAlignment="Left" Width="581"/>
-                            <Button Content="Vender" Margin="516,251,0,-241" Background="{x:Null}" HorizontalAlignment="Left" Width="101"/>
+                    <TextBlock Margin="53,265,506,0" FontSize="24" Height="32" VerticalAlignment="Top">Descuentos</TextBlock>
+                    <Border BorderBrush="LightSlateGray" BorderThickness="1" Margin="53,300,0,0" HorizontalAlignment="Left" Width="619" Height="218" VerticalAlignment="Top">
+                        <Grid Margin="0,0,0,-1">
+                            <TextBlock Margin="18,10,0,0" FontSize="16" Text="Código:" HorizontalAlignment="Left" Width="78" Height="28" VerticalAlignment="Top"></TextBlock>
+                            <Grid Height="40" VerticalAlignment="Top" >
+                                <TextBox Text="Buscar..." VerticalContentAlignment="Center" FontSize="14" Margin="18,40,0,-30" HorizontalAlignment="Left" Width="249"/>
+                                <Button FontFamily="Segoe MDL2 Assets" Content="&#xE71E;" Margin="267,40,0,-30" Background="{x:Null}" HorizontalAlignment="Left" Width="31"/>
+                                <TextBox Text="0,00€" VerticalContentAlignment="Center" FontSize="14" Margin="319,40,0,-30" HorizontalAlignment="Left" Width="280"/>
+                                <TextBox VerticalContentAlignment="Center" FontSize="14" Margin="18,114,0,-140" HorizontalAlignment="Left" Width="581"/>
+                                <Button Content="Vender" Margin="516,251,0,-241" Background="{x:Null}" HorizontalAlignment="Left" Width="101"/>
+                            </Grid>
+                            <TextBlock Margin="320,10,197,0" FontSize="16" Height="28" VerticalAlignment="Top" Text="Descontado:"/>
+                            <TextBlock Margin="18,86,0,0" FontSize="16" Text="Descripción:" HorizontalAlignment="Left" Width="108" Height="28" VerticalAlignment="Top"/>
                         </Grid>
-                        <TextBlock Margin="320,10,197,0" FontSize="16" Height="28" VerticalAlignment="Top" Text="Descontado:"/>
-                        <TextBlock Margin="18,86,0,0" FontSize="16" Text="Descripción:" HorizontalAlignment="Left" Width="108" Height="28" VerticalAlignment="Top"/>
-                    </Grid>
-                </Border>
-                <TextBlock Margin="53,550,506,0" FontSize="24" Height="32" VerticalAlignment="Top" Text="Total: 0,00€"/>
+                    </Border>
+                    <TextBlock Margin="53,550,506,0" FontSize="24" Height="32" VerticalAlignment="Top" Text="Total: 0,00€"/>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

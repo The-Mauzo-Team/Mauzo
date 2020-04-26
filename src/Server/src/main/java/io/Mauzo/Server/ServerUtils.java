@@ -1,7 +1,12 @@
-package io.GestionTiendas.Server;
+package io.Mauzo.Server;
 
 // Paquetes del framework estandar de java
 import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Key;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Collections;
@@ -11,17 +16,20 @@ import java.sql.SQLException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.xml.bind.DatatypeConverter;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.crypto.spec.SecretKeySpec;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
 
 // Paquetes para la validación del token de inicio de sesión.
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.SignatureException;
-
-import io.GestionTiendas.Server.ServerApp;
 
 public class ServerUtils {
     public interface Content {
@@ -36,7 +44,7 @@ public class ServerUtils {
         ResponseBuilder executeContent() throws Exception;
     }
 
-    private static String base64Key = System.getenv("LOGIN_KEY");
+    private static Key privateKey;
 
     /**
      * Método para procesar y responder a una petición generica con las
@@ -56,7 +64,7 @@ public class ServerUtils {
      * @param content  Funcion lambda con todos los pasos a seguir.
      * @return La respuesta con la cual responderemos al cliente.
      */
-    public static Response genericMethod(HttpServletRequest req, String paramId, String jsonData, Content content) {
+    public static Response genericMethod(HttpServletRequest req, Integer paramId, String jsonData, Content content) {
         // Convertimos la información JSON recibida en un objeto.
         ResponseBuilder response = null;
 
@@ -65,11 +73,11 @@ public class ServerUtils {
             response = content.executeContent();
         } catch (SQLException e) {
             // Detectamos errores en la SQL
-            ServerApp.getLoggerSystem().warning("Error en procesar la consulta SQL.");
+            ServerApp.getLoggerSystem().warning("Error en procesar la consulta SQL: " + e.toString());
             response = Response.serverError();
         } catch (Exception e) {
             // En caso de existir otros errores, devolvemos un error 500 y listo.
-            ServerApp.getLoggerSystem().warning("Error imprevisto, devolviendo error 500...");
+            ServerApp.getLoggerSystem().warning("Error imprevisto: " + e.toString());
             response = Response.serverError();
         }
 
@@ -95,7 +103,7 @@ public class ServerUtils {
      * @param content  Funcion lambda con todos los pasos a seguir.
      * @return La respuesta con la cual responderemos al cliente.
      */
-    public static Response genericUserMethod(HttpServletRequest req, String paramId, String jsonData, Content content) {
+    public static Response genericUserMethod(HttpServletRequest req, Integer paramId, String jsonData, Content content) {
         // Obtenemos el token
         String token = getToken(req);
 
@@ -108,11 +116,11 @@ public class ServerUtils {
                 response = content.executeContent();
             } catch (SQLException e) {
                 // Detectamos errores en la SQL
-                ServerApp.getLoggerSystem().warning("Error en procesar la consulta SQL.");
+                ServerApp.getLoggerSystem().warning("Error en procesar la consulta SQL: " + e.toString());
                 response = Response.serverError();
             } catch (Exception e) {
                 // En caso de existir otros errores, devolvemos un error 500 y listo.
-                ServerApp.getLoggerSystem().warning("Error imprevisto, devolviendo error 500...");
+                ServerApp.getLoggerSystem().warning("Error imprevisto: " + e.toString());
                 response = Response.serverError();
             }
         } else {
@@ -142,7 +150,7 @@ public class ServerUtils {
      * @param content  Funcion lambda con todos los pasos a seguir.
      * @return La respuesta con la cual responderemos al cliente.
      */
-    public static Response genericAdminMethod(HttpServletRequest req, String paramId, String jsonData,
+    public static Response genericAdminMethod(HttpServletRequest req, Integer paramId, String jsonData,
             Content content) {
         // Obtenemos el token
         String token = getToken(req);
@@ -156,11 +164,11 @@ public class ServerUtils {
                 response = content.executeContent();
             } catch (SQLException e) {
                 // Detectamos errores en la SQL
-                ServerApp.getLoggerSystem().warning("Error en procesar la consulta SQL.");
+                ServerApp.getLoggerSystem().warning("Error en procesar la consulta SQL: " + e.toString());
                 response = Response.serverError();
             } catch (Exception e) {
                 // En caso de existir otros errores, devolvemos un error 500 y listo.
-                ServerApp.getLoggerSystem().warning("Error imprevisto, devolviendo error 500...");
+                ServerApp.getLoggerSystem().warning("Error imprevisto: " + e.toString());
                 response = Response.serverError();
             }
         } else {
@@ -210,11 +218,20 @@ public class ServerUtils {
             final JwtParser jwtsParser = Jwts.parser();
 
             // Cargamos la llave y validamos el token
-            jwtsParser.setSigningKey(base64Key);
-            jwtsParser.parseClaimsJws(token);
+            jwtsParser.setSigningKey(ServerUtils.getKey());
+
+            // Obtenemos los datos del token.
+            final Claims claims = jwtsParser.parseClaimsJws(token).getBody();
+
+            // Ejecutamos la consulta de verificación.
+            Statement st = ServerApp.getConnection().createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM Users WHERE id = " + claims.getId());
+            
+            // Obtenemos el resultado.
+            rs.next();
 
             // Si no ha lanzado una excepción anda okey el token.
-            returnVar = true;
+            returnVar = claims.getId().equals(rs.getString("id"));
         } catch (final SignatureException e) {
             // Si la firma es invalida, anulamos el token.
             returnVar = false;
@@ -245,11 +262,10 @@ public class ServerUtils {
             // Inicializamos el parser del token.
             final JwtParser jwtsParser = Jwts.parser();
 
-            // Cargamos la llave y validamos el token.
-            jwtsParser.setSigningKey(base64Key);
-            jwtsParser.parseClaimsJws(token);
+            // Cargamos la llave.
+            jwtsParser.setSigningKey(ServerUtils.getKey());
 
-            // Obtenemos los datos del token.
+            // Validamos y obtenemos los datos del token.
             final Claims claims = jwtsParser.parseClaimsJws(token).getBody();
 
             // Ejecutamos la consulta de verificación.
@@ -281,10 +297,66 @@ public class ServerUtils {
      * cliente, tambien sirve esta llave para validar si el token de seguridad no ha
      * sido manipulado.
      * 
-     * @return Llave en base64 del Json Web Token
+     * @return Llave en forma de objeto del Json Web Token
      */
+    public static Key getKey() {
+        if (privateKey == null) {
+            byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(System.getenv("LOGIN_KEY"));
+            privateKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS512.getJcaName());
+        }
 
-    public static String getBase64Key() {
-        return ServerUtils.base64Key;
+        return privateKey;
+    }
+
+    /**
+     * Método estatico para convertir una imagen a un array de bytes.
+     * 
+     * Hay componentes en este servidor que trabajan con imagenes, dado
+     * que los productos y los usuarios tienen esta posibilidad de mostrar una imagen.
+     * 
+     * @param imageBuf La imagen en buffer.
+     * @param type  El formato de salida de la image.
+     * @return  La imagen convertida a un array de bytes.
+     */
+    public static byte[] imageToByteArray(BufferedImage imageBuf, String type) {
+        // Declaramos la variable de salida.
+        byte[] imageArr;
+
+        // Abrimos un stream de salida
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()){
+            // Convertimos la imagen a un byte array
+            ImageIO.write(imageBuf, type, out);
+            imageArr = out.toByteArray();
+        } catch (Exception e) {
+            // En caso de problemas, devolvemos un null.
+            imageArr = null;
+        }
+
+        return imageArr;
+    }
+
+    /**
+     * Método estatico para convertir un array de bytes a una imagen.
+     * 
+     * Hay componentes en este servidor que trabajan con imagenes, dado
+     * que los productos y los usuarios tienen esta posibilidad de mostrar una imagen.
+     * 
+     * @param imageArr La imagen en array de bytes.
+     * @return  La imagen convertida a un BufferedImage.
+     */
+    public static BufferedImage imageFromByteArray(byte[] imageArr) {
+        // Declaramos la variable de salida.
+        BufferedImage imageBuf;
+
+        // Abrimos un stream de entrada
+        try (InputStream in = new ByteArrayInputStream(imageArr)) {
+            // Convertimos el bytearray a una imagen.
+            imageBuf = ImageIO.read(in);
+        } catch (IOException e) {
+            // En caso de problemas, devolvemos un null.
+            imageBuf = null;
+        }
+
+        return imageBuf;
     }
 }
