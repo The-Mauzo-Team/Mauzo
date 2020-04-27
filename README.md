@@ -3,7 +3,7 @@ Proyecto para crear un pequeño gestor de tiendas usando PostgreSQL y TomEE como
 
 ## Mauzo Desktop
 <p align="center">
-  <img alt="Mauzo in action" src="https://raw.githubusercontent.com/Neirth/gestion-tiendas/develop/design/mauzoInAction.png?raw=true">
+  ![Image](../blob/develop/design/mauzoInAction.png?raw=true)
 </p>
 Mauzo Desktop es un programa de gesión de tiendas.
 
