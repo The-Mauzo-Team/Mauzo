@@ -8,9 +8,7 @@ Mauzo Server es el backend de gestión de tiendas para el cliente Mauzo Desktop,
 ![Image](../develop/design/mauzoInAction.png?raw=true)
 Mauzo Desktop es un programa de gesión de tiendas.
 
-## Usuarios
-neirth como Sergio Martinez
-
-lluminar como Lidia Martínez
-
-ant04x como Antonio Izquierdo
+## Contribuidores
+* [neirth](https://github.com/neirth) como Sergio Martinez
+* [lluminar](https://github.com/lluminar) como Lidia Martínez
+* [ant04x](https://github.com/ant04x) como Antonio Izquierdo
