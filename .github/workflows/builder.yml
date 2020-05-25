@@ -31,7 +31,7 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.0
     - name: Download Dependencies
-      run: dotnet restore $pwd
+      run: dotnet restore $pwd\Desktop\MauzoDesktop.csproj
       working-directory: src\Desktop
     - name: Build the Windows Application Packaging Project (wapproj) 
       run: msbuild $env:Solution_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
