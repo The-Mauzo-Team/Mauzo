@@ -99,8 +99,8 @@
     <Compile Include="Views\Windows\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Windows\Margin.xaml.cs">
-      <DependentUpon>Margin.xaml</DependentUpon>
+    <Compile Include="Views\Windows\Manager.xaml.cs">
+      <DependentUpon>Manager.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -118,7 +118,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Windows\Margin.xaml">
+    <Page Include="Views\Windows\Manager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

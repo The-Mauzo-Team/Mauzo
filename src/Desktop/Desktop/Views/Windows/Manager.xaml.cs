@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace Desktop.Views.Windows
 {
     /// <summary>
-    /// Lógica de interacción para Margin.xaml
+    /// Lógica de interacción para Manager.xaml
     /// </summary>
-    public partial class Margin : Window
+    public partial class Manager : Window
     {
-        public Margin()
+        public Manager()
         {
             InitializeComponent();
         }
