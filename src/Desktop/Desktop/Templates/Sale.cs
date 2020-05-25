@@ -9,7 +9,7 @@ namespace Desktop.Templates
     class Sale
     {
         private int id;
-        private DateTime stampRef;
+        private long stampRef;
         private int userId;
         private int prodId;
         private int discId;
@@ -20,7 +20,7 @@ namespace Desktop.Templates
             set { id = value; }
         }
 
-        public DateTime StampRef 
+        public long StampRef 
         {
             get { return stampRef; }
             set { stampRef = value; }
