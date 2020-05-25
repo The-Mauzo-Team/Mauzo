@@ -8,40 +8,40 @@ namespace Desktop.Templates
 {
     class Sale
     {
+        private int id;
+        private DateTime stampRef;
+        private int userId;
+        private int prodId;
+        private int discId;
+        
         public int Id 
         {
-            get { return Id; }
-            set { Id = value; }
+            get { return id; }
+            set { id = value; }
         }
 
         public DateTime StampRef 
         {
-            get { return StampRef; }
-            set { StampRef = value; }
+            get { return stampRef; }
+            set { stampRef = value; }
         }
 
         public int UserId
         { 
-            get { return UserId; }
-            set { UserId = value; }
+            get { return userId; }
+            set { userId = value; }
         }
 
         public int ProdId 
         {
-            get { return ProdId; }
-            set { ProdId = value; }
+            get { return prodId; }
+            set { prodId = value; }
         }
 
         public int DiscId
         {
-            get { return DiscId; }
-            set { DiscId = value; }
-        }
-
-        public int RefundId
-        {
-            get { return RefundId; }
-            set { RefundId = value; }
+            get { return discId; }
+            set { discId = value; }
         }
     }
 }

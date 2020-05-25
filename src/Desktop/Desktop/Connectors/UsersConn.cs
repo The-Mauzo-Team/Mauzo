@@ -19,7 +19,7 @@ namespace Desktop.Connectors
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest("post", Method.POST);
+            IRestRequest request = new RestRequest(Method.POST);
 
             // Agregamos la autorización de token en el header.
             request.AddHeader("Authorization", token);
@@ -48,7 +48,7 @@ namespace Desktop.Connectors
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/" + Id);
             IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest("get", Method.GET);
+            IRestRequest request = new RestRequest(Method.GET);
 
             // Agregamos la autorización de token en el header.
             request.AddHeader("Authorization", token);
@@ -83,7 +83,7 @@ namespace Desktop.Connectors
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest("get", Method.GET);
+            IRestRequest request = new RestRequest(Method.GET);
 
             // Agregamos la autorización de token en el header.
             request.AddHeader("Authorization", token);
@@ -118,7 +118,7 @@ namespace Desktop.Connectors
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/" + user.Id);
             IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest("put", Method.PUT);
+            IRestRequest request = new RestRequest(Method.PUT);
 
             // Agregamos la autorización de token en el header.
             request.AddHeader("Authorization", token);
@@ -147,7 +147,7 @@ namespace Desktop.Connectors
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/" + user.Id);
             IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest("delete", Method.DELETE);
+            IRestRequest request = new RestRequest(Method.DELETE);
 
             // Agregamos la autorización de token en el header.
             request.AddHeader("Authorization", token);

@@ -25,7 +25,7 @@ namespace Desktop.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://mauzo.herokuapp.com/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://mauzo.herokuapp.com")]
         public string MauzoServer {
             get {
                 return ((string)(this["MauzoServer"]));
