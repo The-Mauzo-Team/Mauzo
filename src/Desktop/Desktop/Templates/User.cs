@@ -62,7 +62,7 @@ namespace Desktop.Templates
 
                     // Computamos el valor de ASCII a MD5 Hash
                     foreach (byte b in provider.ComputeHash(Encoding.ASCII.GetBytes(value)))
-                        builder.Append(b.ToString("x2").ToLower());
+                        builder.Append(b.ToString("x2").ToUpper());
 
                     // Guardamos el resultado en el valor password
                     password = builder.ToString();
