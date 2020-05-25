@@ -4,49 +4,49 @@ namespace Desktop.Templates
 {
     class User
     {
-        private int Id 
+        public int Id 
         {
             get { return Id; }
             set { Id = value; }
         }
 
-        private string Username
+        public string Username
         {
             get { return Username; }
             set { Username = value; }
         }
 
-        private string Password
+        public string Password
         {
             get { return Password; }
             set { Password = value; }
         }
 
-        private string Firstname 
+        public string Firstname 
         {
             get { return Firstname; }
             set { Firstname = value; }
         }
 
-        private string Lastname
+        public string Lastname
         {
             get { return Lastname; }
             set { Lastname = value; }
         }
 
-        private string Email 
+        public string Email 
         {
             get { return Email; }
             set { Email = value; }
         }
 
-        private bool IsAdmin 
+        public bool IsAdmin 
         {
             get { return IsAdmin; }
             set { IsAdmin = value; }
         }
 
-        private Bitmap UserPic 
+        public Bitmap UserPic 
         {
             get { return UserPic; }
             set { UserPic = value; }

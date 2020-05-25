@@ -8,37 +8,37 @@ namespace Desktop.Templates
 {
     class Sale
     {
-        private int Id 
+        public int Id 
         {
             get { return Id; }
             set { Id = value; }
         }
 
-        private DateTime StampRef 
+        public DateTime StampRef 
         {
             get { return StampRef; }
             set { StampRef = value; }
         }
 
-        private int UserId
+        public int UserId
         { 
             get { return UserId; }
             set { UserId = value; }
         }
 
-        private int ProdId 
+        public int ProdId 
         {
             get { return ProdId; }
             set { ProdId = value; }
         }
 
-        private int DiscId
+        public int DiscId
         {
             get { return DiscId; }
             set { DiscId = value; }
         }
 
-        private int RefundId
+        public int RefundId
         {
             get { return RefundId; }
             set { RefundId = value; }
