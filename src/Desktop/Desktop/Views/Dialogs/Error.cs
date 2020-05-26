@@ -8,7 +8,7 @@ namespace Desktop.Views.Dialogs
 {
     class Error
     { 
-        public void print(string message)
+        public Error(string message)
         {
             // Definimos la ventana.
             Window root = new Window();
