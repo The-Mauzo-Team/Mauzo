@@ -1,18 +1,60 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020 The Mauzo Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package io.Mauzo.Server.Managers;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import io.Mauzo.Server.ServerApp;
 import io.Mauzo.Server.Templates.Sale;
 
+/**
+ * Clase para gestionar las ventas respecto a la base de datos.
+ * 
+ * La utilidad de esta clase es poder implementar métodos que permitan
+ * hacer operaciones CRUD con la base de datos mediante el lenguaje SQL,
+ * para lograr una eficiencia en las consultas, utilizamos Consultas Preparadas,
+ * esto nos ayuda a que solo tengamos que introducir las variables que deseamos 
+ * a la base de datos.
+ * 
+ * @author Neirth Sergio Martínez
+ */
 public class SalesMgt implements ManagersIntf<Sale> {
-    private static SalesMgt controller = null;
+    // Dejamos preparadas las consultas
+    private final PreparedStatement addQuery;
+    private final PreparedStatement getIdQuery;
+    private final PreparedStatement getListQuery;
+    private final PreparedStatement modifyQuery;
+    private final PreparedStatement deleteQuery;
+
+    SalesMgt(Connection conn) throws SQLException {
+        this.addQuery = conn.prepareStatement("INSERT INTO Sales (stampRef, userId, prodId, discId) VALUES (?, ?, ?, ?);");
+        this.getIdQuery = conn.prepareStatement("SELECT * FROM Sales WHERE id = ?;");
+        this.getListQuery = conn.prepareStatement("SELECT * FROM Sales;");
+        this.modifyQuery = conn.prepareStatement("UPDATE Sales SET stampRef = ?, userId = ?, prodId = ?, discId = ? WHERE id = ?;");
+        this.deleteQuery = conn.prepareStatement("DELETE FROM Sales WHERE id = ?;");
+    }
 
     /**
      * Método para añadir una venta a la base de datos.
@@ -22,21 +64,20 @@ public class SalesMgt implements ManagersIntf<Sale> {
      */
     @Override
     public void add(Sale sale) throws SQLException {
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
+        // Asociamos los valores respecto a la sentencia sql.
+        addQuery.setDate(1, new Date(sale.getStampRef().getTime()));
+        addQuery.setInt(2, sale.getUserId());
+        addQuery.setInt(3, sale.getProdId());
 
-        // Preparamos la consulta SQL.
-        try(PreparedStatement st = conn.prepareStatement("INSERT INTO Sales (stampRef, userId, prodId, discId, refundId) VALUES (?, ?, ?, ?, ?)")) {
-            // Asociamos los valores respecto a la sentencia sql.
-            st.setLong(1, sale.getStampRef().getTime());
-            st.setInt(2, sale.getUserId());
-            st.setInt(3, sale.getProdId());
-            st.setInt(4, sale.getDiscId());
-            st.setInt(4, sale.getProdId());
-
-            // Ejecutamos la sentencia sql.
-            st.execute();
+        // Este es un posible valor nulo.
+        if(sale.getDiscId() != null) {
+            addQuery.setInt(4, sale.getDiscId());
+        } else {
+            addQuery.setNull(4, Types.INTEGER);
         }
+
+        // Ejecutamos la sentencia sql.
+        addQuery.execute();
     }
 
     /**
@@ -49,36 +90,26 @@ public class SalesMgt implements ManagersIntf<Sale> {
      */
     @Override
     public Sale get(int id) throws SQLException, ManagerErrorException {
-        // Preparamos una instancia del objeto a devolver
-        Sale sale = null;
+        // Asociamos los valores respecto a la sentencia sql.
+        getIdQuery.setInt(1, id);
+        
+        Sale sale = new Sale();
 
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
-
-        // Preparamos la consulta sql.
-        try (PreparedStatement st = conn.prepareStatement("SELECT * FROM Sales WHERE id = ?;")) {
-            // Asociamos los valores respecto a la sentencia sql.
-            st.setInt(1, id);
-
-            // Ejecutamos la sentencia sql y recuperamos lo que nos ha retornado.
-            try (ResultSet rs = st.executeQuery()) {
-                if (!(rs.isLast()))
-                    while (rs.next()) {
-                        sale = new Sale();
-
-                        sale.setId(rs.getInt("id"));
-                        sale.setStampRef(new Date(rs.getLong("stampRef")));
-                        sale.setUserId(rs.getInt("userId"));
-                        sale.setProdId(rs.getInt("prodId"));
-                        sale.setDiscId(rs.getInt("discId"));
-                        sale.setRefundId(rs.getInt("refundId"));
-                    }
-                else
-                    throw new ManagerErrorException("No se ha encontrado la venta");
+        // Ejecutamos la sentencia sql y recuperamos lo que nos ha retornado.
+        try (ResultSet rs = getIdQuery.executeQuery()) {
+            if (rs.next()) {
+                // Le damos valor al objeto
+                sale.setId(rs.getInt("id"));
+                sale.setStampRef(new Date(rs.getDate("stampRef").getTime()));
+                sale.setUserId(rs.getInt("userId"));
+                sale.setProdId(rs.getInt("prodId"));
+                sale.setDiscId(rs.getInt("discId"));
+            } else {
+                throw new ManagerErrorException("No se ha encontrado la venta");
             }
         }
 
-        return null;
+        return sale;
     }
 
     /**
@@ -90,28 +121,23 @@ public class SalesMgt implements ManagersIntf<Sale> {
      */
     @Override
     public List<Sale> getList() throws SQLException {
-        // Preparamos una instancia del objeto a devolver
-        List<Sale> salesList = null;
+        List<Sale> salesList = new ArrayList<>();
 
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
+        // Ejecutamos la sentencia sql y recuperamos lo que nos ha retornado.
+        try (ResultSet rs = getListQuery.executeQuery()) {
+            while (rs.next()) {
+                // Preparamos un nuevo objeto de ventas.
+                Sale sale = new Sale();
 
-        try(PreparedStatement st = conn.prepareStatement("SELECT * FROM Sales")) {
-            try(ResultSet rs = st.executeQuery()) {
-                salesList = new ArrayList<>();
+                // Le damos valor al objeto
+                sale.setId(rs.getInt("id"));
+                sale.setStampRef(rs.getDate("stampRef"));
+                sale.setUserId(rs.getInt("userId"));
+                sale.setProdId(rs.getInt("prodId"));
+                sale.setDiscId(rs.getInt("discId"));
 
-                while (rs.next()) {
-                    Sale sale = new Sale();
-
-                    sale.setId(rs.getInt("id"));
-                    sale.setStampRef(new Date(rs.getLong("stampRef")));
-                    sale.setUserId(rs.getInt("userId"));
-                    sale.setProdId(rs.getInt("prodId"));
-                    sale.setDiscId(rs.getInt("discId"));
-                    sale.setRefundId(rs.getInt("refundId"));
-
-                    salesList.add(sale);
-                }
+                // Lo añadimos a la lista a retornar.
+                salesList.add(sale);
             }
         }
 
@@ -121,26 +147,27 @@ public class SalesMgt implements ManagersIntf<Sale> {
     /**
      * Método para actualizar la venta en la base de datos.
      * 
-     * @param user La venta encapsulado en un objeto.
+     * @param sale La venta encapsulado en un objeto.
      * @throws SQLException Excepcion en la consulta SQL.
      * @throws ManagerErrorException Excepcion dada al no encontrar la venta solicitada.
      */
     @Override
     public void modify(Sale sale) throws SQLException, ManagerErrorException {
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
+        modifyQuery.setDate(1, (Date) sale.getStampRef());
+        modifyQuery.setInt(2, sale.getUserId());
+        modifyQuery.setInt(3, sale.getProdId());
 
-        try (PreparedStatement st = conn.prepareStatement("UPDATE Sales SET stampRef = ?, userId = ?, prodId = ?, discId = ?, refundId = ? WHERE id = ?")) {
-            st.setLong(1, sale.getStampRef().getTime());
-            st.setInt(2, sale.getUserId());
-            st.setInt(3, sale.getProdId());
-            st.setInt(4, sale.getDiscId());
-            st.setInt(5, sale.getRefundId());
-            st.setInt(6, sale.getId());
-
-            if(st.execute() == false)
-                throw new ManagerErrorException("No se ha encontrado la venta.");
+        // Este es un posible valor nulo.
+        if(sale.getDiscId() != null) {
+            modifyQuery.setInt(4, sale.getDiscId());
+        } else {
+            modifyQuery.setNull(4, Types.INTEGER);
         }
+
+        modifyQuery.setInt(5, sale.getId());
+
+        if (modifyQuery.executeUpdate() == 0)
+            throw new ManagerErrorException("No se ha encontrado la venta.");
     }
 
     /**
@@ -152,28 +179,10 @@ public class SalesMgt implements ManagersIntf<Sale> {
      */
     @Override
     public void remove(Sale sale) throws SQLException, ManagerErrorException {
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
+        deleteQuery.setInt(1, sale.getId());
 
-        // Preparamos la sentencia sql.
-        try (PreparedStatement st = conn.prepareStatement("DELETE FROM Sales WHERE id = ?;")) {
-            st.setInt(1, sale.getId());
-
-            // Ejecutamos la sentencia sql.
-            if(st.execute() == false) 
-                throw new ManagerErrorException("No se ha encontrado el usuario durante la eliminación del mismo.");
-        }
-    }
-
-    /**
-     * Método para recuperar el controlador de la clase SalesMgt.
-     * 
-     * @return El controlador de la clase SalesMgt.
-     */
-    public static SalesMgt getController() {
-        if (controller == null)
-            controller = new SalesMgt();
-
-        return controller;
+        // Ejecutamos la sentencia sql.
+        if (deleteQuery.executeUpdate() == 0) 
+            throw new ManagerErrorException("No se ha encontrado el usuario durante la eliminación del mismo.");
     }
 }

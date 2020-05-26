@@ -1,18 +1,74 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020 The Mauzo Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package io.Mauzo.Server.Managers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.Mauzo.Server.ServerApp;
 import io.Mauzo.Server.ServerUtils;
 import io.Mauzo.Server.Templates.User;
 
+/**
+ * Clase para gestionar los usuarios respecto a la base de datos.
+ * 
+ * La utilidad de esta clase es poder implementar métodos que permitan
+ * hacer operaciones CRUD con la base de datos mediante el lenguaje SQL,
+ * para lograr una eficiencia en las consultas, utilizamos Consultas Preparadas,
+ * esto nos ayuda a que solo tengamos que introducir las variables que deseamos 
+ * a la base de datos.
+ * 
+ * @author Neirth Sergio Martínez
+ */
 public class UsersMgt implements ManagersIntf<User> {
-    private static UsersMgt controller = null;
+    // Dejamos preparadas las consultas
+    private final PreparedStatement addQuery;
+    private final PreparedStatement getIdQuery;
+    private final PreparedStatement getNameQuery;
+    private final PreparedStatement getListQuery;
+    private final PreparedStatement modifyQuery;
+    private final PreparedStatement deleteQuery;
+
+    /**
+     * Constructor donde se obtiene una connexion y se prepara 
+     * las preparared statements para poder realizar las consultas.
+     * 
+     * @throws SQLException Excepcion en la consulta SQL.
+     */
+    UsersMgt(Connection conn) throws SQLException {  
+        // Dejamos las consultas preparadas
+        addQuery = conn.prepareStatement("INSERT INTO Users (firstname, lastname, username, email, password, isAdmin, userPic) VALUES (?, ?, ?, ?, ?, ?, ?);");
+        getIdQuery = conn.prepareStatement("SELECT * FROM Users WHERE id = ?;");
+        getNameQuery = conn.prepareStatement("SELECT * FROM Users WHERE username = ?;");
+        getListQuery = conn.prepareStatement("SELECT * FROM Users;");
+        modifyQuery = conn.prepareStatement("UPDATE Users SET firstname = ?, lastname = ?, username = ?, email = ?, password = ?, isAdmin = ?, userPic = ? WHERE id = ?;");
+        deleteQuery = conn.prepareStatement("DELETE FROM Users WHERE id = ?;");
+    }
 
     /**
      * Método para añadir usuarios a la base de datos.
@@ -22,28 +78,24 @@ public class UsersMgt implements ManagersIntf<User> {
      */
     @Override
     public void add(User user) throws SQLException {
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
+        // Asociamos los valores respecto a la sentencia sql.
+        addQuery.setString(1, user.getFirstName());
+        
+        addQuery.setString(2, user.getLastName());
+        addQuery.setString(3, user.getUsername());
+        addQuery.setString(4, user.getEmail());
+        addQuery.setString(5, user.getPassword());
+        addQuery.setBoolean(6, user.isAdmin());
 
-        // Preparamos la consulta sql.
-        // Las prepared statement no son de usar y tirar
-        /* INFO: URLs de interes 
-         *  Interfaces SQL: https://javaconceptoftheday.com/statement-vs-preparedstatement-vs-callablestatement-in-java/
-         *  Ataques SQL y protección frente a ellos: https://javarevisited.blogspot.com/2012/03/why-use-preparedstatement-in-java-jdbc.html
-         */
-        try (PreparedStatement st = conn.prepareStatement("INSERT INTO User (firstname, lastname, username, email, password, isAdmin, userPic) VALUES (?, ?, ?, ?, ?, ?, ?);")) {
-            // Asociamos los valores respecto a la sentencia sql.
-            st.setString(1, user.getFirstName());
-            st.setString(2, user.getLastName());
-            st.setString(3, user.getUsername());
-            st.setString(4, user.getEmail());
-            st.setString(5, user.getPassword());
-            st.setBoolean(6, user.isAdmin());
-            st.setBytes(7, ServerUtils.imageToByteArray(user.getUserPic(), "png"));
- 
-            // Ejecutamos la sentencia sql.
-            st.execute();
+        // Este es un posible valor nulo.
+        if(user.getUserPic() != null) {
+            addQuery.setBytes(7, ServerUtils.imageToByteArray(user.getUserPic(), "png"));
+        } else {
+            addQuery.setNull(7, Types.BINARY);
         }
+
+        // Ejecutamos la sentencia sql.
+        addQuery.execute();
     }
 
     /**
@@ -60,31 +112,24 @@ public class UsersMgt implements ManagersIntf<User> {
         // Preparamos una instancia del objeto a devolver
         User user = null;
 
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
+        // Asociamos los valores respecto a la sentencia sql.
+        getIdQuery.setInt(1, id);
 
-        // Preparamos la consulta sql.
-        try (PreparedStatement st = conn.prepareStatement("SELECT * FROM User WHERE id = ?;")) {
-            // Asociamos los valores respecto a la sentencia sql.
-            st.setInt(1, id);
+        // Ejecutamos la sentencia sql y recuperamos lo que nos ha retornado.
+        try (ResultSet rs = getIdQuery.executeQuery()) {
+            if (rs.next()) {
+                user = new User();
 
-            // Ejecutamos la sentencia sql y recuperamos lo que nos ha retornado.
-            try (ResultSet rs = st.executeQuery()) {
-                if (!(rs.isLast()))
-                    while (rs.next()) {
-                        user = new User();
-
-                        user.setId(rs.getInt("id"));
-                        user.setAdmin(rs.getBoolean("isAdmin"));
-                        user.setEmail(rs.getString("email"));
-                        user.setFirstName(rs.getString("firstname"));
-                        user.setLastName(rs.getString("lastname"));
-                        user.setPassword(rs.getString("password"));
-                        user.setUsername(rs.getString("username"));
-                        user.setUserPic(ServerUtils.imageFromByteArray(rs.getBytes("userPic")));
-                    }
-                else 
-                    throw new ManagerErrorException("No se ha encontrado el usuario");
+                user.setId(rs.getInt("id"));
+                user.setAdmin(rs.getBoolean("isAdmin"));
+                user.setEmail(rs.getString("email"));
+                user.setFirstName(rs.getString("firstname"));
+                user.setLastName(rs.getString("lastname"));
+                user.setPassword(rs.getString("password"));
+                user.setUsername(rs.getString("username"));
+                user.setUserPic(ServerUtils.imageFromByteArray(rs.getBytes("userPic")));
+            } else { 
+                throw new ManagerErrorException("No se ha encontrado el usuario");
             }
         }
 
@@ -104,31 +149,24 @@ public class UsersMgt implements ManagersIntf<User> {
         // Preparamos una instancia del objeto a devolver
         User user = null;
 
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
+        // Asociamos los valores respecto a la sentencia sql.
+        getNameQuery.setString(1, username);
 
-        // Preparamos la consulta sql.
-        try (PreparedStatement st = conn.prepareStatement("SELECT * FROM Users WHERE username = ?;")) {
-            // Asociamos los valores respecto a la sentencia sql.
-            st.setString(1, username);
+        // Ejecutamos la sentencia sql y recuperamos lo que nos ha retornado.
+        try (ResultSet rs = getNameQuery.executeQuery()) {
+            if (rs.next()) {
+                user = new User();
 
-            // Ejecutamos la sentencia sql y recuperamos lo que nos ha retornado.
-            try (ResultSet rs = st.executeQuery()) {
-                if (!(rs.isLast()))
-                    while (rs.next()) {
-                        user = new User();
-
-                        user.setId(rs.getInt("id"));
-                        user.setAdmin(rs.getBoolean("isAdmin"));
-                        user.setEmail(rs.getString("email"));
-                        user.setFirstName(rs.getString("firstname"));
-                        user.setLastName(rs.getString("lastname"));
-                        user.setPassword(rs.getString("password"));
-                        user.setUsername(rs.getString("username"));
-                        user.setUserPic(ServerUtils.imageFromByteArray(rs.getBytes("userPic")));
-                    }
-                else
-                    throw new ManagerErrorException("No se ha encontrado el usuario");
+                user.setId(rs.getInt("id"));
+                user.setAdmin(rs.getBoolean("isAdmin"));
+                user.setEmail(rs.getString("email"));
+                user.setFirstName(rs.getString("firstname"));
+                user.setLastName(rs.getString("lastname"));
+                user.setPassword(rs.getString("password"));
+                user.setUsername(rs.getString("username"));
+                user.setUserPic(ServerUtils.imageFromByteArray(rs.getBytes("userPic")));
+            } else {
+                throw new ManagerErrorException("No se ha encontrado el usuario");
             }
         }
 
@@ -147,28 +185,23 @@ public class UsersMgt implements ManagersIntf<User> {
         // Preparamos una instancia del objeto a devolver
         List<User> usersList = null;
 
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
-
         // Lanzamos la consulta SQL y generamos la lista de usuarios.
-        try(PreparedStatement st = conn.prepareStatement("SELECT * FROM Users")) {
-            try(ResultSet rs = st.executeQuery()) {
-                usersList = new ArrayList<>();
+        try(ResultSet rs = getListQuery.executeQuery()) {
+            usersList = new ArrayList<>();
 
-                while (rs.next()) {
-                    User user = new User();
+            while (rs.next()) {
+                User user = new User();
 
-                    user.setId(rs.getInt("id"));
-                    user.setAdmin(rs.getBoolean("isAdmin"));
-                    user.setEmail(rs.getString("email"));
-                    user.setFirstName(rs.getString("firstname"));
-                    user.setLastName(rs.getString("lastname"));
-                    user.setPassword(rs.getString("password"));
-                    user.setUsername(rs.getString("username"));
-                    user.setUserPic(ServerUtils.imageFromByteArray(rs.getBytes("userPic")));
+                user.setId(rs.getInt("id"));
+                user.setAdmin(rs.getBoolean("isAdmin"));
+                user.setEmail(rs.getString("email"));
+                user.setFirstName(rs.getString("firstname"));
+                user.setLastName(rs.getString("lastname"));
+                user.setPassword(rs.getString("password"));
+                user.setUsername(rs.getString("username"));
+                user.setUserPic(ServerUtils.imageFromByteArray(rs.getBytes("userPic")));
 
-                    usersList.add(user);
-                }
+                usersList.add(user);
             }
         }
 
@@ -184,25 +217,26 @@ public class UsersMgt implements ManagersIntf<User> {
      */
     @Override
     public void modify(User user) throws SQLException, ManagerErrorException {
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
-
-        // Preparamos la sentencia sql.
-        try (PreparedStatement st = conn.prepareStatement("UPDATE Users SET firstname = ?, lastname = ?, username = ?, email = ?, password = ?, isAdmin = ?, userPic = ? WHILE id = ?;")) {
-            // Asociamos los valores respecto a la sentencia sql.
-            st.setString(1, user.getFirstName());
-            st.setString(2, user.getLastName());
-            st.setString(3, user.getUsername());
-            st.setString(4, user.getEmail());
-            st.setString(5, user.getPassword());
-            st.setBoolean(6, user.isAdmin());
-            st.setBytes(7, ServerUtils.imageToByteArray(user.getUserPic(), "png"));
-            st.setInt(8, user.getId());
-
-            // Ejecutamos la sentencia sql.
-            if(st.execute() == false) 
-                throw new ManagerErrorException("No se ha encontrado el usuario durante la actualización del mismo.");
+        // Asociamos los valores respecto a la sentencia sql.
+        modifyQuery.setString(1, user.getFirstName());
+        modifyQuery.setString(2, user.getLastName());
+        modifyQuery.setString(3, user.getUsername());
+        modifyQuery.setString(4, user.getEmail());
+        modifyQuery.setString(5, user.getPassword());
+        modifyQuery.setBoolean(6, user.isAdmin());
+        
+        // Este es un posible valor nulo.
+        if(user.getUserPic() != null) {
+            modifyQuery.setBytes(7, ServerUtils.imageToByteArray(user.getUserPic(), "png"));
+        } else {
+            modifyQuery.setNull(7, Types.BINARY);
         }
+
+        modifyQuery.setInt(8, user.getId());
+
+        // Ejecutamos la sentencia sql.
+        if(modifyQuery.executeUpdate() == 0) 
+            throw new ManagerErrorException("No se ha encontrado el usuario durante la actualización del mismo.");
     }
     
     /**
@@ -214,28 +248,11 @@ public class UsersMgt implements ManagersIntf<User> {
      */
     @Override
     public void remove(User user) throws SQLException, ManagerErrorException {
-        // Guardamos el puntero de conexion con la base de datos.
-        final Connection conn = ServerApp.getConnection();
-
         // Preparamos la sentencia sql.
-        try (PreparedStatement st = conn.prepareStatement("DELETE FROM Users WHERE id = ?;")) {
-            st.setInt(1, user.getId());
+        deleteQuery.setInt(1, user.getId());
 
-            // Ejecutamos la sentencia sql.
-            if(st.execute() == false) 
-                throw new ManagerErrorException("No se ha encontrado el usuario durante la eliminación del mismo.");
-        }
-    }
-
-    /**
-     * Método para recuperar el controlador de la clase UsersMgt.
-     * 
-     * @return El controlador de la clase UsersMgt.
-     */
-    public static UsersMgt getController() {
-        if (controller == null)
-            controller = new UsersMgt();
-
-        return controller;
+        // Ejecutamos la sentencia sql.
+        if(deleteQuery.executeUpdate() == 0) 
+            throw new ManagerErrorException("No se ha encontrado el usuario durante la eliminación del mismo.");
     }
 }

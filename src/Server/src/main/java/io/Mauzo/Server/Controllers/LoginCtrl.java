@@ -1,3 +1,26 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020 The Mauzo Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package io.Mauzo.Server.Controllers;
 
 // Paquetes relacionados con el framework estandar.
@@ -30,10 +53,23 @@ import io.jsonwebtoken.SignatureAlgorithm;
 // Paquetes relacionados con el Proyecto.
 import io.Mauzo.Server.ServerApp;
 import io.Mauzo.Server.ServerUtils;
+import io.Mauzo.Server.Managers.Connections;
 import io.Mauzo.Server.Managers.UsersMgt;
 import io.Mauzo.Server.Managers.ManagersIntf.ManagerErrorException;
 import io.Mauzo.Server.Templates.User;
 
+/**
+ * Clase controladora de inicios de sesion de usuarios, la cual 
+ * valida si el usuario y la contraseña proporcionados pueden 
+ * iniciar sesión en el sistema.
+ * 
+ * Para ello, utilizamos una contraseña encriptada en MD5, la 
+ * cual nos enviará el cliente ya encripada. En caso de ser un 
+ * login correcto. Le enviaremos un Json Web Token valido para
+ * operar con el resto de endpoints.
+ * 
+ * @author neirth Sergio Martinez
+ */
 @Component
 @Path("/login")
 public class LoginCtrl {
@@ -62,8 +98,10 @@ public class LoginCtrl {
                 final String username = jsonRequest.getString("username");
                 final String password = jsonRequest.getString("password");
 
+                UsersMgt usersMgt = Connections.getController().acquireUsers();
+                
                 try {
-                    User userAux = UsersMgt.getController().get(username);
+                    User userAux = usersMgt.get(username);
 
                     if(userAux != null) {
                         // Comprobamos la contraseña si es valida.
@@ -88,10 +126,11 @@ public class LoginCtrl {
                     } else {
                         throw new ManagerErrorException("Login invalido para el usuario " + username + " con IP " + req.getRemoteAddr());
                     }
-
                 } catch (ManagerErrorException e) {
-                    ServerApp.getLoggerSystem().severe(e.toString());
+                    ServerApp.getLoggerSystem().error(e.toString());
                     response = Response.status(Status.FORBIDDEN);
+                } finally {
+                    Connections.getController().releaseUsers(usersMgt);
                 }
             }
             
