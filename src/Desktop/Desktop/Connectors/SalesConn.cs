@@ -64,20 +64,14 @@ namespace Desktop.Connectors
             if (!response.IsSuccessful)
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
+                // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
                     throw new Exception("No se ha encontrado el usuario.");
-                }
                 else if (response.StatusCode == HttpStatusCode.BadRequest)
-                {
                     // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
                     throw new Exception("La petición realizada no es valida.");
-                }
                 else if (response.StatusCode == HttpStatusCode.Forbidden)
-                {
                     // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
                     throw new Exception("No tienes autorización a realizar esta operación.");
-                }
                 else
                 {
                     // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
@@ -115,20 +109,14 @@ namespace Desktop.Connectors
             else
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
-                {
                     // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
                     throw new Exception("No se ha encontrado el usuario.");
-                }
                 else if (response.StatusCode == HttpStatusCode.BadRequest)
-                {
                     // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
                     throw new Exception("La petición realizada no es valida.");
-                }
                 else if (response.StatusCode == HttpStatusCode.Forbidden)
-                {
                     // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
                     throw new Exception("No tienes autorización a realizar esta operación.");
-                }
                 else
                 {
                     // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
@@ -163,26 +151,18 @@ namespace Desktop.Connectors
 
             // Procesamos el objeto de venta
             if (response.IsSuccessful)
-            {
                 sales = JsonConvert.DeserializeObject<List<Sale>>(response.Content);
-            }
             else
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
-                {
                     // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
                     throw new Exception("No se ha encontrado el usuario.");
-                }
                 else if (response.StatusCode == HttpStatusCode.BadRequest)
-                {
                     // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
                     throw new Exception("La petición realizada no es valida.");
-                }
                 else if (response.StatusCode == HttpStatusCode.Forbidden)
-                {
                     // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
                     throw new Exception("No tienes autorización a realizar esta operación.");
-                }
                 else
                 {
                     // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
@@ -251,20 +231,14 @@ namespace Desktop.Connectors
             if (!response.IsSuccessful)
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
-                {
                     // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
                     throw new Exception("No se ha encontrado el usuario.");
-                }
                 else if (response.StatusCode == HttpStatusCode.BadRequest)
-                {
                     // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
                     throw new Exception("La petición realizada no es valida.");
-                }
                 else if (response.StatusCode == HttpStatusCode.Forbidden)
-                {
                     // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
                     throw new Exception("No tienes autorización a realizar esta operación.");
-                }
                 else
                 {
                     // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
