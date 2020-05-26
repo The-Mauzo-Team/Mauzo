@@ -16,7 +16,7 @@ namespace Desktop
     {
         public App()
         {
-            Info info = new Info("afglkFSNg");
+            // Info info = new Info("afglkFSNg");
             
         }
     }
