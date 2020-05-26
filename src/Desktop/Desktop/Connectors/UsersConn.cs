@@ -36,7 +36,7 @@ namespace Desktop.Connectors
     class UsersConn
     {
         private string MauzoUrl = Settings.Default.MauzoServer + "/api/users";
-        private string token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1OTA0OTUzNTMsImp0aSI6IjEiLCJzdWIiOiJhZG1pbiIsImFkbSI6dHJ1ZSwiZXhwIjoxNTkwNTgxNzUzfQ.GhaL4tiOeYa_DuuJb7eHkiwVTnixnV2XsEZ7A_uv_VYGo8pE4r9hQLsvmoZ6QVemO95PffOoYFcyIDw_C5-Fzw";
+        private string token;
 
         public void AddUser(User user) 
         {
