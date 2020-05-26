@@ -25,6 +25,7 @@ using Desktop.Properties;
 using Desktop.Templates;
 
 using System;
+using System.Net;
 using System.Collections.Generic;
 
 using RestSharp;
@@ -48,7 +49,16 @@ namespace Desktop.Connectors
             request.AddHeader("Authorization", token);
 
             // Convertimos el usuario a json y lo incorporamos a la petición.
-            String jsonRequest = JsonConvert.SerializeObject(user);
+            String jsonRequest = JsonConvert.SerializeObject(new { 
+                username = user.Username,
+                firstname = user.Firstname,
+                lastname = user.Lastname,
+                email = user.Email,
+                password = user.Password,
+                isAdmin = user.IsAdmin,
+                userPic = user.UserPic
+            });
+
             request.AddJsonBody(jsonRequest);
 
             // Ejecutamos la petición.
@@ -57,12 +67,31 @@ namespace Desktop.Connectors
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
             {
-                // Procesamos la respuesta y obtenemos el mensaje.
-                dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                string message = j["message"].ToString();
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
+                    throw new Exception("No se ha encontrado el usuario.");
+                }
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
+                    throw new Exception("La petición realizada no es valida.");
+                }
+                else if (response.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
+                    throw new Exception("No tienes autorización a realizar esta operación.");
+                }
+                else
+                {
+                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
+                    // Procesamos la respuesta y obtenemos el mensaje.
+                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
+                    string message = j["message"].ToString();
 
-                // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                throw new Exception("Se ha producido un error: " + message);
+                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
+                    throw new Exception("Se ha producido un error: " + message);
+                }
             }
         }
 
@@ -89,12 +118,25 @@ namespace Desktop.Connectors
             } 
             else
             {
-                // Procesamos la respuesta y obtenemos el mensaje.
-                dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                string message = j["message"].ToString();
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
+                    throw new Exception("No se ha encontrado el usuario.");
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
+                    throw new Exception("La petición realizada no es valida.");
+                else if (response.StatusCode == HttpStatusCode.Forbidden)
+                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
+                    throw new Exception("No tienes autorización a realizar esta operación.");
+                else
+                {
+                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
+                    // Procesamos la respuesta y obtenemos el mensaje.
+                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
+                    string message = j["message"].ToString();
 
-                // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                throw new Exception("Se ha producido un error: " + message);
+                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
+                    throw new Exception("Se ha producido un error: " + message);
+                }
             }
 
             // Devolvemos el objeto.
@@ -119,17 +161,28 @@ namespace Desktop.Connectors
 
             // Procesamos el objeto de usuario.
             if (response.IsSuccessful)
-            {
                 users = JsonConvert.DeserializeObject<List<User>>(response.Content);
-            }
             else
             {
-                // Procesamos la respuesta y obtenemos el mensaje.
-                dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                string message = j["message"].ToString();
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
+                    throw new Exception("No se ha encontrado el usuario.");
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
+                    throw new Exception("La petición realizada no es valida.");
+                else if (response.StatusCode == HttpStatusCode.Forbidden)
+                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
+                    throw new Exception("No tienes autorización a realizar esta operación.");
+                else
+                {
+                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
+                    // Procesamos la respuesta y obtenemos el mensaje.
+                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
+                    string message = j["message"].ToString();
 
-                // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                throw new Exception("Se ha producido un error: " + message);
+                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
+                    throw new Exception("Se ha producido un error: " + message);
+                }
             }
 
             // Devolvemos el objeto.
@@ -147,7 +200,17 @@ namespace Desktop.Connectors
             request.AddHeader("Authorization", token);
 
             // Convertimos el usuario a json y lo incorporamos a la petición.
-            String jsonRequest = JsonConvert.SerializeObject(user);
+            String jsonRequest = JsonConvert.SerializeObject(new
+            {
+                username = user.Username,
+                firstname = user.Firstname,
+                lastname = user.Lastname,
+                email = user.Email,
+                password = user.Password,
+                isAdmin = user.IsAdmin,
+                userPic = user.UserPic
+            });
+
             request.AddJsonBody(jsonRequest);
 
             // Ejecutamos la petición.
@@ -156,12 +219,25 @@ namespace Desktop.Connectors
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
             {
-                // Procesamos la respuesta y obtenemos el mensaje.
-                dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                string message = j["message"].ToString();
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
+                    throw new Exception("No se ha encontrado el usuario.");
+                else if (response.StatusCode == HttpStatusCode.BadRequest) 
+                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
+                    throw new Exception("La petición realizada no es valida.");
+                else if (response.StatusCode == HttpStatusCode.Forbidden)
+                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
+                    throw new Exception("No tienes autorización a realizar esta operación.");
+                else
+                {
+                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
+                    // Procesamos la respuesta y obtenemos el mensaje.
+                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
+                    string message = j["message"].ToString();
 
-                // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                throw new Exception("Se ha producido un error: " + message);
+                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
+                    throw new Exception("Se ha producido un error: " + message);
+                }
             }
         }
 
@@ -181,12 +257,25 @@ namespace Desktop.Connectors
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
             {
-                // Procesamos la respuesta y obtenemos el mensaje.
-                dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                string message = j["message"].ToString();
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
+                    throw new Exception("No se ha encontrado el usuario.");
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
+                    throw new Exception("La petición realizada no es valida.");
+                else if (response.StatusCode == HttpStatusCode.Forbidden)
+                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
+                    throw new Exception("No tienes autorización a realizar esta operación.");
+                else
+                {
+                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
+                    // Procesamos la respuesta y obtenemos el mensaje.
+                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
+                    string message = j["message"].ToString();
 
-                // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                throw new Exception("Se ha producido un error: " + message);
+                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
+                    throw new Exception("Se ha producido un error: " + message);
+                }
             }
         }
     }

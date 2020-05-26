@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop.Views.Windows"
         mc:Ignorable="d"
-        Title="Login" Height="450" Width="800">
-    <Grid>
-        
+        Title="Login" Height="295" Width="400" Background="White" ResizeMode="NoResize">
+    <Grid Margin="0,0,3.6,-0.4" RenderTransformOrigin="0.5,0.5" Background="#FFF7F7F7">
+        <Image x:Name="ImageMauzo" Source="/Resources/icon.ico" Margin="163,10,164,194" />
+        <TextBox x:Name="UserBox" Height="26" Margin="15,99,15,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="#FF0060DF" FontSize="14"/>
+        <PasswordBox x:Name="PasswordBox" Margin="15,160,15,0" VerticalAlignment="Top" Height="26" BorderBrush="#FF0060DF" FontSize="14"/>
+        <Button x:Name="Sign_in" Content="Sign in" Margin="127,212,143,0" Width="120" Background="#FF0060DF" BorderBrush="#FF288DBF" FontSize="16" Click="Button_Click_1" Foreground="White" Height="25" VerticalAlignment="Top"/>
+        <TextBlock x:Name="PasswordText" Margin="15,136,15,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top" FontSize="16" />
+        <TextBlock x:Name="UserText" Margin="15,77,15,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" FontSize="16"/>
+        <Button x:Name="Cancel" Content="Cancel" Margin="255,212,15,0" FontSize="16" Click="Button_Click_2" Foreground="Black" Background="White" BorderBrush="#FF0060DF" Height="25" VerticalAlignment="Top"/>
+
     </Grid>
 </Window>

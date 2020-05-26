@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Desktop.Views.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,10 @@ namespace Desktop
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Info info = new Info("afglkFSNg");
+            
+        }
     }
 }
