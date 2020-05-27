@@ -3,10 +3,89 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Desktop.Views.Windows"
         mc:Ignorable="d"
-        Title="Margin" Height="450" Width="800">
+        Title="Añadir elemento" Width="600" Height="435" ResizeMode="NoResize">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <!-- Master -->
+        <Grid HorizontalAlignment="Left" Grid.Column="0" VerticalAlignment="Top" Width="100">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="101"/>
+                <RowDefinition Height="101"/>
+                <RowDefinition Height="101"/>
+                <RowDefinition Height="101"/>
+            </Grid.RowDefinitions>
+
+            <Button Name="ProductButton" Grid.Row="0" Background="Transparent" BorderThickness="0,0,0,0">
+                <StackPanel>
+                    <Label Name="ProductIcon" FontSize="32" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,9,0,0" Content="&#xE719;" />
+                    <Label Name="ProductLabel" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Productos" Margin="0,0,0,8"/>
+                </StackPanel>
+            </Button>
+            <Button Name="DiscountButton" Grid.Row="1" Background="Transparent" BorderThickness="0,0,0,0">
+                <StackPanel>
+                    <Label Name="DiscountIcon" FontSize="32" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,9,0,0" Content="&#xE8EC;" />
+                    <Label Name="DiscountLabel" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Descuentos" Margin="0,0,0,8"/>
+                </StackPanel>
+            </Button>
+            <Button Name="UserButton" Grid.Row="2" Background="Transparent" BorderThickness="0,0,0,0">
+                <StackPanel>
+                    <Label Name="UserIcon" FontSize="32" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,9,0,0" Content="&#xE77B;" />
+                    <Label Name="UserLabel" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Usuarios" Margin="0,0,0,8"/>
+                </StackPanel>
+            </Button>
+            <Button Name="InformButton" Grid.Row="3" Background="Transparent" BorderThickness="0,0,0,0">
+                <StackPanel>
+                    <Label Name="InformIcon" FontSize="32" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,9,0,0" Content="&#xF0E3;" />
+                    <Label Name="InformLabel" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Informes" Margin="0,0,0,8"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+        <!-- Details -->
+        <Grid Name="UserFormView" Visibility="Visible" Grid.Column="1" Background="#F6F6F6">
+            <Grid Height="80" VerticalAlignment="Top" Margin="15,0,27,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Image Source="../../Resources/usuario.png" Grid.Column="0" Grid.RowSpan="2" Width="64" Height="64" Margin="0,10,156,6"/>
+                <Label Content="Usuario nuevo" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
+                <Label Content="newuser@localhost" Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Top" FontSize="8"/>
+            </Grid>
+            <Grid>
+                <StackPanel CanVerticallyScroll="True" Margin="0,79,0,0">
+                    <Grid Margin="15,0,0,0">
+                        <Label Content="Nombre" Margin="0,0,270,0" />
+                        <Label Content="Apellidos" Margin="233,0,38,0" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,15">
+                        <TextBox HorizontalAlignment="Left" Height="23" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="210"/>
+                        <TextBox HorizontalAlignment="Left" Height="23" Margin="246,0,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="210"/>
+                    </Grid>
+
+                    <Label Content="Usuario" Margin="15,0,15,0"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" TextWrapping="Wrap" VerticalAlignment="Top" Width="440"/>
+
+                    <Label Content="Email" Margin="15,0,15,0"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" TextWrapping="Wrap" VerticalAlignment="Top" Width="440"/>
+
+                    <Label Content="Contraseña" Margin="15,0,15,0" />
+                    <PasswordBox HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" VerticalAlignment="Top" Width="440"/>
+
+                    <Grid>
+                        <CheckBox Content="Este usuario es administrador" Margin="15,0,15,0"/>
+                        <Button Content="Añadir usuario" Margin="284,0,38,0"></Button>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
