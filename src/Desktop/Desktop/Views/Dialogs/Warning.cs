@@ -113,7 +113,6 @@ namespace Desktop.Views.Dialogs
             grid.Children.Add(cancel);
 
             win.Content = grid;
-            win.Show();
 
             accept.Click += (o, i) =>
             {
@@ -126,6 +125,11 @@ namespace Desktop.Views.Dialogs
                 win.Close();
                 Cancellation(this, i);
             };
+        }
+
+        public void Show()
+        {
+            win.Show();
         }
 
         public void Close()
