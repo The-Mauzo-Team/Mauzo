@@ -56,10 +56,15 @@
             <Grid>
                 <Border Background="{StaticResource MasterBackgroundColor}" BorderThickness="1" Grid.Row="0" Grid.Column="0">
                     <Grid Height="40" VerticalAlignment="Top" >
-                        <TextBox Foreground="{StaticResource MasterForegroundColor}" Text="Buscar..." VerticalContentAlignment="Center" FontSize="14" Margin="5"/>
+                        <TextBox Foreground="{StaticResource MasterForegroundColor}" Text="Buscar..." VerticalContentAlignment="Center" FontSize="14" Margin="38,5,33,5" BorderThickness="1,1,0,1"/>
                         <Button Foreground="White" FontFamily="Segoe MDL2 Assets" Content="&#xE71E;" Margin="215,5,5,5">
                             <Button.Background>
                                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+                            </Button.Background>
+                        </Button>
+                        <Button Foreground="Black" FontFamily="Segoe MDL2 Assets" Content="&#xE713;" Margin="5,5,215,5" BorderBrush="#FF707070" Click="Button_Click">
+                            <Button.Background>
+                                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
                             </Button.Background>
                         </Button>
                     </Grid>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Desktop.Views.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,12 @@ namespace Desktop
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Manager manager = new Manager();
+            manager.Show();
         }
     }
 }
