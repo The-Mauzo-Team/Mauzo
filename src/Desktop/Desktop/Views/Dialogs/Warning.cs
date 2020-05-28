@@ -127,6 +127,7 @@ namespace Desktop.Views.Dialogs
             accept.Click += (o, i) =>
             {
                 win.Close();
+                Acceptance?.Invoke(this, i);
             };
             
             cancel.Click += (o, i) =>

@@ -12,12 +12,12 @@
         <SolidColorBrush x:Key="MasterForegroundColor" Color="Black" />
         <!--MainMenuContextMenu-->
         <ContextMenu x:Key="MenuItemContextMenu">
-            <MenuItem Header="Edit">
+            <MenuItem Header="Edit"  Click="ContextEdit_Click">
                 <MenuItem.Icon>
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text=" &#xE70F;"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Return">
+            <MenuItem Header="Return" Click="ContextRefund_Click">
                 <MenuItem.Icon>
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text=" &#xE777;"/>
                 </MenuItem.Icon>
@@ -62,18 +62,13 @@
                                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
                             </Button.Background>
                         </Button>
-                        <Button Background="#00000000" Foreground="Black" FontFamily="Segoe MDL2 Assets" Content="&#xE713;" Margin="215,5,5,5" BorderBrush="#00707070" Click="Button_Click" FontSize="18">
+                        <Button Background="#00000000" Foreground="Black" FontFamily="Segoe MDL2 Assets" Content="&#xE713;" Margin="215,5,5,5" BorderBrush="#00707070" Click="Button_Settings" FontSize="18">
                         </Button>
                     </Grid>
                 </Border>
-                <ListBox Background="{StaticResource MasterBackgroundColor}" Foreground="{StaticResource MasterForegroundColor}" BorderThickness="0" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,40" Grid.Row="0" Grid.Column="0">
-                    <ContentPresenter Content="Lidia Martínez" ContentTemplate="{StaticResource SaleMenuItem}"/>
-                    <ContentPresenter Content="Sergio Martínez" ContentTemplate="{StaticResource EditMenuItem}"/>
-                    <ContentPresenter Content="Sergio Martínez" ContentTemplate="{StaticResource SaleMenuItem}"/>
-                    <ContentPresenter Content="Antonio Izquierdo"  ContentTemplate="{StaticResource ReturnMenuItem}"/>
-                    <ContentPresenter Content="Antonio Izquierdo" ContentTemplate="{StaticResource SaleMenuItem}"/>
+                <ListBox Name="ActivityList" Background="{StaticResource MasterBackgroundColor}" Foreground="{StaticResource MasterForegroundColor}" BorderThickness="0" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,40" Grid.Row="0" Grid.Column="0" SelectionChanged="ListBox_SelectionChanged">
                 </ListBox>
-                <Button BorderThickness="0" Foreground="White" Content="Nuevo" Height="40" VerticalAlignment="Bottom" Grid.Row="0" Grid.Column="0" FontSize="14">
+                <Button BorderThickness="0" Foreground="White" Content="Nuevo" Height="40" VerticalAlignment="Bottom" Grid.Row="0" Grid.Column="0" FontSize="14" Click="Button_New">
                     <Button.Background>
                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
                     </Button.Background>
