@@ -30,6 +30,14 @@ namespace Desktop.Views.Dialogs
             };
 
 
+            // Centrar Ventana
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double windowWidth = win.Width;
+            double windowHeight = win.Height;
+            win.Left = (screenWidth / 2) - (windowWidth / 2);
+            win.Top = (screenHeight / 2) - (windowHeight / 2);
+
             Label icon = new Label
             {
                 Height = 50,
@@ -84,7 +92,7 @@ namespace Desktop.Views.Dialogs
             };
             Thickness marginAcpt = new Thickness
             {
-                Right = 20,
+                Right = 140,
                 Bottom = 20
             };
             accept.Margin = marginAcpt;
@@ -97,11 +105,13 @@ namespace Desktop.Views.Dialogs
                 Content = "Cancelar",
 
                 VerticalAlignment = VerticalAlignment.Bottom,
-                HorizontalAlignment = HorizontalAlignment.Right
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7")),
+                Foreground = Brushes.White
             };
             Thickness marginCacl = new Thickness
             {
-                Right = 140,
+                Right = 20,
                 Bottom = 20
             };
             cancel.Margin = marginCacl;
@@ -117,13 +127,12 @@ namespace Desktop.Views.Dialogs
             accept.Click += (o, i) =>
             {
                 win.Close();
-                Acceptance(this, i);
             };
             
             cancel.Click += (o, i) =>
             {
                 win.Close();
-                Cancellation(this, i);
+                Cancellation?.Invoke(this, i);
             };
         }
 
