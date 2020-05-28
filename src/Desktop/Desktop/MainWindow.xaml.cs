@@ -94,5 +94,10 @@ namespace Desktop
             int lastPosition = ActivityList.Items.Count - 1;
             ActivityList.SelectedItem = ActivityList.Items.GetItemAt(lastPosition);
         }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            (sender as TextBox).SelectAll();
+        }
     }
 }
