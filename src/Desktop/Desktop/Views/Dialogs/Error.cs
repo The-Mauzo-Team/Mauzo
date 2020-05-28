@@ -124,7 +124,7 @@ namespace Desktop.Views.Dialogs
             // Establecemos la función lambda del botón de aceptar.
             errButton.Click += (o, i) => {
                 root.Close();
-                Acceptance(this, i);
+                Acceptance?.Invoke(this, i);
             };
 
             // Establecemos el lugar en el grid.

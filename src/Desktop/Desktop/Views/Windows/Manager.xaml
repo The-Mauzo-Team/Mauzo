@@ -13,6 +13,7 @@
             <ColumnDefinition Width="100"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        
         <!-- Master -->
         <Grid HorizontalAlignment="Left" Grid.Column="0" VerticalAlignment="Top" Width="100">
             <Grid.RowDefinitions>
@@ -49,7 +50,7 @@
         </Grid>
         
         <!-- Details -->
-        <Grid Name="ProductFormView" Visibility="Visible" Grid.Column="1" Background="{StaticResource DetailBackgroundColor}">
+        <Grid Name="ProductFormView" Visibility="Hidden" Grid.Column="1" Background="{StaticResource DetailBackgroundColor}">
             <ScrollViewer>
                 <StackPanel CanVerticallyScroll="True" Height="435">
                     <Grid Height="80" VerticalAlignment="Top" Margin="15,0,27,0">
@@ -92,8 +93,40 @@
             </ScrollViewer>
         </Grid>
         
-        <Grid Name="DiscountFormView" Visibility="Hidden" Grid.Column="1" Background="{StaticResource DetailBackgroundColor}">
+        <Grid Name="DiscountFormView" Visibility="Visible" Grid.Column="1" Background="{StaticResource DetailBackgroundColor}">
+            <StackPanel CanVerticallyScroll="True">
+                <Grid Height="80" VerticalAlignment="Top" Margin="15,0,27,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Label FontFamily="Segoe MDL2 Assets" Content="&#xE8EC;" FontSize="54" Grid.Column="0" Grid.RowSpan="2" Width="64" Height="64" Margin="0,10,156,6"/>
+                    <Label Name="DiscountNameLabel" Content="Descuento nuevo" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
+                    <Label Name="DescriptionNameLabel" Content="Descripción del descuento" Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Top" FontSize="8"/>
+                </Grid>
+                <Grid>
+                    <StackPanel>
+                        <Label Content="Código" Margin="15,0,15,0"/>
+                        <TextBox  Name="CodeText" HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" TextWrapping="Wrap" VerticalAlignment="Top" Width="440"/>
+
+                        <Label Content="Descripcion" Margin="15,0,15,0"/>
+                        <TextBox Name="DiscountText" HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" TextWrapping="Wrap" VerticalAlignment="Top" Width="440"/>
+
+                        <Label Content="Porcentaje de descuento" Margin="15,0,15,0"/>
+                        <TextBox  Name="PriceDiscountText" HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" TextWrapping="Wrap" VerticalAlignment="Top" Width="440"/>
+
+                        <Grid>
+                            <Button Name="SaveDiscounts" Content="Añadir descuento" Width="100" Margin="356,0,38,0" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
         </Grid>
 
         <Grid Name="UserFormView" Visibility="Hidden" Grid.Column="1" Background="{StaticResource DetailBackgroundColor}">
