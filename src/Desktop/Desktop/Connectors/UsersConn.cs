@@ -59,6 +59,7 @@ namespace Desktop.Connectors
                 userPic = user.UserPic
             });
 
+            // Se añade el json al cuerpo de la petición.
             request.AddJsonBody(jsonRequest);
 
             // Ejecutamos la petición.
@@ -211,6 +212,7 @@ namespace Desktop.Connectors
                 userPic = user.UserPic
             });
 
+            // Se añade el json al cuerpo de la petición.
             request.AddJsonBody(jsonRequest);
 
             // Ejecutamos la petición.

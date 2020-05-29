@@ -55,6 +55,8 @@ namespace Desktop.Connectors
                 prodId = sale.ProdId,
                 discId = sale.DiscId
             });
+
+            // Se añade el json al cuerpo de la petición.
             request.AddJsonBody(jsonRequest);
 
             // Ejecutamos la petición.
@@ -197,6 +199,8 @@ namespace Desktop.Connectors
                 prodId = sale.ProdId,
                 discId = sale.DiscId
             });
+
+            // Se añade el json al cuerpo de la petición.
             request.AddJsonBody(jsonRequest);
 
             // Ejecutamos la petición.
