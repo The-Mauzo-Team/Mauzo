@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,6 +27,16 @@ namespace Desktop.Views.Dialogs
                 Height = 192,
                 ResizeMode = ResizeMode.NoResize
             };
+
+            //Centramos la ventana en la pantalla
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double windowWidth = window.Width;
+            double windowHeight = window.Height;
+            window.Left = (screenWidth / 2) - (windowWidth / 2);
+            window.Top = (screenHeight / 2) - (windowHeight / 2);
+
+            //Definimos un color de fondo
 
             //Creamos el grid con el mismo tamaño
             Grid grid = new Grid
@@ -119,6 +130,10 @@ namespace Desktop.Views.Dialogs
             grid.Children.Add(accept);
 
             window.Content = grid;
+        }
+
+        public void Show()
+        { 
             window.Show();
         }
     }
