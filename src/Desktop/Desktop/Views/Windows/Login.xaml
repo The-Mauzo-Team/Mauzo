@@ -9,11 +9,11 @@
     <Grid Margin="0,0,-6.4,-0.4" RenderTransformOrigin="0.5,0.5" Background="#FFF7F7F7">
         <Image x:Name="ImageMauzo" Source="/Resources/icon.ico" Margin="163,10,164,194" />
         <TextBox x:Name="UserBox" Height="30" Margin="12,95,18,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="#FF0060DF" FontSize="14"/>
-        <PasswordBox x:Name="PasswordBox" Margin="12,156,18,0" VerticalAlignment="Top" Height="30" BorderBrush="#FF0060DF" FontSize="14"/>
-        <Button x:Name="Sign_in" Content="Registrarse" Margin="165,208,0,0" Width="100" Background="#FF0060DF" BorderBrush="#FF288DBF" FontSize="16" Click="Button_Click_1" Foreground="White" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <PasswordBox x:Name="PasswordBox" Margin="12,156,18,0" VerticalAlignment="Top" Height="30" BorderBrush="#FF0060DF" FontSize="14" Password="kñlkñkkñk"/>
+        <Button x:Name="Sign_in" Content="Iniciar" Margin="165,208,0,0" Width="100" Background="#FF0060DF" BorderBrush="#FF288DBF" FontSize="12" Click="Button_Click_1" Foreground="White" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBlock x:Name="PasswordText" Margin="12,132,18,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top" FontSize="16" />
         <TextBlock x:Name="UserText" Margin="12,73,18,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" FontSize="16"/>
-        <Button x:Name="Cancel" Content="Cancelar" Margin="0,208,18,0" FontSize="16" Click="Button_Click_2" Foreground="Black" Background="White" BorderBrush="#FF0060DF" Height="30" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <Button x:Name="Cancel" Content="Cancelar" Margin="0,208,18,0" FontSize="12" Click="Button_Click_2" Foreground="Black" Background="White" BorderBrush="#FF0060DF" Height="30" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right"/>
 
     </Grid>
 </Window>
