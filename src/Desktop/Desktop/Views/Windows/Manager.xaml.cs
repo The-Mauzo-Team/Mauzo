@@ -23,5 +23,10 @@ namespace Desktop.Views.Windows
         {
             InitializeComponent();
         }
+
+        private void SaveDiscounts_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
