@@ -36,7 +36,7 @@ namespace Desktop.Connectors
     class SalesConn
     {
         private string MauzoUrl = Settings.Default.MauzoServer + "/api/sales";
-        private string token;
+        private string token = LoginConn.Token;
 
         public void AddSale(Sale sale)
         {

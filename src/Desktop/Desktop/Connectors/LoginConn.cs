@@ -1,8 +1,32 @@
-﻿using Desktop.Properties;
+﻿/*
+ * MIT License
+ *
+ * Copyright (c) 2020 The Mauzo Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+using Desktop.Properties;
 using Desktop.Templates;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 
@@ -10,6 +34,10 @@ namespace Desktop.Connectors
 {
     class LoginConn
     {
+        private static User user;
+        private static string token = null;
+        private static DateTime expirerToken;
+
         private string MauzoUrl = Settings.Default.MauzoServer + "/api/login";
 
         public string LoginUser(User user) {
@@ -54,6 +82,39 @@ namespace Desktop.Connectors
             }
 
             return result;
+        }
+
+        public static User User {
+            get;
+        }
+        
+        public static DateTime ExpirerTime
+        {
+            get;
+        }
+
+        public static string Token
+        {
+            get { return token; }
+            set {
+                // Inicializamos el parser del jwt
+                JwtSecurityToken handler = (JwtSecurityToken) new JwtSecurityTokenHandler().ReadToken(token);
+
+                // Creamos los objetos de usuario y tiempo de expiración.
+                user = new User();
+                expirerToken = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+
+                // Añadimos los atributos del usuario recuperados del token.
+                user.Id = int.Parse(handler.Claims.First(claim => claim.Type == "jti").Value);
+                user.Username = handler.Claims.First(claim => claim.Type == "sub").Value;
+                user.IsAdmin = bool.Parse(handler.Claims.First(claim => claim.Type == "adm").Value);
+
+                // Añadimos el tiempo en el que expira el token.
+                expirerToken = expirerToken.AddSeconds(double.Parse(handler.Claims.First(claim => claim.Type == "exp").Value)).ToLocalTime();
+
+                // Setteamos el valor del token que nos han pasado.
+                token = value;
+            }
         }
     }
 }

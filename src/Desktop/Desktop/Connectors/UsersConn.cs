@@ -31,12 +31,13 @@ using System.Collections.Generic;
 using RestSharp;
 using Newtonsoft.Json;
 
+
 namespace Desktop.Connectors
 {
     class UsersConn
     {
         private string MauzoUrl = Settings.Default.MauzoServer + "/api/users";
-        private string token;
+        private string token = LoginConn.Token;
 
         public void AddUser(User user) 
         {
