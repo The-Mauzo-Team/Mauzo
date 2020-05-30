@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Master -->
-        <Grid HorizontalAlignment="Left" Grid.Column="0" VerticalAlignment="Top" Width="100">
+        <Grid Name="MasterButtons" HorizontalAlignment="Left" Grid.Column="0" VerticalAlignment="Top" Width="100">
             <Grid.RowDefinitions>
                 <RowDefinition Height="101"/>
                 <RowDefinition Height="101"/>

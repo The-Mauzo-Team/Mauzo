@@ -37,7 +37,7 @@ namespace Desktop.Connectors
         private string MauzoUrl = Settings.Default.MauzoServer + "/api/users";
         private string token = LoginConn.Token;
 
-        public void AddUser(User user) 
+        public void Add(User user) 
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/");
@@ -69,7 +69,7 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado el usuario");
         }
 
-        public User GetUser(int Id) 
+        public User Get(int Id) 
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/" + Id);
@@ -95,7 +95,7 @@ namespace Desktop.Connectors
             return user;
         }
 
-        public List<User> GetUsersList()
+        public List<User> GetList()
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/");
@@ -121,7 +121,7 @@ namespace Desktop.Connectors
             return users;
         }
 
-        public void ModifyUser(User user)
+        public void Modify(User user)
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/" + user.Id);
@@ -154,7 +154,7 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado el usuario");
         }
 
-        public void DeleteUser(User user)
+        public void Delete(User user)
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/" + user.Id);
