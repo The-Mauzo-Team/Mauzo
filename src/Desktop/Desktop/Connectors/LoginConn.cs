@@ -32,23 +32,59 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
-using System.Windows.Documents;
 
 namespace Desktop.Connectors
 {
     class LoginConn
     {
+        private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/login";
         private static string token = null;
-        private string MauzoUrl = Settings.Default.MauzoServer + "/api/login";
+
+        public static User User
+        {
+            get; private set;
+        }
+
+        public static DateTime ExpirerToken
+        {
+            get; private set;
+        }
+
+        public static string Token
+        {
+            get { return token; }
+            set
+            {
+                // Inicializamos el parser del jwt
+                JwtSecurityToken handler = (JwtSecurityToken)new JwtSecurityTokenHandler().ReadToken(value.Remove(0, 7));
+
+                // Creamos los objetos de usuario y tiempo de expiración.
+                User = new User();
+                ExpirerToken = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+
+                // Añadimos los atributos del usuario recuperados del token.
+                List<Claim> claims = handler.Claims.ToList();
+
+                User.Id = int.Parse(claims[1].Value);
+                User.Username = claims[2].Value;
+                User.IsAdmin = bool.Parse(claims[3].Value);
+
+                // Añadimos el tiempo en el que expira el token.
+                ExpirerToken = ExpirerToken.AddSeconds(double.Parse(claims[4].Value)).ToLocalTime();
+
+                // Setteamos el valor del token que nos han pasado.
+                token = value;
+            }
+        }
 
         public void LoginUser(User user) {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/");
+            Uri baseUrl = new Uri(mauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.POST);
 
             // Creamos un objeto solo con el nombre de usuario y la contraseña.
-            String jsonRequest = JsonConvert.SerializeObject(new { 
+            string jsonRequest = JsonConvert.SerializeObject(new { 
                 username = user.Username,
                 password = user.Password
             });
@@ -58,7 +94,6 @@ namespace Desktop.Connectors
 
             // Ejecutamos la petición.
             IRestResponse response = client.Execute(request);
-            string result = null;
 
             // Procesamos la respuesta de la petición.
             if (response.IsSuccessful)
@@ -122,41 +157,6 @@ namespace Desktop.Connectors
 
                 // Lanzamos una excepción con el mensaje que ha dado el servidor.
                 throw new ServerException("Se ha producido un error: " + message);
-            }
-        }
-
-        public static User User {
-            get; private set;
-        }
-        
-        public static DateTime ExpirerToken
-        {
-            get; private set;
-        }
-
-        public static string Token
-        {
-            get { return token; }
-            set {
-                // Inicializamos el parser del jwt
-                JwtSecurityToken handler = (JwtSecurityToken) new JwtSecurityTokenHandler().ReadToken(value.Remove(0, 7));
-
-                // Creamos los objetos de usuario y tiempo de expiración.
-                User = new User();
-                ExpirerToken = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-
-                // Añadimos los atributos del usuario recuperados del token.
-                List<Claim> claims = handler.Claims.ToList();
-
-                User.Id = int.Parse(claims[1].Value);
-                User.Username = claims[2].Value;
-                User.IsAdmin = bool.Parse(claims[3].Value);
-
-                // Añadimos el tiempo en el que expira el token.
-                ExpirerToken = ExpirerToken.AddSeconds(double.Parse(claims[4].Value)).ToLocalTime();
-
-                // Setteamos el valor del token que nos han pasado.
-                token = value;
             }
         }
     }

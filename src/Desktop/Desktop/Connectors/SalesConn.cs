@@ -35,13 +35,13 @@ namespace Desktop.Connectors
 {
     class SalesConn
     {
-        private string MauzoUrl = Settings.Default.MauzoServer + "/api/sales";
+        private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/sales";
         private string token = LoginConn.Token;
 
         public void Add(Sale sale)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/");
+            Uri baseUrl = new Uri(mauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.POST);
 
@@ -49,7 +49,7 @@ namespace Desktop.Connectors
             request.AddHeader("Authorization", token);
 
             // Convertimos la venta a json y lo incorporamos a la petición.
-            String jsonRequest = JsonConvert.SerializeObject(new { 
+            string jsonRequest = JsonConvert.SerializeObject(new { 
                 stampRef = sale.StampRef,
                 userId = sale.UserId,
                 prodId = sale.ProdId,
@@ -70,7 +70,7 @@ namespace Desktop.Connectors
         public Sale Get(int Id) 
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.GET);
 
@@ -96,7 +96,7 @@ namespace Desktop.Connectors
         public List<Sale> GetList()
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/");
+            Uri baseUrl = new Uri(mauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.GET);
 
@@ -122,15 +122,15 @@ namespace Desktop.Connectors
         public void Modify(Sale sale)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + sale.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + sale.Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.PUT);
 
             // Agregamos la autorización de token en el header.
             request.AddHeader("Authorization", token);
 
-            // Convertimos el usuario a json y lo incorporamos a la petición.
-            String jsonRequest = JsonConvert.SerializeObject(new
+            // Convertimos la venta a json y lo incorporamos a la petición.
+            string jsonRequest = JsonConvert.SerializeObject(new
             {
                 stampRef = sale.StampRef,
                 userId = sale.UserId,
@@ -152,7 +152,7 @@ namespace Desktop.Connectors
         public void Delete(Sale sale)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + sale.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + sale.Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.DELETE);
 

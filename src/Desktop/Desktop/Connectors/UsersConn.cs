@@ -34,13 +34,13 @@ namespace Desktop.Connectors
 {
     class UsersConn
     {
-        private string MauzoUrl = Settings.Default.MauzoServer + "/api/users";
+        private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/users";
         private string token = LoginConn.Token;
 
         public void Add(User user) 
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/");
+            Uri baseUrl = new Uri(mauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.POST);
 
@@ -48,7 +48,7 @@ namespace Desktop.Connectors
             request.AddHeader("Authorization", token);
 
             // Convertimos el usuario a json y lo incorporamos a la petición.
-            String jsonRequest = JsonConvert.SerializeObject(new { 
+            string jsonRequest = JsonConvert.SerializeObject(new { 
                 username = user.Username,
                 firstname = user.Firstname,
                 lastname = user.Lastname,
@@ -72,7 +72,7 @@ namespace Desktop.Connectors
         public User Get(int Id) 
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.GET);
 
@@ -98,7 +98,7 @@ namespace Desktop.Connectors
         public List<User> GetList()
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/");
+            Uri baseUrl = new Uri(mauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.GET);
 
@@ -124,7 +124,7 @@ namespace Desktop.Connectors
         public void Modify(User user)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + user.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + user.Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.PUT);
 
@@ -132,7 +132,7 @@ namespace Desktop.Connectors
             request.AddHeader("Authorization", token);
 
             // Convertimos el usuario a json y lo incorporamos a la petición.
-            String jsonRequest = JsonConvert.SerializeObject(new
+            string jsonRequest = JsonConvert.SerializeObject(new
             {
                 username = user.Username,
                 firstname = user.Firstname,
@@ -157,7 +157,7 @@ namespace Desktop.Connectors
         public void Delete(User user)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + user.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + user.Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.DELETE);
 
