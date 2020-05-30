@@ -1,4 +1,7 @@
-﻿using Desktop.Views.Dialogs;
+﻿using Desktop.Connectors;
+using Desktop.Exceptions;
+using Desktop.Templates;
+using Desktop.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +36,25 @@ namespace Desktop.Views.Windows
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            MainWindow main = new MainWindow();
-            main.Show();
-            this.Close();
+            User user = new User();
+            user.Username = UserBox.Text;
+            user.Password = PasswordBox.Password;
+            try
+            {
+                LoginConn loginConn = new LoginConn();
+                loginConn.LoginUser(user);
+                this.Close();
+            }
+            catch (ExpiredLoginException ex)
+            {
+                Error error = new Error(ex.Message);
+                error.Show();
+            } 
+            catch(ServerException ex)
+            {
+                Error error = new Error(ex.Message);
+                error.Show();
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
