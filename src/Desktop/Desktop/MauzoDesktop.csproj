@@ -103,6 +103,7 @@
     <Compile Include="Connectors\DiscountsConn.cs" />
     <Compile Include="Connectors\InformsConn.cs" />
     <Compile Include="Connectors\LoginConn.cs" />
+    <Compile Include="Connectors\ProductsConn.cs" />
     <Compile Include="Connectors\SalesConn.cs" />
     <Compile Include="Connectors\UsersConn.cs" />
     <Compile Include="Exceptions\AdminForbiddenException.cs" />
