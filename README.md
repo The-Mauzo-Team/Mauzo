@@ -1,14 +1,30 @@
-# Mauzo Shop Manager
-Proyecto para crear un pequeño gestor de tiendas usando PostgreSQL y TomEE como backend, y de frontend .Net y WPF.
+# Mauzo
+Mauzo es un proyecto de código abierto basado en el minimalismo y la facilidad de uso. Está hecho con tecnologías robustas como PostgreSQL, Spring Boot y WPF, además de usar plataformas afianzadas y estables, como JVM en el servidor y .NET en el cliente de Windows.
 
-## Mauzo Server
-Mauzo Server es el backend de gestión de tiendas para el cliente Mauzo Desktop, que usa PostgreSQL y TomEE.
+![Image](./design/mauzoInAction.png?raw=true)
 
-## Mauzo Desktop
-![Image](../develop/design/mauzoInAction.png?raw=true)
-Mauzo Desktop es un programa de gesión de tiendas.
+## ¿Dónde puedo descargarlo?:
 
-## Contribuidores
+Puedes descargar la aplicación Mauzo Desktop para Windows desde [aquí](./).
+
+También puedes obtener [aquí](./) el Dockerfile para construir un contenedor de Mauzo Server con un entorno óptimo para servidores.
+
+**NOTA**: Se puede compilar la [carpeta](./src/Server) Maven del código fuente en Java y usarlo para tus necesidades en el lado del servidor.
+
+## Ayuda, consultas e información:
+
+Si requiere de ayuda acerca de este proyecto, puede usar responsablemente las herramientas, proporcionadas por la plataforma GitHub, para intentar satisfacer su consulta o para obtener la información que necesites, aunque es posible que tardes un poco en recibir una respuesta. 
+
+**NOTA**: Es importante, si usted no cuenta con un trato comercial con nosotros (The Mauzo Team), que sea consciente de que la licencia publicada en este proyecto especifica que el software se proporciona sin ningún tipo de garantía, ni de responsabilidad de ningún tipo. Puedes leer más detalladamente estos puntos en la [licencia](./LICENSE) del proyecto. 
+
+## Licencia:
+
+Proyecto licenciado bajo los términos y condiciones de la licencia **[MIT](LICENSE)**. 
+
+Mauzo Desktop, Mauzo Server y sus logotipos son marcas de The Mauzo Team. 
+
+## Integrantes de The Mauzo Team:
+
 * [neirth](https://github.com/neirth) como Sergio Martinez
 * [lluminar](https://github.com/lluminar) como Lidia Martínez
 * [ant04x](https://github.com/ant04x) como Antonio Izquierdo
