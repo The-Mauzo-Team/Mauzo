@@ -27,21 +27,21 @@ using Desktop.Templates;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
+using System.Windows.Documents;
 
 namespace Desktop.Connectors
 {
     class LoginConn
     {
-        private static User user;
         private static string token = null;
-        private static DateTime expirerToken;
-
         private string MauzoUrl = Settings.Default.MauzoServer + "/api/login";
 
-        public string LoginUser(User user) {
+        public void LoginUser(User user) {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
@@ -64,13 +64,13 @@ namespace Desktop.Connectors
             if (response.IsSuccessful)
             {
                 // En caso de que el servidor nos haya devuelto un token, nos lo guardaremos.
-                result = response.Headers.ToList().Find(x => x.Name == "Authorization").Value.ToString();
+                Token = response.Headers.ToList().Find(x => x.Name == "Authorization").Value.ToString();
             }
             else
             {
                 if (response.StatusCode == HttpStatusCode.Forbidden)
                     // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new Exception("El usuario y contraseña no son correctos.");
+                    throw new ExpiredLoginException("El usuario y contraseña no son correctos.");
                 else
                 {
                     // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
@@ -79,33 +79,31 @@ namespace Desktop.Connectors
                     string message = j["message"].ToString();
 
                     // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                    throw new Exception("Se ha producido un error: " + message);
+                    throw new ServerException("Se ha producido un error: " + message);
                 }
             }
-
-            return result;
         }
 
         public static void CalculateException(IRestResponse response, string defaultMessage)
         {
             if (response.StatusCode == HttpStatusCode.NotFound)
                 // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
-                throw new Exception(defaultMessage);
+                throw new NotFoundException(defaultMessage);
             else if (response.StatusCode == HttpStatusCode.BadRequest)
                 // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
-                throw new Exception("La petición realizada no es valida.");
+                throw new BadRequestException("La petición realizada no es valida.");
             else if (response.StatusCode == HttpStatusCode.Forbidden)
             {
                 if (token != null)
                 {
                     // Hacer un diff del tiempo actual con el de expiración y comprobar si es admin.
-                    if (User.IsAdmin == false && (DateTime.Now.Ticks - ExpirerTime.Ticks) < 0)
+                    if (User.IsAdmin == false && (DateTime.Now.Ticks - ExpirerToken.Ticks) < 0)
                         // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
                         throw new AdminForbiddenException("No tienes autorización a realizar esta operación.");
-                    else if (User.IsAdmin == true && (DateTime.Now.Ticks - ExpirerTime.Ticks) < 0)
+                    else if (User.IsAdmin == true && (DateTime.Now.Ticks - ExpirerToken.Ticks) < 0)
                         // Es sospechoso esto, lo más probable es que se hayan deshabilitado remotamente.
                         throw new AdminForbiddenException("Se ha producido un error, tal vez, en el servidor se hayan deshabilitado los privilegios de administrador para su usuario.");
-                    else if (Token != null && (DateTime.Now.Ticks - ExpirerTime.Ticks) > 0)
+                    else if (Token != null && (DateTime.Now.Ticks - ExpirerToken.Ticks) > 0)
                         // El token ha expirado, notificamos de ello para tomar acciones en el controlador.
                         throw new ExpiredLoginException("El token que ha proporcionado el servidor ha caducado.");
                 }
@@ -123,17 +121,17 @@ namespace Desktop.Connectors
                 string message = j["message"].ToString();
 
                 // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                throw new Exception("Se ha producido un error: " + message);
+                throw new ServerException("Se ha producido un error: " + message);
             }
         }
 
         public static User User {
-            get;
+            get; private set;
         }
         
-        public static DateTime ExpirerTime
+        public static DateTime ExpirerToken
         {
-            get;
+            get; private set;
         }
 
         public static string Token
@@ -141,19 +139,21 @@ namespace Desktop.Connectors
             get { return token; }
             set {
                 // Inicializamos el parser del jwt
-                JwtSecurityToken handler = (JwtSecurityToken) new JwtSecurityTokenHandler().ReadToken(token);
+                JwtSecurityToken handler = (JwtSecurityToken) new JwtSecurityTokenHandler().ReadToken(value.Remove(0, 7));
 
                 // Creamos los objetos de usuario y tiempo de expiración.
-                user = new User();
-                expirerToken = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                User = new User();
+                ExpirerToken = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
 
                 // Añadimos los atributos del usuario recuperados del token.
-                user.Id = int.Parse(handler.Claims.First(claim => claim.Type == "jti").Value);
-                user.Username = handler.Claims.First(claim => claim.Type == "sub").Value;
-                user.IsAdmin = bool.Parse(handler.Claims.First(claim => claim.Type == "adm").Value);
+                List<Claim> claims = handler.Claims.ToList();
+
+                User.Id = int.Parse(claims[1].Value);
+                User.Username = claims[2].Value;
+                User.IsAdmin = bool.Parse(claims[3].Value);
 
                 // Añadimos el tiempo en el que expira el token.
-                expirerToken = expirerToken.AddSeconds(double.Parse(handler.Claims.First(claim => claim.Type == "exp").Value)).ToLocalTime();
+                ExpirerToken = ExpirerToken.AddSeconds(double.Parse(claims[4].Value)).ToLocalTime();
 
                 // Setteamos el valor del token que nos han pasado.
                 token = value;

@@ -110,6 +110,10 @@
     <Compile Include="Exceptions\NoConnectionException.cs" />
     <Compile Include="Templates\Discount.cs" />
     <Compile Include="Templates\Informs.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
+    <Compile Include="Exceptions\ServerException.cs" />
+    <Compile Include="Templates\Product.cs" />
+    <Compile Include="Templates\Refund.cs" />
     <Compile Include="Templates\Sale.cs" />
     <Compile Include="Templates\User.cs" />
     <Compile Include="Views\Dialogs\Error.cs" />
