@@ -13,8 +13,8 @@ namespace Desktop.Templates
         private int nRefunds;
         private int nDiscounts;
 
-        private DateTime dStart;
-        private DateTime dEnd;
+        private long dStart;
+        private long dEnd;
 
         public int Id
         {
@@ -37,13 +37,13 @@ namespace Desktop.Templates
             set => nDiscounts = value;
         }
 
-        public DateTime DStart
+        public long DStart
         {
             get => dStart;
             set => dStart = value;
         }
 
-        public DateTime DEnd
+        public long DEnd
         {
             get => dEnd;
             set => dEnd = value;
