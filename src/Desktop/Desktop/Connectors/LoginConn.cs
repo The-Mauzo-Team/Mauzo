@@ -96,16 +96,24 @@ namespace Desktop.Connectors
                 throw new Exception("La petición realizada no es valida.");
             else if (response.StatusCode == HttpStatusCode.Forbidden)
             {
-                // Hacer un diff del tiempo actual con el de expiración y comprobar si es admin.
-                if (LoginConn.User.IsAdmin == false && (DateTime.Now.Ticks - LoginConn.ExpirerTime.Ticks) < 0)
-                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new AdminForbiddenException("No tienes autorización a realizar esta operación.");
-                else if (LoginConn.User.IsAdmin == true && (DateTime.Now.Ticks - LoginConn.ExpirerTime.Ticks) < 0)
-                    // Es sospechoso esto, lo más probable es que se hayan deshabilitado remotamente.
-                    throw new AdminForbiddenException("Se ha producido un error, tal vez, en el servidor remoto se hayan deshabilitado los privilegios de administrador para su usuario.");
-                else if (LoginConn.Token != null && (DateTime.Now.Ticks - LoginConn.ExpirerTime.Ticks) > 0)
-                    // El token ha expirado, notificamos de ello para tomar acciones en el controlador.
-                    throw new ExpiredLoginException("El token ha expirado, vuelve a iniciar sesión.");
+                if (token != null)
+                {
+                    // Hacer un diff del tiempo actual con el de expiración y comprobar si es admin.
+                    if (User.IsAdmin == false && (DateTime.Now.Ticks - ExpirerTime.Ticks) < 0)
+                        // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
+                        throw new AdminForbiddenException("No tienes autorización a realizar esta operación.");
+                    else if (User.IsAdmin == true && (DateTime.Now.Ticks - ExpirerTime.Ticks) < 0)
+                        // Es sospechoso esto, lo más probable es que se hayan deshabilitado remotamente.
+                        throw new AdminForbiddenException("Se ha producido un error, tal vez, en el servidor se hayan deshabilitado los privilegios de administrador para su usuario.");
+                    else if (Token != null && (DateTime.Now.Ticks - ExpirerTime.Ticks) > 0)
+                        // El token ha expirado, notificamos de ello para tomar acciones en el controlador.
+                        throw new ExpiredLoginException("El token que ha proporcionado el servidor ha caducado.");
+                }
+                else 
+                {
+                    // En caso de que no haya establecido un token, devolveremos esta excepción.
+                    throw new ExpiredLoginException("No se ha iniciado sesión en el servidor.");
+                }
             }
             else
             {
