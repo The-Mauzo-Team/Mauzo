@@ -44,7 +44,7 @@ namespace Desktop.Views.Windows
 
         private void InformButton_Click(object sender, RoutedEventArgs e)
         {
-            Warning warning = new Warning("Estas a punto de generar un informe, esta operacion va a bloquear la base de datos del servidor hasta que se complete la operación, impidiendo agregar ventas u otros elementos en el momento de generación.", "¿Estás seguro de querer ejecutar la operación ahora mismo?");
+            Warning warning = new Warning("Estas a punto de generar un informe, esta operacion va a bloquear la base de datos del servidor hasta que se complete la operación, impidiendo agregar ventas u otros elementos en el momento de generación. ¿Estás seguro de querer ejecutar la operación ahora mismo?", "");
 
             warning.Acceptance += (o, i) =>
             {
@@ -79,12 +79,12 @@ namespace Desktop.Views.Windows
             user.Email = EmailText.Text;
             user.Password = PasswordText.Password;
             user.Username = UsernameText.Text;
-            user.IsAdmin = isAdmin.IsEnabled;
+            user.IsAdmin = (bool) isAdmin.IsChecked;
 
             try
             {
                 UsersConn usersConn = new UsersConn();
-                usersConn.AddUser(user);
+                usersConn.Add(user);
 
                 Info infoWindow = new Info("Se ha guardado correctamente, en el servidor, el usuario " + user.Username);
                 infoWindow.Show();
@@ -113,7 +113,7 @@ namespace Desktop.Views.Windows
                     ManagerWindow.Close();
                 };
             }
-            catch (Exception ex)
+            catch (ServerException ex)
             {
                 Error errorWindow = new Error(ex.Message);
                 errorWindow.Show();

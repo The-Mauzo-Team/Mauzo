@@ -38,7 +38,7 @@ namespace Desktop.Connectors
         private string MauzoUrl = Settings.Default.MauzoServer + "/api/sales";
         private string token = LoginConn.Token;
 
-        public void AddSale(Sale sale)
+        public void Add(Sale sale)
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/");
@@ -67,7 +67,7 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado la venta");
         }
 
-        public Sale GetSale(int Id) 
+        public Sale Get(int Id) 
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/" + Id);
@@ -93,7 +93,7 @@ namespace Desktop.Connectors
             return sale;
         }
 
-        public List<Sale> GetSalesList()
+        public List<Sale> GetList()
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/");
@@ -119,7 +119,7 @@ namespace Desktop.Connectors
             return sales;
         }
 
-        public void ModifySale(Sale sale)
+        public void Modify(Sale sale)
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/" + sale.Id);
@@ -149,7 +149,7 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado la venta");
         }
 
-        public void DeleteUser(Sale sale)
+        public void Delete(Sale sale)
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(MauzoUrl + "/" + sale.Id);
