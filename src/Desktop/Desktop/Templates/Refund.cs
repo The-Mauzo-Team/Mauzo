@@ -35,5 +35,30 @@ namespace Desktop.Templates
         private long dateRefund;
         private int userId;
         private int saleId;
+
+        public int Id
+        {
+            get => id;
+            set => id = value; 
+        }
+
+        public long DateRefund
+        {
+            get => dateRefund;
+            set => dateRefund = value;
+        }
+
+        public int UserId
+        {
+            get => userId;
+            set => userId = value;
+        }
+
+        public int SaleId
+        {
+            get => saleId;
+            set => saleId = value;
+        }
+
     }
 }

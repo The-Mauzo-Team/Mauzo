@@ -108,6 +108,8 @@
     <Compile Include="Exceptions\AdminForbiddenException.cs" />
     <Compile Include="Exceptions\BadRequestException.cs" />
     <Compile Include="Exceptions\ExpiredLoginException.cs" />
+    <Compile Include="Templates\Discount.cs" />
+    <Compile Include="Templates\Informs.cs" />
     <Compile Include="Templates\Product.cs" />
     <Compile Include="Templates\Refund.cs" />
     <Compile Include="Exceptions\NoConnectionException.cs" />
