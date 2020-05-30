@@ -122,7 +122,7 @@ namespace Desktop.Views.Dialogs
             // Establecemos la función lambda para cerrar la ventana.
             accept.Click += (o, i) => {
                 window.Close();
-                Acceptance(this, i);
+                Acceptance?.Invoke(this, i);
             };
 
             grid.Children.Add(icono);
