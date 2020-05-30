@@ -104,7 +104,9 @@
     <Compile Include="Connectors\SalesConn.cs" />
     <Compile Include="Connectors\UsersConn.cs" />
     <Compile Include="Exceptions\AdminForbiddenException.cs" />
+    <Compile Include="Exceptions\BadRequestException.cs" />
     <Compile Include="Exceptions\ExpiredLoginException.cs" />
+    <Compile Include="Exceptions\NoConnectionException.cs" />
     <Compile Include="Templates\Sale.cs" />
     <Compile Include="Templates\User.cs" />
     <Compile Include="Views\Dialogs\Error.cs" />
