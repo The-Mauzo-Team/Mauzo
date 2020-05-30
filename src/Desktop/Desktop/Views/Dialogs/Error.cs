@@ -141,7 +141,9 @@ namespace Desktop.Views.Dialogs
                 Width = 100,
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                Content = "Aceptar"
+                Content = "Aceptar",
+                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7")),
+                Foreground = Brushes.White
             };
 
             // Establecemos la función lambda del botón de aceptar.

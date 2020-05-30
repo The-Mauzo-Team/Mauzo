@@ -101,6 +101,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Connectors\DiscountsConn.cs" />
+    <Compile Include="Connectors\InformsConn.cs" />
     <Compile Include="Connectors\LoginConn.cs" />
     <Compile Include="Connectors\SalesConn.cs" />
     <Compile Include="Connectors\UsersConn.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="Exceptions\ExpiredLoginException.cs" />
     <Compile Include="Exceptions\NoConnectionException.cs" />
     <Compile Include="Templates\Discount.cs" />
-    <Compile Include="Templates\Informs.cs" />
+    <Compile Include="Templates\Inform.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\ServerException.cs" />
     <Compile Include="Templates\Product.cs" />

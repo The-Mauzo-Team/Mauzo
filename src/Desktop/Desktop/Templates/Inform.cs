@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Desktop.Templates
 {
-    class Informs
+    class Inform
     {
         private int id;
         private int nSales;
