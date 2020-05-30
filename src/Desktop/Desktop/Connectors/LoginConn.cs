@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+using Desktop.Exceptions;
 using Desktop.Properties;
 using Desktop.Templates;
 using Newtonsoft.Json;
@@ -62,6 +63,7 @@ namespace Desktop.Connectors
             // Procesamos la respuesta de la petición.
             if (response.IsSuccessful)
             {
+                // En caso de que el servidor nos haya devuelto un token, nos lo guardaremos.
                 result = response.Headers.ToList().Find(x => x.Name == "Authorization").Value.ToString();
             }
             else
@@ -82,6 +84,39 @@ namespace Desktop.Connectors
             }
 
             return result;
+        }
+
+        public static void CalculateException(IRestResponse response, string defaultMessage)
+        {
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
+                throw new Exception(defaultMessage);
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+                // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
+                throw new Exception("La petición realizada no es valida.");
+            else if (response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                // Hacer un diff del tiempo actual con el de expiración y comprobar si es admin.
+                if (LoginConn.User.IsAdmin == false && (DateTime.Now.Ticks - LoginConn.ExpirerTime.Ticks) < 0)
+                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
+                    throw new AdminForbiddenException("No tienes autorización a realizar esta operación.");
+                else if (LoginConn.User.IsAdmin == true && (DateTime.Now.Ticks - LoginConn.ExpirerTime.Ticks) < 0)
+                    // Es sospechoso esto, lo más probable es que se hayan deshabilitado remotamente.
+                    throw new AdminForbiddenException("Se ha producido un error, tal vez, en el servidor remoto se hayan deshabilitado los privilegios de administrador para su usuario.");
+                else if (LoginConn.Token != null && (DateTime.Now.Ticks - LoginConn.ExpirerTime.Ticks) > 0)
+                    // El token ha expirado, notificamos de ello para tomar acciones en el controlador.
+                    throw new ExpiredLoginException("El token ha expirado, vuelve a iniciar sesión.");
+            }
+            else
+            {
+                // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
+                // Procesamos la respuesta y obtenemos el mensaje.
+                dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
+                string message = j["message"].ToString();
+
+                // Lanzamos una excepción con el mensaje que ha dado el servidor.
+                throw new Exception("Se ha producido un error: " + message);
+            }
         }
 
         public static User User {

@@ -64,27 +64,7 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
-                    throw new Exception("No se ha encontrado el usuario.");
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
-                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
-                    throw new Exception("La petición realizada no es valida.");
-                else if (response.StatusCode == HttpStatusCode.Forbidden)
-                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new Exception("No tienes autorización a realizar esta operación.");
-                else
-                {
-                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
-                    // Procesamos la respuesta y obtenemos el mensaje.
-                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                    string message = j["message"].ToString();
-
-                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                    throw new Exception("Se ha producido un error: " + message);
-                }
-            }
+                LoginConn.CalculateException(response, "No se ha encontrado la venta");
         }
 
         public Sale GetSale(int Id) 
@@ -105,31 +85,9 @@ namespace Desktop.Connectors
 
             // Procesamos el objeto de la venta
             if (response.IsSuccessful)
-            {
                 sale = JsonConvert.DeserializeObject<Sale>(response.Content);
-            }
             else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
-                    throw new Exception("No se ha encontrado el usuario.");
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
-                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
-                    throw new Exception("La petición realizada no es valida.");
-                else if (response.StatusCode == HttpStatusCode.Forbidden)
-                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new Exception("No tienes autorización a realizar esta operación.");
-                else
-                {
-                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
-                    // Procesamos la respuesta y obtenemos el mensaje.
-                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                    string message = j["message"].ToString();
-
-                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                    throw new Exception("Se ha producido un error: " + message);
-                }
-            }
+                LoginConn.CalculateException(response, "No se ha encontrado la venta");
 
             // Devolvemos el objeto
             return sale;
@@ -155,27 +113,7 @@ namespace Desktop.Connectors
             if (response.IsSuccessful)
                 sales = JsonConvert.DeserializeObject<List<Sale>>(response.Content);
             else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
-                    throw new Exception("No se ha encontrado el usuario.");
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
-                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
-                    throw new Exception("La petición realizada no es valida.");
-                else if (response.StatusCode == HttpStatusCode.Forbidden)
-                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new Exception("No tienes autorización a realizar esta operación.");
-                else
-                {
-                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
-                    // Procesamos la respuesta y obtenemos el mensaje.
-                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                    string message = j["message"].ToString();
-
-                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                    throw new Exception("Se ha producido un error: " + message);
-                }
-            }
+                LoginConn.CalculateException(response, "No se ha encontrado la venta");
 
             // Devolvemos el objeto
             return sales;
@@ -208,14 +146,7 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-            {
-                // Procesamos la respuesta y obtenemos el mensaje.
-                dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                string message = j["message"].ToString();
-
-                // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                throw new Exception("Se ha producido un error: " + message);
-            }
+                LoginConn.CalculateException(response, "No se ha encontrado la venta");
         }
 
         public void DeleteUser(Sale sale)
@@ -233,27 +164,7 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
-                    throw new Exception("No se ha encontrado el usuario.");
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
-                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
-                    throw new Exception("La petición realizada no es valida.");
-                else if (response.StatusCode == HttpStatusCode.Forbidden)
-                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new Exception("No tienes autorización a realizar esta operación.");
-                else
-                {
-                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
-                    // Procesamos la respuesta y obtenemos el mensaje.
-                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                    string message = j["message"].ToString();
-
-                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                    throw new Exception("Se ha producido un error: " + message);
-                }
-            }
+                LoginConn.CalculateException(response, "No se ha encontrado la venta");
         }
     }
 }
