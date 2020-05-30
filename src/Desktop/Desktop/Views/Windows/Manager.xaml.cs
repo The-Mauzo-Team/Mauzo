@@ -131,7 +131,50 @@ namespace Desktop.Views.Windows
         // Botones del detail correspondientes a guardar elementos.
         private void SaveProduct_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Pendiente de hacer la operación con Products.
+            Product product = new Product();
+
+            product.ProdName = ProductName.Text;
+            product.ProdCode = ProductCode.Text;
+            product.ProdDesc = ProductDescription.Text;
+            product.ProdPrice = float.Parse(ProductPrize.Text);
+
+            try
+            {
+                ProductsConn productsConn = new ProductsConn();
+                productsConn.Add(product);
+
+                Info infoWindow = new Info("Se ha guardado correctamente, en el servidor, el producto" + product.ProdName);
+                infoWindow.Show();
+            }
+            catch (AdminForbiddenException ex)
+            {
+                Error errorWindow = new Error(ex.Message);
+                errorWindow.Show();
+
+            }
+            catch (ExpiredLoginException ex)
+            {
+                Warning warningWindow = new Warning(ex.Message, "¿Deseas iniciar la sesión?");
+                warningWindow.Show();
+
+                warningWindow.Acceptance += (o, i) =>
+                {
+                    warningWindow.Close();
+
+                    Login loginWindow = new Login();
+                    loginWindow.Show();
+                };
+
+                warningWindow.Cancellation += (o, i) =>
+                {
+                    ManagerWindow.Close();
+                };
+            }
+            catch (ServerException ex)
+            {
+                Error errorWindow = new Error(ex.Message);
+                errorWindow.Show();
+            }
         }
 
         private void SaveDiscounts_Click(object sender, RoutedEventArgs e)

@@ -72,16 +72,16 @@
                     <Grid Margin="0,0,0,0" Height="440">
                         <StackPanel>
                             <Label Content="Nombre" Margin="15,15,0,0" />
-                            <TextBox HorizontalAlignment="Left" Height="23" Margin="15,0,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="440" />
+                            <TextBox Name="ProductName" HorizontalAlignment="Left" Height="23" Margin="15,0,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="440" />
 
                             <Label Content="Codigo de producto" Margin="15,15,0,0" />
-                            <TextBox HorizontalAlignment="Left" Height="23" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" />
+                            <TextBox Name="ProductCode" HorizontalAlignment="Left" Height="23" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" />
 
                             <Label Content="Descripción" Margin="15,15,0,0" />
-                            <TextBox HorizontalAlignment="Left" Height="92" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" VerticalScrollBarVisibility="Auto" />
+                            <TextBox Name="ProductDescription" HorizontalAlignment="Left" Height="92" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" VerticalScrollBarVisibility="Auto" />
 
                             <Label Content="Precio" Margin="15,15,0,0" />
-                            <TextBox HorizontalAlignment="Left" Height="23" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" />
+                            <TextBox Name="ProductPrize" HorizontalAlignment="Left" Height="23" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" />
 
                             <Grid Margin="0,15,0,0" Width="477">
                                 <Button Name="LoadImageProduct" 
