@@ -26,6 +26,8 @@ namespace Desktop.Views.Windows
         public Login()
         {
             InitializeComponent();
+
+            //Centramos la pantalla
             double screenWidth = SystemParameters.PrimaryScreenWidth;
             double screenHeight = SystemParameters.PrimaryScreenHeight;
             double windowWidth = this.Width;
@@ -41,17 +43,20 @@ namespace Desktop.Views.Windows
             user.Password = PasswordBox.Password;
             try
             {
+                //Registramos el usuario
                 LoginConn loginConn = new LoginConn();
                 loginConn.LoginUser(user);
                 this.Close();
             }
             catch (ExpiredLoginException ex)
             {
+                //En caso de que haya expirado lanzamos una excepción y mostramos la ventana de error
                 Error error = new Error(ex.Message);
                 error.Show();
             } 
             catch(ServerException ex)
             {
+                //En caso de que haya habido problemas con el servidor lanzamos una excepción y mostramos la ventana de error
                 Error error = new Error(ex.Message);
                 error.Show();
             }
@@ -59,8 +64,8 @@ namespace Desktop.Views.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            //Al darle a cancelar cerramos la ventana
             this.Close();
-           
         }
     }
 }
