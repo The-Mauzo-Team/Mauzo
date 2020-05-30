@@ -35,7 +35,7 @@ namespace Desktop.Connectors
 {
     class ProductsConn
     {
-        private string MauzoUrl = Settings.Default.MauzoServer + "/api/products";
+        private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/products";
         private string token = LoginConn.Token;
 
         public List<Product> List
@@ -43,7 +43,7 @@ namespace Desktop.Connectors
             get
             {
                 // Iniciamos la conexión.
-                Uri baseUrl = new Uri(MauzoUrl + "/");
+                Uri baseUrl = new Uri(mauzoUrl + "/");
                 IRestClient client = new RestClient(baseUrl);
                 IRestRequest request = new RestRequest(Method.GET);
 
@@ -58,7 +58,7 @@ namespace Desktop.Connectors
 
                 // Procesamos el objeto del producto
                 if (response.IsSuccessful)
-                    products = JsonConvert.Deserialize<List<Product>>(response.Content);
+                    products = JsonConvert.DeserializeObject<List<Product>>(response.Content);
                 else
                     LoginConn.CalculateException(response, "No se ha encontrado el producto");
 
@@ -70,7 +70,7 @@ namespace Desktop.Connectors
         public void Add(Product product)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/");
+            Uri baseUrl = new Uri(mauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.POST);
 
@@ -100,7 +100,7 @@ namespace Desktop.Connectors
         public Product Get(int id)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.GET);
 
@@ -126,7 +126,7 @@ namespace Desktop.Connectors
         public void Modify(Product product)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + product);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + product);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.PUT);
 
@@ -153,10 +153,10 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado el producto");
         }
 
-        public void Delete(Products product)
+        public void Delete(Product product)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + product.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + product.Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.DELETE);
 

@@ -31,7 +31,7 @@ namespace Desktop.Connectors
 {
     class RefundsConn
     {
-        private string MauzoUrl = Settings.Default.MauzoServer + "/api/refunds";
+        private string mauzoUrl = Settings.Default.MauzoServer + "/api/refunds";
         private string token = LoginConn.Token;
 
         public List<Refund> List
@@ -39,7 +39,7 @@ namespace Desktop.Connectors
             get
             {
                 // Iniciamos la conexión.
-                Uri baseUrl = new Uri(MauzoUrl + "/");
+                Uri baseUrl = new Uri(mauzoUrl + "/");
                 IRestClient client = new RestClient(baseUrl);
                 IRestRequest request = new RestRequest(Method.GET);
 
@@ -54,7 +54,7 @@ namespace Desktop.Connectors
 
                 // Procesamos el objeto de la devolución
                 if (response.IsSuccessful)
-                    refunds = JsonConvert.Deserialize<List<Refund>>(response.Content);
+                    refunds = JsonConvert.DeserializeObject<List<Refund>>(response.Content);
                 else
                     LoginConn.CalculateException(response, "No se ha encontrado la devolución");
 
@@ -66,7 +66,7 @@ namespace Desktop.Connectors
         public void Add(Refund refund)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/");
+            Uri baseUrl = new Uri(mauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.POST);
 
@@ -97,7 +97,7 @@ namespace Desktop.Connectors
         public Refund Get(int id)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.GET);
 
@@ -123,7 +123,7 @@ namespace Desktop.Connectors
         public void Modify(Refund refund)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + refund);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + refund);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.PUT);
 
@@ -152,7 +152,7 @@ namespace Desktop.Connectors
         public void Delete(Refund refund)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + refund.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + refund.Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.DELETE);
 
