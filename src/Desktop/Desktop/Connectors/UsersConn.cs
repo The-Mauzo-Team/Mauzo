@@ -95,30 +95,33 @@ namespace Desktop.Connectors
             return user;
         }
 
-        public List<User> GetList()
+        public List<User> GetList
         {
-            // Iniciamos la conexión.
-            Uri baseUrl = new Uri(mauzoUrl + "/");
-            IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest(Method.GET);
+            get
+            {
+                // Iniciamos la conexión.
+                Uri baseUrl = new Uri(mauzoUrl + "/");
+                IRestClient client = new RestClient(baseUrl);
+                IRestRequest request = new RestRequest(Method.GET);
 
-            // Agregamos la autorización de token en el header.
-            request.AddHeader("Authorization", token);
+                // Agregamos la autorización de token en el header.
+                request.AddHeader("Authorization", token);
 
-            // Ejecutamos la petición.
-            IRestResponse response = client.Execute(request);
+                // Ejecutamos la petición.
+                IRestResponse response = client.Execute(request);
 
-            // Inicializamos la lista de usuarios.
-            List<User> users = null;
+                // Inicializamos la lista de usuarios.
+                List<User> users = null;
 
-            // Procesamos el objeto de usuario.
-            if (response.IsSuccessful)
-                users = JsonConvert.DeserializeObject<List<User>>(response.Content);
-            else
-                LoginConn.CalculateException(response, "No se ha encontrado el usuario");
+                // Procesamos el objeto de usuario.
+                if (response.IsSuccessful)
+                    users = JsonConvert.DeserializeObject<List<User>>(response.Content);
+                else
+                    LoginConn.CalculateException(response, "No se ha encontrado el usuario");
 
-            // Devolvemos el objeto.
-            return users;
+                // Devolvemos el objeto.
+                return users;
+            }
         }
 
         public void Modify(User user)

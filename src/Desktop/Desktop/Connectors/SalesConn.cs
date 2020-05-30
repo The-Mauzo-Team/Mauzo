@@ -25,7 +25,6 @@ using Desktop.Properties;
 using Desktop.Templates;
 
 using System;
-using System.Net;
 using System.Collections.Generic;
 
 using RestSharp;
@@ -93,30 +92,33 @@ namespace Desktop.Connectors
             return sale;
         }
 
-        public List<Sale> GetList()
+        public List<Sale> GetList
         {
-            // Iniciamos la conexión.
-            Uri baseUrl = new Uri(mauzoUrl + "/");
-            IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest(Method.GET);
+            get 
+            {
+                // Iniciamos la conexión.
+                Uri baseUrl = new Uri(mauzoUrl + "/");
+                IRestClient client = new RestClient(baseUrl);
+                IRestRequest request = new RestRequest(Method.GET);
 
-            // Agregamos la autorización de token en el header.
-            request.AddHeader("Authorization", token);
+                // Agregamos la autorización de token en el header.
+                request.AddHeader("Authorization", token);
 
-            // Ejecutamos la petición.
-            IRestResponse response = client.Execute(request);
+                // Ejecutamos la petición.
+                IRestResponse response = client.Execute(request);
 
-            // Inicializamos la lista de ventas
-            List<Sale> sales = null;
+                // Inicializamos la lista de ventas
+                List<Sale> sales = null;
 
-            // Procesamos el objeto de venta
-            if (response.IsSuccessful)
-                sales = JsonConvert.DeserializeObject<List<Sale>>(response.Content);
-            else
-                LoginConn.CalculateException(response, "No se ha encontrado la venta");
+                // Procesamos el objeto de venta
+                if (response.IsSuccessful)
+                    sales = JsonConvert.DeserializeObject<List<Sale>>(response.Content);
+                else
+                    LoginConn.CalculateException(response, "No se ha encontrado la venta");
 
-            // Devolvemos el objeto
-            return sales;
+                // Devolvemos el objeto
+                return sales;
+            }
         }
 
         public void Modify(Sale sale)
