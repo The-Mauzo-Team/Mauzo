@@ -101,10 +101,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Connectors\LoginConn.cs" />
+    <Compile Include="Connectors\ProductsConn.cs" />
+    <Compile Include="Connectors\RefundsConn.cs" />
     <Compile Include="Connectors\SalesConn.cs" />
     <Compile Include="Connectors\UsersConn.cs" />
     <Compile Include="Exceptions\AdminForbiddenException.cs" />
     <Compile Include="Exceptions\ExpiredLoginException.cs" />
+    <Compile Include="Templates\Product.cs" />
+    <Compile Include="Templates\Refund.cs" />
     <Compile Include="Templates\Sale.cs" />
     <Compile Include="Templates\User.cs" />
     <Compile Include="Views\Dialogs\Error.cs" />
