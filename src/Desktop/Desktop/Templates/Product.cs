@@ -10,7 +10,7 @@ namespace Desktop.Templates
     class Product
     {
         private int id;
-        private int prodName;
+        private string prodName;
         private string prodCode;
         private float prodPrice;
         private string prodDesc;
@@ -22,7 +22,7 @@ namespace Desktop.Templates
             set => id = value;
         }
 
-        public int ProdName
+        public string ProdName
         {
             get => prodName;
             set => prodName = value;
