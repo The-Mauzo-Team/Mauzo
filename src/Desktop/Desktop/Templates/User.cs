@@ -21,9 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+using System;
 using System.Drawing;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Desktop.Templates
 {
@@ -36,7 +40,7 @@ namespace Desktop.Templates
         private string lastName;
         private string email;
         private bool isAdmin;
-        private Bitmap userPic;
+        private Bitmap userPicArr;
 
         public int Id 
         {
@@ -94,10 +98,42 @@ namespace Desktop.Templates
             set { isAdmin = value; }
         }
 
-        public Bitmap UserPic 
+        public string UserPic
         {
-            get { return userPic; }
-            set { userPic = value; }
+            get {
+                string auxPic = null;
+
+                if (userPicArr != null) { 
+                    auxPic = Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(userPicArr, typeof(byte[])));
+                }
+
+                return auxPic;
+            }
+
+            set { 
+                if (value != null)
+                {
+                    BitmapSource userPicSource = (BitmapSource)new ImageSourceConverter().ConvertFrom(Convert.FromBase64String(value));
+
+                    using (MemoryStream outStream = new MemoryStream())
+                    {
+                        BitmapEncoder encoder = new BmpBitmapEncoder();
+                        encoder.Frames.Add(BitmapFrame.Create(userPicSource));
+                        encoder.Save(outStream);
+                        userPicArr = new Bitmap(outStream);
+                    }
+                } 
+                else
+                {
+                    userPicArr = null;
+                }
+            }
+        }
+
+        public Bitmap UserPicArr
+        {
+            get { return userPicArr; }
+            set { userPicArr = value; }
         }
     }
 }

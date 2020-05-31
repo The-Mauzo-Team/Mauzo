@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Desktop.Connectors;
 using Desktop.Exceptions;
 using Desktop.Templates;
 using Desktop.Views.Dialogs;
+using Microsoft.Win32;
 
 namespace Desktop.Views.Windows
 {
@@ -27,8 +32,8 @@ namespace Desktop.Views.Windows
                 InformButton.IsEnabled = false;
             }
 
-            ProductIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7"));
-            ProductLabel.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7"));
+            ProductIcon.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0078d7"));
+            ProductLabel.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0078d7"));
 
             DiscountIcon.Foreground = new SolidColorBrush(Colors.Black);
             DiscountLabel.Foreground = new SolidColorBrush(Colors.Black);
@@ -48,8 +53,8 @@ namespace Desktop.Views.Windows
             UserFormView.Visibility = Visibility.Hidden;
             InformsFormView.Visibility = Visibility.Hidden;
 
-            ProductIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7"));
-            ProductLabel.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7"));
+            ProductIcon.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0078d7"));
+            ProductLabel.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0078d7"));
 
             DiscountIcon.Foreground = new SolidColorBrush(Colors.Black);
             DiscountLabel.Foreground = new SolidColorBrush(Colors.Black);
@@ -71,8 +76,8 @@ namespace Desktop.Views.Windows
             ProductIcon.Foreground = new SolidColorBrush(Colors.Black);
             ProductLabel.Foreground = new SolidColorBrush(Colors.Black);
 
-            DiscountIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7"));
-            DiscountLabel.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7"));
+            DiscountIcon.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0078d7"));
+            DiscountLabel.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0078d7"));
 
             UserIcon.Foreground = new SolidColorBrush(Colors.Black);
             UserLabel.Foreground = new SolidColorBrush(Colors.Black);
@@ -94,8 +99,8 @@ namespace Desktop.Views.Windows
             DiscountIcon.Foreground = new SolidColorBrush(Colors.Black);
             DiscountLabel.Foreground = new SolidColorBrush(Colors.Black);
 
-            UserIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7"));
-            UserLabel.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7"));
+            UserIcon.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0078d7"));
+            UserLabel.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0078d7"));
 
             InformIcon.Foreground = new SolidColorBrush(Colors.Black);
             InformLabel.Foreground = new SolidColorBrush(Colors.Black);
@@ -123,8 +128,8 @@ namespace Desktop.Views.Windows
                 UserIcon.Foreground = new SolidColorBrush(Colors.Black);
                 UserLabel.Foreground = new SolidColorBrush(Colors.Black);
 
-                InformIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7"));
-                InformLabel.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078d7"));
+                InformIcon.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0078d7"));
+                InformLabel.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0078d7"));
 
                 // Lanzamos los datos a la vista, para que las dibuje con barras.
                 List<Inform> informs = new InformsConn().List;
@@ -178,12 +183,13 @@ namespace Desktop.Views.Windows
         // Botones del detail correspondientes a guardar elementos.
         private void SaveProduct_Click(object sender, RoutedEventArgs e)
         {
-            Product product = new Product();
-
-            product.ProdName = ProductName.Text;
-            product.ProdCode = ProductCode.Text;
-            product.ProdDesc = ProductDescription.Text;
-            product.ProdPrice = float.Parse(ProductPrize.Text);
+            Product product = new Product
+            {
+                ProdName = ProductName.Text,
+                ProdCode = ProductCode.Text,
+                ProdDesc = ProductDescription.Text,
+                ProdPrice = float.Parse(ProductPrize.Text)
+            };
 
             try
             {
@@ -226,11 +232,12 @@ namespace Desktop.Views.Windows
 
         private void SaveDiscounts_Click(object sender, RoutedEventArgs e)
         {
-            Discount discount = new Discount();
-
-            discount.Code = CodeText.Text;
-            discount.Desc = DiscountText.Text;
-            discount.PriceDisc = float.Parse(PriceDiscountText.Text);
+            Discount discount = new Discount
+            {
+                Code = CodeText.Text,
+                Desc = DiscountText.Text,
+                PriceDisc = float.Parse(PriceDiscountText.Text)
+            };
 
             try
             {
@@ -273,14 +280,16 @@ namespace Desktop.Views.Windows
 
         private void SaveUser_Click(object sender, RoutedEventArgs e)
         {
-            User user = new User();
-
-            user.Firstname = FirstnameText.Text;
-            user.Lastname = LastnameText.Text;
-            user.Email = EmailText.Text;
-            user.Password = PasswordText.Password;
-            user.Username = UsernameText.Text;
-            user.IsAdmin = (bool) isAdmin.IsChecked;
+            User user = new User
+            {
+                Firstname = FirstnameText.Text,
+                Lastname = LastnameText.Text,
+                Email = EmailText.Text,
+                Password = PasswordText.Password,
+                Username = UsernameText.Text,
+                IsAdmin = (bool)isAdmin.IsChecked,
+                UserPicArr = BitmapImage2Bitmap(UserPicLabel.Source)
+            };
 
             try
             {
@@ -323,6 +332,74 @@ namespace Desktop.Views.Windows
                 errorWindow.Show();
             }
 
+        }
+
+        private void ClearImageProduct_Click(object sender, RoutedEventArgs e)
+        {
+            ProdPicLabel.Source = null;
+        }
+
+        private void LoadImageProduct_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog
+            {
+                // Ponemos los filtros que veamos conveniente al tipo de la imagen.
+                DefaultExt = ".png",
+                Filter = "Archivos JPEG (*.jpeg)|*.jpeg|Archivos PNG (*.png)|*.png|Archivos JPG (*.jpg)|*.jpg|Archivos GIF (*.gif)|*.gif"
+            };
+
+            // Abrimos el cuadro de dialogo teniendo en cuenta que puede ser null.
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Recojemos la imagen obtenida y la cargamos a la interfaz grafica.
+            if (result == true)
+            {
+                UserPicLabel.Source = new BitmapImage(new Uri(dlg.FileName));
+            }
+        }
+
+        private void LoadImageUser_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog
+            {
+                // Ponemos los filtros que veamos conveniente al tipo de la imagen.
+                DefaultExt = ".png",
+                Filter = "Archivos JPEG (*.jpeg)|*.jpeg|Archivos PNG (*.png)|*.png|Archivos JPG (*.jpg)|*.jpg|Archivos GIF (*.gif)|*.gif"
+            };
+
+            // Abrimos el cuadro de dialogo teniendo en cuenta que puede ser null.
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Recojemos la imagen obtenida y la cargamos a la interfaz grafica.
+            if (result == true)
+            {
+                UserPicLabel.Source = new BitmapImage(new Uri(dlg.FileName));
+            }
+        }
+
+        private void ClearImageUser_Click(object sender, RoutedEventArgs e)
+        {
+            UserPicLabel.Source = null;
+        }
+
+        private Bitmap BitmapImage2Bitmap(ImageSource image)
+        {
+            Bitmap result = null;
+
+            if (image != null)
+            {
+                using (MemoryStream outStream = new MemoryStream())
+                {
+                    BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create((BitmapSource)image));
+                    encoder.Save(outStream);
+                    outStream.Flush();
+
+                    result = (Bitmap)Image.FromStream(outStream);
+                }
+            }
+
+            return result;
         }
     }
 }

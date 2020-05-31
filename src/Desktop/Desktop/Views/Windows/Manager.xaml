@@ -66,9 +66,9 @@
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
 
-                        <Image Name="ProdPicLoad" Source="../../Resources/usuario.png" Grid.Column="0" Grid.RowSpan="2" Width="64" Height="64" Margin="0,10,156,6"/>
-                        <Label Name="ProdNameLabel" Content="Producto nuevo" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
-                        <Label Name="ProdDescriptionLabel" Content="Descripción del nuevo producto..." Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Top" FontSize="8"/>
+                        <Image Name="ProdPicLabel" Source="../../Resources/usuario.png" Grid.Column="0" Grid.RowSpan="2" Width="64" Height="64" Margin="0,10,156,6"/>
+                        <Label Name="ProdNameLabel" Content="{Binding ElementName=ProductName, Path=Text}" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
+                        <Label Name="ProdDescriptionLabel" Content="{Binding ElementName=ProductDescription, Path=Text}" Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,60,0" VerticalAlignment="Top" FontSize="10"/>
                     </Grid>
                     <Grid Margin="0,0,0,0" Height="440">
                         <StackPanel>
@@ -91,14 +91,16 @@
                                         FontSize="12" 
                                         Margin="194,0,0,0" 
                                         HorizontalAlignment="Left" 
-                                        VerticalAlignment="Bottom" />
+                                        VerticalAlignment="Bottom"
+                                        Click="LoadImageProduct_Click" />
                                 <Button Name="ClearImageProduct"
                                         Content="Borrar imagen" 
                                         Width="100" Height="30" 
                                         FontSize="12" 
                                         Margin="16,0,0,0" 
                                         HorizontalAlignment="Left" 
-                                        VerticalAlignment="Bottom" />
+                                        VerticalAlignment="Bottom" 
+                                        Click="ClearImageProduct_Click"/>
                                 <Button Name="SaveProduct" 
                                         Background="{StaticResource DetailAddBackgroundButton}" 
                                         Foreground="White" 
@@ -131,8 +133,8 @@
                     </Grid.RowDefinitions>
 
                     <Label FontFamily="Segoe MDL2 Assets" Content="&#xE8EC;" FontSize="54" Grid.Column="0" Grid.RowSpan="2" Width="64" Height="64" Margin="0,10,156,6"/>
-                    <Label Name="DiscountNameLabel" Content="Descuento nuevo" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
-                    <Label Name="DescriptionNameLabel" Content="Descripción del descuento" Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Top" FontSize="8"/>
+                    <Label Name="DiscountNameLabel" Content="{Binding ElementName=CodeText, Path=Text}" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
+                    <Label Name="DescriptionNameLabel" Content="{Binding ElementName=DiscountText, Path=Text}" Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,60,0" VerticalAlignment="Top" FontSize="10"/>
                 </Grid>
                 <Grid>
                     <StackPanel>
@@ -176,8 +178,8 @@
                         </Grid.RowDefinitions>
 
                         <Image Name="UserPicLabel" Source="../../Resources/usuario.png" Grid.Column="0" Grid.RowSpan="2" Width="64" Height="64" Margin="0,10,156,6"/>
-                        <Label Name="UsernameLabel" Content="Usuario nuevo" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
-                        <Label Name="EmailLabel" Content="newuser@localhost" Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Top" FontSize="8"/>
+                        <Label Name="UsernameLabel" Content="{Binding ElementName=UsernameText, Path=Text}" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
+                        <Label Name="EmailLabel" Content="{Binding ElementName=EmailText, Path=Text}" Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,60,0" VerticalAlignment="Top" FontSize="10"/>
                     </Grid>
                     <Grid>
                         <StackPanel>
@@ -207,12 +209,14 @@
                                         Content="Cargar imagen" 
                                         Height="30" Width="100" 
                                         Margin="194,0,0,0" 
-                                        HorizontalAlignment="Left" />
+                                        HorizontalAlignment="Left"
+                                        Click="LoadImageUser_Click"/>
                                 <Button Name="ClearImageUser" 
                                         Content="Borrar imagen" 
                                         Height="30" Width="100" 
                                         Margin="16,0,0,0" 
-                                        HorizontalAlignment="Left" />
+                                        HorizontalAlignment="Left"
+                                        Click="ClearImageUser_Click"/>
                                 <Button Name="SaveUser" 
                                         Background="{StaticResource DetailAddBackgroundButton}" 
                                         Foreground="White" 
