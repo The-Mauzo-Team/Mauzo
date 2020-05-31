@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -36,15 +31,16 @@ namespace Desktop.Views.Dialogs
             window.Left = (screenWidth / 2) - (windowWidth / 2);
             window.Top = (screenHeight / 2) - (windowHeight / 2);
 
-            //Definimos un color de fondo
-
             //Creamos el grid con el mismo tamaño
             Grid grid = new Grid
             {
                 Width = window.Width,
                 Height = window.Height,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
+                //Definimos un color de fondo
+                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f7f7f7"))
+
             };
 
             // Definimos las filas del grid.
@@ -79,8 +75,10 @@ namespace Desktop.Views.Dialogs
                 VerticalAlignment = VerticalAlignment.Center,
                 Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1e88e5"))
             };
+
             Grid.SetRow(icono, 0);
             Grid.SetColumn(icono, 0);
+
             Thickness marginImage = new Thickness
             {
                 Left = 0,

@@ -36,7 +36,22 @@ namespace Desktop.Views.Windows
             this.Top = (screenHeight / 2) - (windowHeight / 2);
         }
 
+        // Hacemos el login si da click sobre el botón iniciar
         private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            LoginButton();
+        }
+
+        // Hacemos el login si da click al intro
+        private void bttnLogin_Enter(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                LoginButton();
+            }
+        }
+
+        private void LoginButton()
         {
             User user = new User();
             user.Username = UserBox.Text;
@@ -53,8 +68,8 @@ namespace Desktop.Views.Windows
                 //En caso de que haya expirado lanzamos una excepción y mostramos la ventana de error
                 Error error = new Error(ex.Message);
                 error.Show();
-            } 
-            catch(ServerException ex)
+            }
+            catch (ServerException ex)
             {
                 //En caso de que haya habido problemas con el servidor lanzamos una excepción y mostramos la ventana de error
                 Error error = new Error(ex.Message);
