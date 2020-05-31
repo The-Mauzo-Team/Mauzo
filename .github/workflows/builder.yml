@@ -42,4 +42,4 @@ jobs:
         AppxBundle: Never
         BuildMode: SideLoadOnly
         Configuration: Release
-        TargetPlatform: "Any CPU"
+        TargetPlatform: x64
