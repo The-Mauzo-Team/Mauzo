@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:DVC="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
         mc:Ignorable="d" Name="ManagerWindow"
         Title="Añadir elemento" Width="600" Height="435" ResizeMode="NoResize">
     <Window.Resources>
@@ -229,7 +230,13 @@
 
         <!-- Detail del formulario de informes. -->
         <Grid Name="InformsFormView" Visibility="Hidden" Grid.Column="1" Background="{StaticResource DetailBackgroundColor}">
-
+            <DVC:Chart Canvas.Top="80" Canvas.Left="30" BorderThickness="0,0,0,0" Name="mcChart" Background="{StaticResource DetailBackgroundColor}">
+                <DVC:Chart.Series>
+                    <DVC:BarSeries Title="Ventas por mes" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" />
+                    <DVC:BarSeries Title="Devoluciones por mes" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" />
+                    <DVC:BarSeries Title="Descuentos por mes" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" />
+                </DVC:Chart.Series>
+            </DVC:Chart>
         </Grid>
     </Grid>
 </Window>

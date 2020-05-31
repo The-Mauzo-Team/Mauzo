@@ -49,6 +49,14 @@ namespace Desktop.Views.Dialogs
                 ResizeMode = ResizeMode.NoResize
             };
 
+            //Centramos la ventana en la pantalla
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double windowWidth = root.Width;
+            double windowHeight = root.Height;
+            root.Left = (screenWidth / 2) - (windowWidth / 2);
+            root.Top = (screenHeight / 2) - (windowHeight / 2);
+
             // Definimos el grid.
             grid = new Grid() 
             {

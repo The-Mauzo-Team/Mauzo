@@ -59,6 +59,9 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetProjects.DataVisualization.Toolkit, Version=6.0.84.0, Culture=neutral, PublicKeyToken=79778c5f2eed289b, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetProjects.WpfToolkit.DataVisualization.6.0.84\lib\net40\DotNetProjects.DataVisualization.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=6.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.6.6.0\lib\net461\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
     </Reference>
