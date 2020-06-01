@@ -19,6 +19,11 @@ namespace Desktop.Views.Windows
     /// </summary>
     public partial class Manager : Window
     {
+
+        /// <summary>
+        /// Constructor que inicializa por defecto los componentes graficos 
+        /// a mostrar en esta ventana.
+        /// </summary>
         public Manager()
         {
             InitializeComponent();
@@ -45,7 +50,11 @@ namespace Desktop.Views.Windows
             InformLabel.Foreground = new SolidColorBrush(Colors.Black);
         }
 
-        // Botones del master
+        /// <summary>
+        /// Botón que cambia el detail al detail de product.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ProductButton_Click(object sender, RoutedEventArgs e)
         {
             ProductFormView.Visibility = Visibility.Visible;
@@ -66,6 +75,11 @@ namespace Desktop.Views.Windows
             InformLabel.Foreground = new SolidColorBrush(Colors.Black);
         }
 
+        /// <summary>
+        /// Botón que cambia el detail al detail de discounts.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DiscountButton_Click(object sender, RoutedEventArgs e)
         {
             ProductFormView.Visibility = Visibility.Hidden;
@@ -86,6 +100,11 @@ namespace Desktop.Views.Windows
             InformLabel.Foreground = new SolidColorBrush(Colors.Black);
         }
 
+        /// <summary>
+        /// Botón que cambia el detail al detail de usuarios.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
             ProductFormView.Visibility = Visibility.Hidden;
@@ -106,6 +125,14 @@ namespace Desktop.Views.Windows
             InformLabel.Foreground = new SolidColorBrush(Colors.Black);
         }
 
+        /// <summary>
+        /// Botón que cambia el detail al detail de informes.
+        /// 
+        /// En este caso generará tambien su respectivo informe,
+        /// consumiendo así tiempo en el servidor para generarlo.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void InformButton_Click(object sender, RoutedEventArgs e)
         {
             Warning warning = new Warning("Estas a punto de generar un informe, esta operacion va a bloquear la base de datos del servidor hasta que se complete la operación, impidiendo agregar ventas u otros elementos en el momento de generación. ¿Estás seguro de querer ejecutar la operación ahora mismo?", "");
@@ -113,7 +140,6 @@ namespace Desktop.Views.Windows
 
             warning.Acceptance += (o, i) =>
             {
-                // TODO: Añadir los datos del informe obtenido a la vista.
                 ProductFormView.Visibility = Visibility.Hidden;
                 DiscountFormView.Visibility = Visibility.Hidden;
                 UserFormView.Visibility = Visibility.Hidden;
@@ -180,7 +206,12 @@ namespace Desktop.Views.Windows
             };
         }
 
-        // Botones del detail correspondientes a guardar elementos.
+        /// <summary>
+        /// Botón que lanza una petición al servidor para que guarde
+        /// el objeto de producto, a traves de la interfaz RESTful.
+        /// </summary>
+        /// <param name="sender">Objeto pasado por parametro</param>
+        /// <param name="e">Evento pasado por parametro</param>
         private void SaveProduct_Click(object sender, RoutedEventArgs e)
         {
             Product product = new Product
@@ -231,6 +262,12 @@ namespace Desktop.Views.Windows
             }
         }
 
+        /// <summary>
+        /// Botón que lanza una petición al servidor para que guarde
+        /// el objeto de documento, a traves de la interfaz RESTful.
+        /// </summary>
+        /// <param name="sender">Objeto pasado por parametro</param>
+        /// <param name="e">Evento pasado por parametro</param>
         private void SaveDiscounts_Click(object sender, RoutedEventArgs e)
         {
             Discount discount = new Discount
@@ -279,6 +316,12 @@ namespace Desktop.Views.Windows
             }
         }
 
+        /// <summary>
+        /// Botón que lanza una petición al servidor para que guarde
+        /// el objeto de usuario, a traves de la interfaz RESTful.
+        /// </summary>
+        /// <param name="sender">Objeto pasado por parametro</param>
+        /// <param name="e">Evento pasado por parametro</param>
         private void SaveUser_Click(object sender, RoutedEventArgs e)
         {
             User user = new User
@@ -335,11 +378,21 @@ namespace Desktop.Views.Windows
 
         }
 
+        /// <summary>
+        /// Botón que permite borrar una imagen para el producto.
+        /// </summary>
+        /// <param name="sender">Objeto pasado por parametro</param>
+        /// <param name="e">Evento pasado por parametro</param>
         private void ClearImageProduct_Click(object sender, RoutedEventArgs e)
         {
             ProdPicLabel.Source = null;
         }
 
+        /// <summary>
+        /// Botón que permite añadir una imagen para el producto.
+        /// </summary>
+        /// <param name="sender">Objeto pasado por parametro</param>
+        /// <param name="e">Evento pasado por parametro</param>
         private void LoadImageProduct_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog
@@ -359,6 +412,11 @@ namespace Desktop.Views.Windows
             }
         }
 
+        /// <summary>
+        /// Botón que permite añadir una imagen para el usuario.
+        /// </summary>
+        /// <param name="sender">Objeto pasado por parametro</param>
+        /// <param name="e">Evento pasado por parametro</param>
         private void LoadImageUser_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog
@@ -378,11 +436,21 @@ namespace Desktop.Views.Windows
             }
         }
 
+        /// <summary>
+        /// Botón que permite borrar una imagen para el usuario.
+        /// </summary>
+        /// <param name="sender">Objeto pasado por parametro</param>
+        /// <param name="e">Evento pasado por parametro</param>
         private void ClearImageUser_Click(object sender, RoutedEventArgs e)
         {
             UserPicLabel.Source = null;
         }
 
+        /// <summary>
+        /// Utilidad para convertir un BitmapImage a un Bitmap
+        /// </summary>
+        /// <param name="sender">Objeto pasado por parametro</param>
+        /// <param name="e">Evento pasado por parametro</param>
         private Bitmap BitmapImage2Bitmap(ImageSource image)
         {
             Bitmap result = null;
