@@ -1,4 +1,5 @@
-﻿using Desktop.Views.Dialogs;
+﻿using Desktop.Templates;
+using Desktop.Views.Dialogs;
 using Desktop.Views.Windows;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,9 @@ namespace Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
+        Dictionary<Sale, bool> history = new Dictionary<Sale, bool>();
+        ContentPresenter conForm;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,18 +40,44 @@ namespace Desktop
             manager.Show();
         }
 
+        private void Button_Update(object sender, RoutedEventArgs e)
+        {
+            Manager manager = new Manager();
+            manager.Show();
+        }
+
         private void Button_New(object sender, RoutedEventArgs e)
         {
-            ContentPresenter content = new ContentPresenter();
-            content.Content = "Nueva Venta";
-            content.ContentTemplate = (DataTemplate)Resources["SaleMenuItem"];
+            ContentPresenter conItem = new ContentPresenter();
+            conItem.Content = "Nueva Venta";
+            conItem.ContentTemplate = (DataTemplate)Resources["EditMenuItem"];
 
-            ActivityList.Items.Add(content);
+            ActivityList.Items.Add(conItem);
+
+            // Cambiar selección.
+            int lastPosition = ActivityList.Items.Count - 1;
+            ActivityList.SelectedItem = ActivityList.Items.GetItemAt(lastPosition);
+
+            // Cambiar formulario
+            FormGrid.Children.Remove(conForm);
+            conForm = new ContentPresenter();
+            conForm.ContentTemplate = (DataTemplate)Resources["SaleForm"];
+            FormGrid.Children.Add(conForm);
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Mostrar formulario correspondiente.
+            // Cambiar formulario
+            FormGrid.Children.Remove(conForm);
+            conForm = new ContentPresenter();
+            conForm.ContentTemplate = (DataTemplate)Resources["SaleForm"];
+
+            ContentPresenter conAux = (ActivityList.SelectedItem as ContentPresenter);
+
+            if (conAux.ContentTemplate != (DataTemplate)Resources["EditMenuItem"]) // TODO
+                conForm.IsEnabled = false; // Al cambiar de vista nunca deja modificar.
+
+            FormGrid.Children.Add(conForm);
         }
 
         private void ContextRefund_Click(object sender, RoutedEventArgs e)
@@ -72,6 +102,15 @@ namespace Desktop
 
                 int lastPosition = ActivityList.Items.Count - 1;
                 ActivityList.SelectedItem = ActivityList.Items.GetItemAt(lastPosition);
+
+                // Cambiar formulario.
+                FormGrid.Children.Remove(conForm);
+                conForm = new ContentPresenter
+                {
+                    IsEnabled = false,
+                    ContentTemplate = (DataTemplate)Resources["SaleForm"]
+                };
+                FormGrid.Children.Add(conForm);
             };
         }
 
@@ -98,6 +137,29 @@ namespace Desktop
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             (sender as TextBox).SelectAll();
+        }
+
+        private void SaleButton(object sender, RoutedEventArgs e)
+        {
+            ContentPresenter conAux = (ActivityList.SelectedItem as ContentPresenter);
+
+            conAux.ContentTemplate = (DataTemplate)Resources["SaleMenuItem"];
+            Console.WriteLine("Antiguo elemento seleccionado: " + conAux.Content);
+
+            // Clonando el objeto original.
+            string cloneXaml = XamlWriter.Save(conAux);
+            StringReader stringReader = new StringReader(cloneXaml);
+            XmlReader xmlReader = XmlReader.Create(stringReader);
+            ContentPresenter newContent = (ContentPresenter)XamlReader.Load(xmlReader);
+
+            Console.WriteLine("Elemento clonado: " + newContent.Content);
+            ActivityList.Items.Add(newContent);
+
+            // Cambiar selección.
+            int lastPosition = ActivityList.Items.Count - 1;
+            ActivityList.SelectedItem = ActivityList.Items.GetItemAt(lastPosition);
+
+            ActivityList.Items.Remove(conAux);
         }
     }
 }
