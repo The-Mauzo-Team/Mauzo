@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -57,7 +54,13 @@ namespace Desktop.Templates
 
                 if (prodPicArr != null)
                 {
-                    auxPic = Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(prodPicArr, typeof(byte[])));
+                    Bitmap auxBits = new Bitmap(prodPicArr);
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        auxBits.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        auxPic = Convert.ToBase64String(ms.ToArray());
+                    }
                 }
 
                 return auxPic;
