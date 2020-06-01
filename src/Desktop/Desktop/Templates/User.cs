@@ -103,8 +103,15 @@ namespace Desktop.Templates
             get {
                 string auxPic = null;
 
-                if (userPicArr != null) { 
-                    auxPic = Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(userPicArr, typeof(byte[])));
+                if (userPicArr != null)
+                {
+                    Bitmap auxBits = new Bitmap(userPicArr);
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        auxBits.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        auxPic = Convert.ToBase64String(ms.ToArray());
+                    }
                 }
 
                 return auxPic;

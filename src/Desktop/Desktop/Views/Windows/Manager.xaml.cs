@@ -355,7 +355,7 @@ namespace Desktop.Views.Windows
             // Recojemos la imagen obtenida y la cargamos a la interfaz grafica.
             if (result == true)
             {
-                UserPicLabel.Source = new BitmapImage(new Uri(dlg.FileName));
+                ProdPicLabel.Source = new BitmapImage(new Uri(dlg.FileName));
             }
         }
 
