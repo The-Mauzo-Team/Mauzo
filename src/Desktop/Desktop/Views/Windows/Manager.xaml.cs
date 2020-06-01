@@ -188,7 +188,8 @@ namespace Desktop.Views.Windows
                 ProdName = ProductName.Text,
                 ProdCode = ProductCode.Text,
                 ProdDesc = ProductDescription.Text,
-                ProdPrice = float.Parse(ProductPrize.Text)
+                ProdPrice = float.Parse(ProductPrize.Text),
+                ProdPicArr = BitmapImage2Bitmap(ProdPicLabel.Source)
             };
 
             try
@@ -196,7 +197,7 @@ namespace Desktop.Views.Windows
                 ProductsConn productsConn = new ProductsConn();
                 productsConn.Add(product);
 
-                Info infoWindow = new Info("Se ha guardado correctamente, en el servidor, el producto" + product.ProdName);
+                Info infoWindow = new Info("Se ha guardado correctamente, en el servidor, el producto " + product.ProdName);
                 infoWindow.Show();
             }
             catch (AdminForbiddenException ex)
@@ -244,7 +245,7 @@ namespace Desktop.Views.Windows
                 DiscountsConn discountsConn = new DiscountsConn();
                 discountsConn.Add(discount);
 
-                Info infoWindow = new Info("Se ha guardado correctamente, en el servidor, el descuento" + discount.Code);
+                Info infoWindow = new Info("Se ha guardado correctamente, en el servidor, el descuento " + discount.Code);
                 infoWindow.Show();
             }
             catch (AdminForbiddenException ex)
