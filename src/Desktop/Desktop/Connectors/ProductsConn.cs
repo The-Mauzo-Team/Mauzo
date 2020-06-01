@@ -78,7 +78,8 @@ namespace Desktop.Connectors
             string jsonRequest = JsonConvert.SerializeObject(new
             {
                 prodName = product.ProdName,
-                prodprice = product.ProdPrice,
+                prodCode = product.ProdCode,
+                prodPrice = product.ProdPrice,
                 prodDesc = product.ProdDesc,
                 prodPic = product.ProdPic
             });
@@ -134,6 +135,7 @@ namespace Desktop.Connectors
             string jsonRequest = JsonConvert.SerializeObject(new
             {
                 prodName = product.ProdName,
+                prodCode = product.ProdCode,
                 prodprice = product.ProdPrice,
                 prodDesc = product.ProdDesc,
                 prodPic = product.ProdPic
@@ -166,8 +168,6 @@ namespace Desktop.Connectors
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
                 LoginConn.CalculateException(response, "No se ha encontrado el producto");
-
-
         }
     }
 }
