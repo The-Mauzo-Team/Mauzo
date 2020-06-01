@@ -25,7 +25,6 @@ using Desktop.Properties;
 using Desktop.Templates;
 
 using System;
-using System.Net;
 using System.Collections.Generic;
 
 using RestSharp;
@@ -35,13 +34,13 @@ namespace Desktop.Connectors
 {
     class UsersConn
     {
-        private string MauzoUrl = Settings.Default.MauzoServer + "/api/users";
-        private string token;
+        private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/users";
+        private string token = LoginConn.Token;
 
-        public void AddUser(User user) 
+        public void Add(User user) 
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/");
+            Uri baseUrl = new Uri(mauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.POST);
 
@@ -49,7 +48,7 @@ namespace Desktop.Connectors
             request.AddHeader("Authorization", token);
 
             // Convertimos el usuario a json y lo incorporamos a la petición.
-            String jsonRequest = JsonConvert.SerializeObject(new { 
+            string jsonRequest = JsonConvert.SerializeObject(new { 
                 username = user.Username,
                 firstname = user.Firstname,
                 lastname = user.Lastname,
@@ -59,6 +58,7 @@ namespace Desktop.Connectors
                 userPic = user.UserPic
             });
 
+            // Se añade el json al cuerpo de la petición.
             request.AddJsonBody(jsonRequest);
 
             // Ejecutamos la petición.
@@ -66,39 +66,13 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
-                    throw new Exception("No se ha encontrado el usuario.");
-                }
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
-                {
-                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
-                    throw new Exception("La petición realizada no es valida.");
-                }
-                else if (response.StatusCode == HttpStatusCode.Forbidden)
-                {
-                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new Exception("No tienes autorización a realizar esta operación.");
-                }
-                else
-                {
-                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
-                    // Procesamos la respuesta y obtenemos el mensaje.
-                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                    string message = j["message"].ToString();
-
-                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                    throw new Exception("Se ha producido un error: " + message);
-                }
-            }
+                LoginConn.CalculateException(response, "No se ha encontrado el usuario");
         }
 
-        public User GetUser(int Id) 
+        public User Get(int Id) 
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.GET);
 
@@ -113,86 +87,47 @@ namespace Desktop.Connectors
 
             // Procesamos el objeto de usuario.
             if (response.IsSuccessful)
-            {
                 user = JsonConvert.DeserializeObject<User>(response.Content);
-            } 
             else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
-                    throw new Exception("No se ha encontrado el usuario.");
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
-                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
-                    throw new Exception("La petición realizada no es valida.");
-                else if (response.StatusCode == HttpStatusCode.Forbidden)
-                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new Exception("No tienes autorización a realizar esta operación.");
-                else
-                {
-                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
-                    // Procesamos la respuesta y obtenemos el mensaje.
-                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                    string message = j["message"].ToString();
-
-                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                    throw new Exception("Se ha producido un error: " + message);
-                }
-            }
+                LoginConn.CalculateException(response, "No se ha encontrado el usuario");
 
             // Devolvemos el objeto.
             return user;
         }
 
-        public List<User> GetUsersList()
+        public List<User> GetList
         {
-            // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/");
-            IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest(Method.GET);
-
-            // Agregamos la autorización de token en el header.
-            request.AddHeader("Authorization", token);
-
-            // Ejecutamos la petición.
-            IRestResponse response = client.Execute(request);
-
-            // Inicializamos la lista de usuarios.
-            List<User> users = null;
-
-            // Procesamos el objeto de usuario.
-            if (response.IsSuccessful)
-                users = JsonConvert.DeserializeObject<List<User>>(response.Content);
-            else
+            get
             {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
-                    throw new Exception("No se ha encontrado el usuario.");
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
-                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
-                    throw new Exception("La petición realizada no es valida.");
-                else if (response.StatusCode == HttpStatusCode.Forbidden)
-                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new Exception("No tienes autorización a realizar esta operación.");
+                // Iniciamos la conexión.
+                Uri baseUrl = new Uri(mauzoUrl + "/");
+                IRestClient client = new RestClient(baseUrl);
+                IRestRequest request = new RestRequest(Method.GET);
+
+                // Agregamos la autorización de token en el header.
+                request.AddHeader("Authorization", token);
+
+                // Ejecutamos la petición.
+                IRestResponse response = client.Execute(request);
+
+                // Inicializamos la lista de usuarios.
+                List<User> users = null;
+
+                // Procesamos el objeto de usuario.
+                if (response.IsSuccessful)
+                    users = JsonConvert.DeserializeObject<List<User>>(response.Content);
                 else
-                {
-                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
-                    // Procesamos la respuesta y obtenemos el mensaje.
-                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                    string message = j["message"].ToString();
+                    LoginConn.CalculateException(response, "No se ha encontrado el usuario");
 
-                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                    throw new Exception("Se ha producido un error: " + message);
-                }
+                // Devolvemos el objeto.
+                return users;
             }
-
-            // Devolvemos el objeto.
-            return users;
         }
 
-        public void ModifyUser(User user)
+        public void Modify(User user)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + user.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + user.Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.PUT);
 
@@ -200,7 +135,7 @@ namespace Desktop.Connectors
             request.AddHeader("Authorization", token);
 
             // Convertimos el usuario a json y lo incorporamos a la petición.
-            String jsonRequest = JsonConvert.SerializeObject(new
+            string jsonRequest = JsonConvert.SerializeObject(new
             {
                 username = user.Username,
                 firstname = user.Firstname,
@@ -211,6 +146,7 @@ namespace Desktop.Connectors
                 userPic = user.UserPic
             });
 
+            // Se añade el json al cuerpo de la petición.
             request.AddJsonBody(jsonRequest);
 
             // Ejecutamos la petición.
@@ -218,33 +154,13 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
-                    throw new Exception("No se ha encontrado el usuario.");
-                else if (response.StatusCode == HttpStatusCode.BadRequest) 
-                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
-                    throw new Exception("La petición realizada no es valida.");
-                else if (response.StatusCode == HttpStatusCode.Forbidden)
-                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new Exception("No tienes autorización a realizar esta operación.");
-                else
-                {
-                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
-                    // Procesamos la respuesta y obtenemos el mensaje.
-                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                    string message = j["message"].ToString();
-
-                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                    throw new Exception("Se ha producido un error: " + message);
-                }
-            }
+                LoginConn.CalculateException(response, "No se ha encontrado el usuario");
         }
 
-        public void DeleteUser(User user)
+        public void Delete(User user)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(MauzoUrl + "/" + user.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + user.Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.DELETE);
 
@@ -256,27 +172,7 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                    // En caso de que no se haya encontrado el usuario, lanzamos un mensaje personalizado.
-                    throw new Exception("No se ha encontrado el usuario.");
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
-                    // En caso de que la petición no sea valida, lanzamos un mensaje personalizado.
-                    throw new Exception("La petición realizada no es valida.");
-                else if (response.StatusCode == HttpStatusCode.Forbidden)
-                    // En caso de que el usuario no tenga autorización, lanzamos un mensaje personalizado.
-                    throw new Exception("No tienes autorización a realizar esta operación.");
-                else
-                {
-                    // En caso de que se haya producido un error en el servidor, mostramos el mensaje en el cliente.
-                    // Procesamos la respuesta y obtenemos el mensaje.
-                    dynamic j = JsonConvert.DeserializeObject<dynamic>(response.Content);
-                    string message = j["message"].ToString();
-
-                    // Lanzamos una excepción con el mensaje que ha dado el servidor.
-                    throw new Exception("Se ha producido un error: " + message);
-                }
-            }
+                LoginConn.CalculateException(response, "No se ha encontrado el usuario");
         }
     }
 }

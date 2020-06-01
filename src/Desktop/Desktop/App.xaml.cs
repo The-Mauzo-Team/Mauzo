@@ -1,10 +1,5 @@
-﻿using Desktop.Views.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Desktop.Connectors;
+using Desktop.Views.Windows;
 using System.Windows;
 
 namespace Desktop
@@ -14,10 +9,22 @@ namespace Desktop
     /// </summary>
     public partial class App : Application
     {
+        private static MainWindow window = null;
+
         public App()
         {
-            Info info = new Info("afglkFSNg");
-            
+            Login login = new Login();
+            login.Show();
+
+            login.Closing += (o, i) =>
+            {
+                if (LoginConn.User != null && window == null)
+                {
+                    window = new MainWindow();
+                    window.Show();
+                }
+
+            };
         }
     }
 }

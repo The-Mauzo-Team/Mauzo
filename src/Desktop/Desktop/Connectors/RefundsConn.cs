@@ -21,80 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using Desktop.Properties;
-using Desktop.Templates;
-
 using System;
 using System.Collections.Generic;
-
-using RestSharp;
-using Newtonsoft.Json;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Desktop.Connectors
 {
-    class SalesConn
+    class RefundsConn
     {
-        private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/sales";
+        private string mauzoUrl = Settings.Default.MauzoServer + "/api/refunds";
         private string token = LoginConn.Token;
 
-        public void Add(Sale sale)
+        public List<Refund> List
         {
-            // Iniciamos la conexión.
-            Uri baseUrl = new Uri(mauzoUrl + "/");
-            IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest(Method.POST);
-
-            // Agregamos la autorización de token en el header.
-            request.AddHeader("Authorization", token);
-
-            // Convertimos la venta a json y lo incorporamos a la petición.
-            string jsonRequest = JsonConvert.SerializeObject(new { 
-                stampRef = sale.StampRef,
-                userId = sale.UserId,
-                prodId = sale.ProdId,
-                discId = sale.DiscId
-            });
-
-            // Se añade el json al cuerpo de la petición.
-            request.AddJsonBody(jsonRequest);
-
-            // Ejecutamos la petición.
-            IRestResponse response = client.Execute(request);
-
-            // Procesamos la respuesta de la petición.
-            if (!response.IsSuccessful)
-                LoginConn.CalculateException(response, "No se ha encontrado la venta");
-        }
-
-        public Sale Get(int Id) 
-        {
-            // Iniciamos la conexión.
-            Uri baseUrl = new Uri(mauzoUrl + "/" + Id);
-            IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest(Method.GET);
-
-            // Agregamos la autorización de token en el header.
-            request.AddHeader("Authorization", token);
-
-            // Ejecutamos la petición.
-            IRestResponse response = client.Execute(request);
-
-            // Inicializamos la venta
-            Sale sale = null;
-
-            // Procesamos el objeto de la venta
-            if (response.IsSuccessful)
-                sale = JsonConvert.DeserializeObject<Sale>(response.Content);
-            else
-                LoginConn.CalculateException(response, "No se ha encontrado la venta");
-
-            // Devolvemos el objeto
-            return sale;
-        }
-
-        public List<Sale> GetList
-        {
-            get 
+            get
             {
                 // Iniciamos la conexión.
                 Uri baseUrl = new Uri(mauzoUrl + "/");
@@ -107,37 +49,38 @@ namespace Desktop.Connectors
                 // Ejecutamos la petición.
                 IRestResponse response = client.Execute(request);
 
-                // Inicializamos la lista de ventas
-                List<Sale> sales = null;
+                // Inicializamos la lista de devoluciones
+                List<Refund> refunds = null;
 
-                // Procesamos el objeto de venta
+                // Procesamos el objeto de la devolución
                 if (response.IsSuccessful)
-                    sales = JsonConvert.DeserializeObject<List<Sale>>(response.Content);
+                    refunds = JsonConvert.DeserializeObject<List<Refund>>(response.Content);
                 else
-                    LoginConn.CalculateException(response, "No se ha encontrado la venta");
+                    LoginConn.CalculateException(response, "No se ha encontrado la devolución");
 
                 // Devolvemos el objeto
-                return sales;
+                return refunds;
             }
         }
 
-        public void Modify(Sale sale)
+        public void Add(Refund refund)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(mauzoUrl + "/" + sale.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/");
             IRestClient client = new RestClient(baseUrl);
-            IRestRequest request = new RestRequest(Method.PUT);
+            IRestRequest request = new RestRequest(Method.POST);
 
             // Agregamos la autorización de token en el header.
             request.AddHeader("Authorization", token);
 
-            // Convertimos la venta a json y lo incorporamos a la petición.
+            // Convertimos la devolución a json y lo incorporamos a la petición.
             string jsonRequest = JsonConvert.SerializeObject(new
             {
-                stampRef = sale.StampRef,
-                userId = sale.UserId,
-                prodId = sale.ProdId,
-                discId = sale.DiscId
+                
+                dateRefund = refund.DateRefund,
+                userId = refund.UserId,
+                saleId = refund.SaleId
+
             });
 
             // Se añade el json al cuerpo de la petición.
@@ -148,13 +91,68 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-                LoginConn.CalculateException(response, "No se ha encontrado la venta");
+                LoginConn.CalculateException(response, "No se ha encontrado la devolución");
         }
 
-        public void Delete(Sale sale)
+        public Refund Get(int id)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(mauzoUrl + "/" + sale.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + id);
+            IRestClient client = new RestClient(baseUrl);
+            IRestRequest request = new RestRequest(Method.GET);
+
+            // Agregamos la autorización de token en el header.
+            request.AddHeader("Authorization", token);
+
+            // Ejecutamos la petición.
+            IRestResponse response = client.Execute(request);
+
+            // Inicializamos la devolución
+            Refund refund = null;
+
+            // Procesamos el objeto de la devolución
+            if (response.IsSuccessful)
+                refund = JsonConvert.DeserializeObject<Refund>(response.Content);
+            else
+                LoginConn.CalculateException(response, "No se ha encontrado la devolución.");
+            
+            // Devolvemos el objeto
+            return refund;
+        }
+
+        public void Modify(Refund refund)
+        {
+            // Iniciamos la conexión.
+            Uri baseUrl = new Uri(mauzoUrl + "/" + refund);
+            IRestClient client = new RestClient(baseUrl);
+            IRestRequest request = new RestRequest(Method.PUT);
+
+            // Agregamos la autorización de token en el header.
+            request.AddHeader("Authorization", token);
+
+            // Convertimos la devolución a json y lo incorporamos a la petición.
+            string jsonRequest = JsonConvert.SerializeObject(new
+            {
+                dateRefund = refund.DateRefund,
+                userId = refund.UserId,
+                saleId = refund.SaleId
+            });
+
+            // Se añade el json al cuerpo de la petición.
+            request.AddJsonBody(jsonRequest);
+
+            // Ejecutamos la petición.
+            IRestResponse response = client.Execute(request);
+
+            // Procesamos la respuesta de la petición.
+            if (!response.IsSuccessful)
+                LoginConn.CalculateException(response, "No se ha encontrado la devolución");
+        }
+
+        public void Delete(Refund refund)
+        {
+            // Iniciamos la conexión.
+            Uri baseUrl = new Uri(mauzoUrl + "/" + refund.Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.DELETE);
 
@@ -166,7 +164,8 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-                LoginConn.CalculateException(response, "No se ha encontrado la venta");
+                LoginConn.CalculateException(response, "No se ha encontrado la devolución");
         }
+
     }
 }

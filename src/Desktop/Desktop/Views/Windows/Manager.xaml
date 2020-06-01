@@ -3,10 +3,244 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Desktop.Views.Windows"
-        mc:Ignorable="d"
-        Title="Margin" Height="450" Width="800">
+        xmlns:DVC="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
+        mc:Ignorable="d" Name="ManagerWindow"
+        Title="Añadir elemento" Width="600" Height="435" ResizeMode="NoResize">
+    <Window.Resources>
+        <SolidColorBrush x:Key="DetailAddBackgroundButton" Color="#0078D7" />
+        <SolidColorBrush x:Key="DetailBackgroundColor" Color="#F6F6F6" />
+    </Window.Resources>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <!-- Master -->
+        <Grid Name="MasterButtons" HorizontalAlignment="Left" Grid.Column="0" VerticalAlignment="Top" Width="100">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="101"/>
+                <RowDefinition Height="101"/>
+                <RowDefinition Height="101"/>
+                <RowDefinition Height="101"/>
+            </Grid.RowDefinitions>
+
+            <Button Name="ProductButton" Grid.Row="0" Background="Transparent" BorderThickness="0,0,0,0" Click="ProductButton_Click">
+                <StackPanel>
+                    <Label Name="ProductIcon" FontSize="32" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,9,0,0" Content="&#xE719;" />
+                    <Label Name="ProductLabel" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Productos" Margin="0,0,0,8"/>
+                </StackPanel>
+            </Button>
+            <Button Name="DiscountButton" Grid.Row="1" Background="Transparent" BorderThickness="0,0,0,0" Click="DiscountButton_Click">
+                <StackPanel>
+                    <Label Name="DiscountIcon" FontSize="32" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,9,0,0" Content="&#xE8EC;" />
+                    <Label Name="DiscountLabel" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Descuentos" Margin="0,0,0,8"/>
+                </StackPanel>
+            </Button>
+            <Button Name="UserButton" Grid.Row="2" Background="Transparent" BorderThickness="0,0,0,0" Click="UserButton_Click">
+                <StackPanel>
+                    <Label Name="UserIcon" FontSize="32" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,9,0,0" Content="&#xE77B;" />
+                    <Label Name="UserLabel" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Usuarios" Margin="0,0,0,8"/>
+                </StackPanel>
+            </Button>
+            <Button Name="InformButton" Grid.Row="3" Background="Transparent" BorderThickness="0,0,0,0" Click="InformButton_Click">
+                <StackPanel>
+                    <Label Name="InformIcon" FontSize="32" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,9,0,0" Content="&#xF0E3;" />
+                    <Label Name="InformLabel" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Informes" Margin="0,0,0,8"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- Detail del formulario de producto. -->
+        <Grid Name="ProductFormView" Visibility="Visible" Grid.Column="1" Background="{StaticResource DetailBackgroundColor}">
+            <ScrollViewer VerticalAlignment="Bottom">
+                <StackPanel CanVerticallyScroll="True" Height="470">
+                    <Grid Height="80" VerticalAlignment="Top" Margin="15,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <Image Name="ProdPicLabel" Source="../../Resources/usuario.png" Grid.Column="0" Grid.RowSpan="2" Width="64" Height="64" Margin="0,10,156,6"/>
+                        <Label Name="ProdNameLabel" Content="{Binding ElementName=ProductName, Path=Text}" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
+                        <Label Name="ProdDescriptionLabel" Content="{Binding ElementName=ProductDescription, Path=Text}" Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,60,0" VerticalAlignment="Top" FontSize="10"/>
+                    </Grid>
+                    <Grid Margin="0,0,0,0" Height="440">
+                        <StackPanel>
+                            <Label Content="Nombre" Margin="15,15,0,0" />
+                            <TextBox Name="ProductName" HorizontalAlignment="Left" Height="23" Margin="15,0,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="440" />
+
+                            <Label Content="Codigo de producto" Margin="15,15,0,0" />
+                            <TextBox Name="ProductCode" HorizontalAlignment="Left" Height="23" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" />
+
+                            <Label Content="Descripción" Margin="15,15,0,0" />
+                            <TextBox Name="ProductDescription" HorizontalAlignment="Left" Height="92" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" VerticalScrollBarVisibility="Auto" />
+
+                            <Label Content="Precio" Margin="15,15,0,0" />
+                            <TextBox Name="ProductPrize" HorizontalAlignment="Left" Height="23" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" />
+
+                            <Grid Margin="0,15,0,0" Width="477">
+                                <Button Name="LoadImageProduct" 
+                                        Content="Cargar imagen" 
+                                        Width="100" Height="30" 
+                                        FontSize="12" 
+                                        Margin="194,0,0,0" 
+                                        HorizontalAlignment="Left" 
+                                        VerticalAlignment="Bottom"
+                                        Click="LoadImageProduct_Click" />
+                                <Button Name="ClearImageProduct"
+                                        Content="Borrar imagen" 
+                                        Width="100" Height="30" 
+                                        FontSize="12" 
+                                        Margin="16,0,0,0" 
+                                        HorizontalAlignment="Left" 
+                                        VerticalAlignment="Bottom" 
+                                        Click="ClearImageProduct_Click"/>
+                                <Button Name="SaveProduct" 
+                                        Background="{StaticResource DetailAddBackgroundButton}" 
+                                        Foreground="White" 
+                                        Content="Añadir producto" 
+                                        Width="100" Height="30" 
+                                        FontSize="12" 
+                                        Margin="356,0,0,0" 
+                                        HorizontalAlignment="Left" 
+                                        VerticalAlignment="Bottom" 
+                                        Click="SaveProduct_Click" />
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Detail del formulario de descuento. -->
+        <Grid Name="DiscountFormView" Visibility="Hidden" Grid.Column="1" Background="{StaticResource DetailBackgroundColor}">
+            <StackPanel>
+                <Grid Height="80" VerticalAlignment="Top" Margin="15,0,27,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Label FontFamily="Segoe MDL2 Assets" Content="&#xE8EC;" FontSize="54" Grid.Column="0" Grid.RowSpan="2" Width="64" Height="64" Margin="0,10,156,6"/>
+                    <Label Name="DiscountNameLabel" Content="{Binding ElementName=CodeText, Path=Text}" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
+                    <Label Name="DescriptionNameLabel" Content="{Binding ElementName=DiscountText, Path=Text}" Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,60,0" VerticalAlignment="Top" FontSize="10"/>
+                </Grid>
+                <Grid>
+                    <StackPanel>
+                        <Label Content="Código" Margin="15,0,15,0"/>
+                        <TextBox  Name="CodeText" HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" TextWrapping="Wrap" VerticalAlignment="Top" Width="440"/>
+
+                        <Label Content="Descripcion" Margin="15,0,15,0"/>
+                        <TextBox Name="DiscountText" HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" TextWrapping="Wrap" VerticalAlignment="Top" Width="440"/>
+
+                        <Label Content="Porcentaje de descuento" Margin="15,0,15,0"/>
+                        <TextBox Name="PriceDiscountText" HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" TextWrapping="Wrap" VerticalAlignment="Top" Width="440"/>
+
+                        <Grid>
+                            <Button Name="SaveDiscounts" 
+                                    Background="{StaticResource DetailAddBackgroundButton}" 
+                                    Foreground="White" 
+                                    Content="Añadir descuento" 
+                                    Width="100" Height="30" 
+                                    Margin="356,0,0,0" 
+                                    Click="SaveDiscounts_Click" 
+                                    HorizontalAlignment="Left" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+
+        <!-- Detail del formulario de usuario. -->
+        <Grid Name="UserFormView" Visibility="Hidden" Grid.Column="1" Background="{StaticResource DetailBackgroundColor}">
+            <ScrollViewer VerticalAlignment="Bottom">
+                <StackPanel CanVerticallyScroll="True" Height="420">
+                    <Grid Height="80" VerticalAlignment="Top" Margin="15,0,27,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <Image Name="UserPicLabel" Source="../../Resources/usuario.png" Grid.Column="0" Grid.RowSpan="2" Width="64" Height="64" Margin="0,10,156,6"/>
+                        <Label Name="UsernameLabel" Content="{Binding ElementName=UsernameText, Path=Text}" Grid.Row="0" Grid.ColumnSpan="2" Margin="79,0,0,0" VerticalAlignment="Bottom"/>
+                        <Label Name="EmailLabel" Content="{Binding ElementName=EmailText, Path=Text}" Grid.Row="1" Grid.ColumnSpan="2" Margin="79,0,60,0" VerticalAlignment="Top" FontSize="10"/>
+                    </Grid>
+                    <Grid>
+                        <StackPanel>
+                            <Grid Margin="15,0,0,0">
+                                <Label Content="Nombre" Margin="0,0,270,0" />
+                                <Label Content="Apellidos" Margin="233,0,38,0" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,15">
+                                <TextBox Name="FirstnameText" HorizontalAlignment="Left" Height="23" Margin="15,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="210"/>
+                                <TextBox Name="LastnameText" HorizontalAlignment="Left" Height="23" Margin="246,0,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="210"/>
+                            </Grid>
+
+                            <Label Content="Usuario" Margin="15,0,15,0"/>
+                            <TextBox  Name="UsernameText" HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" TextWrapping="Wrap" VerticalAlignment="Top" Width="440"/>
+
+                            <Label Content="Email" Margin="15,0,15,0"/>
+                            <TextBox Name="EmailText" HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" TextWrapping="Wrap" VerticalAlignment="Top" Width="440"/>
+
+                            <Label Content="Contraseña" Margin="15,0,15,0" />
+                            <PasswordBox Name="PasswordText" HorizontalAlignment="Left" Height="23" Margin="15,0,0,15" VerticalAlignment="Top" Width="440"/>
+
+                            <CheckBox Name="isAdmin" Content="Este usuario es administrador" Margin="15,0,15,15"/>
+
+                            <Grid>
+                                <Button Name="LoadImageUser" 
+                                        Content="Cargar imagen" 
+                                        Height="30" Width="100" 
+                                        Margin="194,0,0,0" 
+                                        HorizontalAlignment="Left"
+                                        Click="LoadImageUser_Click"/>
+                                <Button Name="ClearImageUser" 
+                                        Content="Borrar imagen" 
+                                        Height="30" Width="100" 
+                                        Margin="16,0,0,0" 
+                                        HorizontalAlignment="Left"
+                                        Click="ClearImageUser_Click"/>
+                                <Button Name="SaveUser" 
+                                        Background="{StaticResource DetailAddBackgroundButton}" 
+                                        Foreground="White" 
+                                        Content="Añadir usuario" 
+                                        Height="30" Width="100" 
+                                        Margin="356,0,0,0" 
+                                        HorizontalAlignment="Left" 
+                                        Click="SaveUser_Click" />
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Detail del formulario de informes. -->
+        <Grid Name="InformsFormView" Visibility="Hidden" Grid.Column="1" Background="{StaticResource DetailBackgroundColor}">
+            <DVC:Chart Canvas.Top="80" Canvas.Left="30" BorderThickness="0,0,0,0" Name="mcChart" Background="{StaticResource DetailBackgroundColor}">
+                <DVC:Chart.Series>
+                    <DVC:BarSeries Title="Ventas por mes" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" />
+                    <DVC:BarSeries Title="Devoluciones por mes" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" />
+                    <DVC:BarSeries Title="Descuentos por mes" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" />
+                </DVC:Chart.Series>
+            </DVC:Chart>
+        </Grid>
     </Grid>
 </Window>

@@ -1,4 +1,7 @@
-﻿using Desktop.Views.Dialogs;
+﻿using Desktop.Connectors;
+using Desktop.Exceptions;
+using Desktop.Templates;
+using Desktop.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +26,8 @@ namespace Desktop.Views.Windows
         public Login()
         {
             InitializeComponent();
+
+            //Centramos la pantalla
             double screenWidth = SystemParameters.PrimaryScreenWidth;
             double screenHeight = SystemParameters.PrimaryScreenHeight;
             double windowWidth = this.Width;
@@ -31,17 +36,51 @@ namespace Desktop.Views.Windows
             this.Top = (screenHeight / 2) - (windowHeight / 2);
         }
 
+        // Hacemos el login si da click sobre el botón iniciar
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            MainWindow main = new MainWindow();
-            main.Show();
-            this.Close();
+            LoginButton();
+        }
+
+        // Hacemos el login si da click al intro
+        private void bttnLogin_Enter(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                LoginButton();
+            }
+        }
+
+        private void LoginButton()
+        {
+            User user = new User();
+            user.Username = UserBox.Text;
+            user.Password = PasswordBox.Password;
+            try
+            {
+                //Registramos el usuario
+                LoginConn loginConn = new LoginConn();
+                loginConn.LoginUser(user);
+                this.Close();
+            }
+            catch (ExpiredLoginException ex)
+            {
+                //En caso de que haya expirado lanzamos una excepción y mostramos la ventana de error
+                Error error = new Error(ex.Message);
+                error.Show();
+            }
+            catch (ServerException ex)
+            {
+                //En caso de que haya habido problemas con el servidor lanzamos una excepción y mostramos la ventana de error
+                Error error = new Error(ex.Message);
+                error.Show();
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            
-           
+            //Al darle a cancelar cerramos la ventana
+            this.Close();
         }
     }
 }

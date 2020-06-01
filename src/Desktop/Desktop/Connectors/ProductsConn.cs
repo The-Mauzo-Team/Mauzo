@@ -23,21 +23,48 @@
  */
 using Desktop.Properties;
 using Desktop.Templates;
-
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 
-using RestSharp;
-using Newtonsoft.Json;
-
 namespace Desktop.Connectors
 {
-    class SalesConn
+    class ProductsConn
     {
-        private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/sales";
+        private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/products";
         private string token = LoginConn.Token;
 
-        public void Add(Sale sale)
+        public List<Product> List
+        {
+            get
+            {
+                // Iniciamos la conexión.
+                Uri baseUrl = new Uri(mauzoUrl + "/");
+                IRestClient client = new RestClient(baseUrl);
+                IRestRequest request = new RestRequest(Method.GET);
+
+                // Agregamos la autorización de token en el header.
+                request.AddHeader("Authorization", token);
+                
+                // Ejecutamos la petición.
+                IRestResponse response = client.Execute(request);
+
+                // Inicializamos la lista de productos
+                List<Product> products = null;
+
+                // Procesamos el objeto del producto
+                if (response.IsSuccessful)
+                    products = JsonConvert.DeserializeObject<List<Product>>(response.Content);
+                else
+                    LoginConn.CalculateException(response, "No se ha encontrado el producto");
+
+                // Devolvemos el objeto
+                return products;
+            }
+        }
+
+        public void Add(Product product)
         {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(mauzoUrl + "/");
@@ -47,12 +74,13 @@ namespace Desktop.Connectors
             // Agregamos la autorización de token en el header.
             request.AddHeader("Authorization", token);
 
-            // Convertimos la venta a json y lo incorporamos a la petición.
-            string jsonRequest = JsonConvert.SerializeObject(new { 
-                stampRef = sale.StampRef,
-                userId = sale.UserId,
-                prodId = sale.ProdId,
-                discId = sale.DiscId
+            // Convertimos el producto a json y lo incorporamos a la petición.
+            string jsonRequest = JsonConvert.SerializeObject(new
+            {
+                prodName = product.ProdName,
+                prodprice = product.ProdPrice,
+                prodDesc = product.ProdDesc,
+                prodPic = product.ProdPic
             });
 
             // Se añade el json al cuerpo de la petición.
@@ -63,13 +91,13 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-                LoginConn.CalculateException(response, "No se ha encontrado la venta");
+                LoginConn.CalculateException(response, "No se ha encontrado el producto");
         }
 
-        public Sale Get(int Id) 
+        public Product Get(int id)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(mauzoUrl + "/" + Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.GET);
 
@@ -79,65 +107,36 @@ namespace Desktop.Connectors
             // Ejecutamos la petición.
             IRestResponse response = client.Execute(request);
 
-            // Inicializamos la venta
-            Sale sale = null;
+            // Inicializamos el producto
+            Product product = null;
 
-            // Procesamos el objeto de la venta
+            // Procesamos el objeto del producto
             if (response.IsSuccessful)
-                sale = JsonConvert.DeserializeObject<Sale>(response.Content);
+                product = JsonConvert.DeserializeObject<Product>(response.Content);
             else
-                LoginConn.CalculateException(response, "No se ha encontrado la venta");
+                LoginConn.CalculateException(response, "No se ha encontrado el producto.");
 
             // Devolvemos el objeto
-            return sale;
+            return product;
         }
 
-        public List<Sale> GetList
-        {
-            get 
-            {
-                // Iniciamos la conexión.
-                Uri baseUrl = new Uri(mauzoUrl + "/");
-                IRestClient client = new RestClient(baseUrl);
-                IRestRequest request = new RestRequest(Method.GET);
-
-                // Agregamos la autorización de token en el header.
-                request.AddHeader("Authorization", token);
-
-                // Ejecutamos la petición.
-                IRestResponse response = client.Execute(request);
-
-                // Inicializamos la lista de ventas
-                List<Sale> sales = null;
-
-                // Procesamos el objeto de venta
-                if (response.IsSuccessful)
-                    sales = JsonConvert.DeserializeObject<List<Sale>>(response.Content);
-                else
-                    LoginConn.CalculateException(response, "No se ha encontrado la venta");
-
-                // Devolvemos el objeto
-                return sales;
-            }
-        }
-
-        public void Modify(Sale sale)
+        public void Modify(Product product)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(mauzoUrl + "/" + sale.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + product);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.PUT);
 
             // Agregamos la autorización de token en el header.
             request.AddHeader("Authorization", token);
 
-            // Convertimos la venta a json y lo incorporamos a la petición.
+            // Convertimos el producto a json y lo incorporamos a la petición.
             string jsonRequest = JsonConvert.SerializeObject(new
             {
-                stampRef = sale.StampRef,
-                userId = sale.UserId,
-                prodId = sale.ProdId,
-                discId = sale.DiscId
+                prodName = product.ProdName,
+                prodprice = product.ProdPrice,
+                prodDesc = product.ProdDesc,
+                prodPic = product.ProdPic
             });
 
             // Se añade el json al cuerpo de la petición.
@@ -148,13 +147,13 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-                LoginConn.CalculateException(response, "No se ha encontrado la venta");
+                LoginConn.CalculateException(response, "No se ha encontrado el producto");
         }
 
-        public void Delete(Sale sale)
+        public void Delete(Product product)
         {
             // Iniciamos la conexión.
-            Uri baseUrl = new Uri(mauzoUrl + "/" + sale.Id);
+            Uri baseUrl = new Uri(mauzoUrl + "/" + product.Id);
             IRestClient client = new RestClient(baseUrl);
             IRestRequest request = new RestRequest(Method.DELETE);
 
@@ -166,7 +165,9 @@ namespace Desktop.Connectors
 
             // Procesamos la respuesta de la petición.
             if (!response.IsSuccessful)
-                LoginConn.CalculateException(response, "No se ha encontrado la venta");
+                LoginConn.CalculateException(response, "No se ha encontrado el producto");
+
+
         }
     }
 }
