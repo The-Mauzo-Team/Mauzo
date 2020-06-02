@@ -27,17 +27,18 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Desktop.Connectors
 {
     class RefundsConn
     {
-        private string mauzoUrl = Settings.Default.MauzoServer + "/api/refunds";
+        private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/refunds";
         private string token = LoginConn.Token;
 
+        /// <summary>
+        /// Inicia la conexión y nos devuelve una lista de devoluciones
+        /// </summary>
         public List<Refund> List
         {
             get
@@ -67,6 +68,10 @@ namespace Desktop.Connectors
             }
         }
 
+        /// <summary>
+        /// Nos añade una devolución con todos sus atributos a la base de datos, en caso de no poder nos manda un mensaje de error.
+        /// </summary>
+        /// <param name="refund">El recibo a añadir a la base de datos </param>
         public void Add(Refund refund)
         {
             // Iniciamos la conexión.
@@ -98,6 +103,11 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado la devolución");
         }
 
+        /// <summary>
+        /// Este método nos devuelve una devolución a partir de un id
+        /// </summary>
+        /// <param name="id"> Atributo a partir del cual conseguimos el objeto </param>
+        /// <returns> La devolución obetenida </returns>
         public Refund Get(int id)
         {
             // Iniciamos la conexión.
@@ -124,6 +134,10 @@ namespace Desktop.Connectors
             return refund;
         }
 
+        /// <summary>
+        /// Nos permite modificar una devolución de la base de datos
+        /// </summary>
+        /// <param name="refund"> La devolución a modificar</param>
         public void Modify(Refund refund)
         {
             // Iniciamos la conexión.
@@ -153,6 +167,10 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado la devolución");
         }
 
+        /// <summary>
+        /// Método para eliminar una devolución de la base de datos.
+        /// </summary>
+        /// <param name="refund"> La devolución a eliminar </param>
         public void Delete(Refund refund)
         {
             // Iniciamos la conexión.

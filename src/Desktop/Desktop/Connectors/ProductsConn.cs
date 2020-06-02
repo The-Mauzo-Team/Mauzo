@@ -106,7 +106,7 @@ namespace Desktop.Connectors
         /// Este método nos devuelve un producto a partir de un id
         /// </summary>
         /// <param name="id"> Atributo a partir del cual conseguimos el objeto </param>
-        /// <returns> EL producto obtenido </returns>
+        /// <returns> El producto obtenido </returns>
         public Product Get(int id)
         {
             // Iniciamos la conexión.
