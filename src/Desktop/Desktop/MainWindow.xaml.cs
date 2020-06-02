@@ -1,4 +1,5 @@
-﻿using Desktop.Templates;
+﻿using Desktop.Connectors;
+using Desktop.Templates;
 using Desktop.Views.Dialogs;
 using Desktop.Views.Windows;
 using System;
@@ -43,8 +44,30 @@ namespace Desktop
 
         private void Button_Update(object sender, RoutedEventArgs e)
         {
-            Manager manager = new Manager();
-            manager.Show();
+            Warning warning = new Warning("Se va a sincronizar las ventas. Se perderán las ventas no guardadas.", "¿Estás seguro de que deseas continuar?");
+            warning.Show();
+
+            warning.Acceptance += (o, i) =>
+            {
+                ActivityList.Items.Clear();
+
+                SalesConn sc = new SalesConn();
+                RefundsConn rc = new RefundsConn();
+
+                // Recuperar todas las ventas.
+                for (int j = 0; j < sc.List.Count; j++)
+                {
+                    ContentPresenter conItem = new ContentPresenter();
+                    conItem.Content = sc.List[j].Id;
+
+                    conItem.ContentTemplate = (DataTemplate)Resources["SaleMenuItem"];
+
+                    // Si coincide con alguna devolución convertir elemento de menu en Return.
+                    for (int k = 0; k < rc.List.Count; k++)
+                        if (sc.List[j].Id == rc.List[k].Id)
+                            conItem.ContentTemplate = (DataTemplate)Resources["ReturnMenuItem"];
+                }
+            };
         }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
@@ -76,6 +99,14 @@ namespace Desktop
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Si se ha limpiado las ventas.
+            if (ActivityList.Items.Count == 0)
+            {
+                history.Clear();
+                FormGrid.Children.Clear();
+                return;
+            }
+
             ContentPresenter conAux = (ActivityList.SelectedItem as ContentPresenter); // Obtener elemento de menú.
             ContentPresenter conForm = history[conAux]; // Obtener formulario de elemento de menú.
 
