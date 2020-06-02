@@ -35,6 +35,9 @@ namespace Desktop.Connectors
         private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/products";
         private string token = LoginConn.Token;
 
+        /// <summary>
+        /// Inicia la conexión y nos devuelve una lista de productos
+        /// </summary>
         public List<Product> List
         {
             get
@@ -64,6 +67,10 @@ namespace Desktop.Connectors
             }
         }
 
+        /// <summary>
+        /// Nos añade un producto con todos sus atributos a la base de datos, en caso de no poder nos manda un mensaje de error
+        /// </summary>
+        /// <param name="product">El producto a añadir a la base de datos</param>
         public void Add(Product product)
         {
             // Iniciamos la conexión.
@@ -95,6 +102,11 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado el producto");
         }
 
+        /// <summary>
+        /// Este método nos devuelve un producto a partir de un id
+        /// </summary>
+        /// <param name="id"> Atributo a partir del cual conseguimos el objeto </param>
+        /// <returns> EL producto obtenido </returns>
         public Product Get(int id)
         {
             // Iniciamos la conexión.
@@ -121,6 +133,10 @@ namespace Desktop.Connectors
             return product;
         }
 
+        /// <summary>
+        /// Nos permite modificar un producto de la base de datos
+        /// </summary>
+        /// <param name="product"> El producto que vamos a modificar </param>
         public void Modify(Product product)
         {
             // Iniciamos la conexión.
@@ -152,6 +168,10 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado el producto");
         }
 
+        /// <summary>
+        /// Método para eliminar un producto de la base de datos.
+        /// </summary>
+        /// <param name="product"> El producto a eliminar </param>
         public void Delete(Product product)
         {
             // Iniciamos la conexión.
