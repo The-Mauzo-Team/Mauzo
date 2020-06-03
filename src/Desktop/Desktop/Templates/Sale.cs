@@ -39,7 +39,7 @@ namespace Desktop.Templates
         private long stampRef;
         private int userId;
         private int prodId;
-        private int discId;
+        private int? discId;
 
         /// <summary>
         /// Propiedad que hace un get o un set sobre el atributo id.
@@ -80,7 +80,7 @@ namespace Desktop.Templates
         /// <summary>
         /// Propiedad que hace un get o un set sobre el atributo discId.
         /// </summary>
-        public int DiscId
+        public int? DiscId
         {
             get { return discId; }
             set { discId = value; }
