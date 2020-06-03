@@ -62,8 +62,10 @@ namespace Desktop
 
                     conItem.ContentTemplate = (DataTemplate)Resources["SaleMenuItem"];
 
+                    int max = rc.List.Count;
+
                     // Si coincide con alguna devolución convertir elemento de menu en Return.
-                    for (int k = 0; k < rc.List.Count; k++)
+                    for (int k = 0; k < max; k++)
                         if (sc.List[j].Id == rc.List[k].Id)
                             conItem.ContentTemplate = (DataTemplate)Resources["ReturnMenuItem"];
                 }
@@ -147,6 +149,87 @@ namespace Desktop
 
             ContentPresenter conForm = history[conAux]; // Obtener formulario de elemento de menú.
             conForm.IsEnabled = false; // Cambiar estado del formulario.
+        }
+
+        private void AddProduct_Click(object sender, RoutedEventArgs e)
+        {
+            // Obtener contenedor.
+            DataTemplate auxDT = (FormGrid.Children[0] as ContentPresenter).ContentTemplate;
+
+            // Obtener elementos de la GUI
+            TextBox searchProducts = (TextBox)auxDT.FindName("ProductSearch", (ContentPresenter)FormGrid.Children[0]);
+            StackPanel productsSP = (StackPanel)auxDT.FindName("Products", (ContentPresenter)FormGrid.Children[0]);
+
+            // Crear variable y conexión para el producto.
+            ProductsConn pc = new ProductsConn();
+            Product product;
+
+            try
+            {
+                product = pc.Get(int.Parse(searchProducts.Text)); // Intentar buscar el ID transformado.
+                if (product == null)
+                    throw new Exception();
+            } catch
+            {
+                Error error = new Error("El ID del producto introducido no existe.");
+                error.Show(); // Si da algún error mostrar que ha fallado.
+                return;
+            }
+
+            // Crear y añadir elemento a la lista visual.
+            ContentPresenter productItem = new ContentPresenter();
+            productItem.ContentTemplate = (DataTemplate)Resources["ProductItem"];
+            productItem.Content = searchProducts.Text;
+            productsSP.Children.Clear(); // Solo se permite uno, limpiar antes siempre.
+            productsSP.Children.Add(productItem);
+
+            // Refrescar contador de Total.
+            float paying = product.ProdPrice;
+            float discounting = float.Parse((auxDT.FindName("Discounted", (ContentPresenter)FormGrid.Children[0]) as TextBox).Text);
+
+            float result = paying - discounting;
+            (auxDT.FindName("TotalCost", (ContentPresenter)FormGrid.Children[0]) as TextBox).Text = "Total: " + result + "€";
+        }
+
+        private void AddDiscount_Click(object sender, RoutedEventArgs e)
+        {
+            // Obtener contenedor.
+            DataTemplate auxDT = (FormGrid.Children[0] as ContentPresenter).ContentTemplate;
+
+            // Obtener elementos de la GUI
+            TextBox searchDiscounts = (TextBox)auxDT.FindName("DiscountSearch", (ContentPresenter)FormGrid.Children[0]);
+            StackPanel discountSP = (StackPanel)auxDT.FindName("Discounts", (ContentPresenter)FormGrid.Children[0]);
+
+            // Crear variable y conexión para el descuento.
+            DiscountsConn dc = new DiscountsConn();
+            Discount discount;
+
+            try
+            {
+                discount = dc.Get(int.Parse(searchDiscounts.Text)); // Intentar buscar el ID transformado.
+                if (discount == null)
+                    throw new Exception();
+            }
+            catch
+            {
+                Error error = new Error("El ID del descuento introducido no esta aceptado.");
+                error.Show(); // Si da algún error mostrar que ha fallado.
+                return;
+            }
+
+            // Crear y añadir elemento a la lista visual.
+            ContentPresenter discountItem = new ContentPresenter();
+            discountItem.ContentTemplate = (DataTemplate)Resources["DiscountItem"];
+            discountItem.Content = searchDiscounts.Text;
+            discountSP.Children.Clear(); // Solo se permite uno, limpiar antes siempre.
+            discountSP.Children.Add(discountItem);
+
+            // Refrescar contador de Total.
+            float paying = discount.PriceDisc;
+            float discounting = float.Parse((auxDT.FindName("Discounted", (ContentPresenter)FormGrid.Children[0]) as TextBox).Text);
+
+            float result = paying - discounting;
+            (auxDT.FindName("TotalCost", (ContentPresenter)FormGrid.Children[0]) as TextBox).Text = "Total: " + result + "€";
         }
     }
 }
