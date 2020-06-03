@@ -21,11 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Desktop.Templates
 {
@@ -36,24 +31,36 @@ namespace Desktop.Templates
         private int userId;
         private int saleId;
 
+        /// <summary>
+        /// Propiedad para hacer un getter o setter sobre el atributo id
+        /// </summary>
         public int Id
         {
             get => id;
             set => id = value; 
         }
 
+        /// <summary>
+        /// Propiedad para hacer un getter o setter sobre el atributo DateRefund
+        /// </summary>
         public long DateRefund
         {
             get => dateRefund;
             set => dateRefund = value;
         }
 
+        /// <summary>
+        /// Propiedad para hacer un getter o setter sobre el atributo UserId
+        /// </summary>
         public int UserId
         {
             get => userId;
             set => userId = value;
         }
 
+        /// <summary>
+        /// Propiedad para hacer un getter o setter sobre el atributo SaleId
+        /// </summary>
         public int SaleId
         {
             get => saleId;
