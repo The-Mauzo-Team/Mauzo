@@ -29,6 +29,10 @@ using System.Threading.Tasks;
 
 namespace Desktop.Templates
 {
+    /// <summary>
+    /// Template de venta.
+    /// </summary>
+    /// <remarks>@Neirth - Sergio Martinez</remarks>
     class Sale
     {
         private int id;
@@ -36,31 +40,46 @@ namespace Desktop.Templates
         private int userId;
         private int prodId;
         private int discId;
-        
+
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo id.
+        /// </summary>
         public int Id 
         {
             get { return id; }
             set { id = value; }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo stampRef.
+        /// </summary>
         public long StampRef 
         {
             get { return stampRef; }
             set { stampRef = value; }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo userId.
+        /// </summary>
         public int UserId
         { 
             get { return userId; }
             set { userId = value; }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo prodId.
+        /// </summary>
         public int ProdId 
         {
             get { return prodId; }
             set { prodId = value; }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo discId.
+        /// </summary>
         public int DiscId
         {
             get { return discId; }

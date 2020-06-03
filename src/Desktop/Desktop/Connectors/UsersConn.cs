@@ -32,11 +32,21 @@ using Newtonsoft.Json;
 
 namespace Desktop.Connectors
 {
+    /// <summary>
+    /// Clase para gestionar los usuarios almacenados en el
+    /// servidor de API RESTful escrito en java.
+    /// </summary>
+    /// <remarks>@Neirth - Sergio Martinez</remarks>
     class UsersConn
     {
         private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/users";
         private string token = LoginConn.Token;
 
+        /// <summary>
+        /// Método para añadir un usuario a la base de datos a partir
+        /// de la API RESTful.
+        /// </summary>
+        /// <param name="user">El usuario en cuestión.</param>
         public void Add(User user) 
         {
             // Iniciamos la conexión.
@@ -69,6 +79,12 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado el usuario");
         }
 
+        /// <summary>
+        /// Método para obtener un usuario a traves del id en la base de datos 
+        /// usando de intermediario a la API RESTful.
+        /// </summary>
+        /// <param name="Id">El id del usuario.</param>
+        /// <returns></returns>
         public User Get(int Id) 
         {
             // Iniciamos la conexión.
@@ -95,6 +111,11 @@ namespace Desktop.Connectors
             return user;
         }
 
+        /// <summary>
+        /// Método para obtener todos los usuarios de la base de datos 
+        /// a partir de la API RESTful.
+        /// </summary>
+        /// <param name="user">El usuario en cuestión.</param>
         public List<User> List
         {
             get
@@ -124,6 +145,12 @@ namespace Desktop.Connectors
             }
         }
 
+        /// <summary>
+        /// Método para modificar un usuario de la base de datos
+        /// usando la API RESTful.
+
+        /// </summary>
+        /// <param name="user">El usuario en cuestión.</param>
         public void Modify(User user)
         {
             // Iniciamos la conexión.
@@ -157,6 +184,11 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado el usuario");
         }
 
+        /// <summary>
+        /// Método para eliminar un usuario en la base de datos 
+        /// usando de intermediario a la API RESTful.
+        /// </summary>
+        /// <param name="user">El usuario en cuestión.</param>
         public void Delete(User user)
         {
             // Iniciamos la conexión.

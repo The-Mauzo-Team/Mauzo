@@ -17,6 +17,7 @@ namespace Desktop.Views.Windows
     /// <summary>
     /// Lógica de interacción para Manager.xaml
     /// </summary>
+    /// <remarks>@Neirth Sergio Martinez</remarks>
     public partial class Manager : Window
     {
 
