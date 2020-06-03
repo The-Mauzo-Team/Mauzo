@@ -274,7 +274,7 @@ namespace Desktop.Views.Windows
             {
                 Code = CodeText.Text,
                 Desc = DiscountText.Text,
-                PriceDisc = float.Parse(PriceDiscountText.Text)
+                PricePerc = float.Parse(PriceDiscountText.Text)
             };
 
             try

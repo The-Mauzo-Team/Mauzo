@@ -30,6 +30,8 @@ namespace Desktop
     {
         Dictionary<ContentPresenter, ContentPresenter> history = new Dictionary<ContentPresenter, ContentPresenter>();
         ContentPresenter selConForm;
+        Product selProd;
+        Discount selDisc;
 
         public MainWindow()
         {
@@ -162,12 +164,12 @@ namespace Desktop
 
             // Crear variable y conexión para el producto.
             ProductsConn pc = new ProductsConn();
-            Product product;
+            // Product product;
 
             try
             {
-                product = pc.Get(int.Parse(searchProducts.Text)); // Intentar buscar el ID transformado.
-                if (product == null)
+                selProd = pc.Get(int.Parse(searchProducts.Text)); // Intentar buscar el ID transformado.
+                if (selProd == null)
                     throw new Exception();
             } catch
             {
@@ -184,11 +186,18 @@ namespace Desktop
             productsSP.Children.Add(productItem);
 
             // Refrescar contador de Total.
-            float paying = product.ProdPrice;
-            float discounting = float.Parse((auxDT.FindName("Discounted", (ContentPresenter)FormGrid.Children[0]) as TextBox).Text);
 
-            float result = paying - discounting;
-            (auxDT.FindName("TotalCost", (ContentPresenter)FormGrid.Children[0]) as TextBox).Text = "Total: " + result + "€";
+            float paying = selProd.ProdPrice;
+
+            // Si es null Product ser 0.
+            float discounting;
+            if (selDisc == null)
+                discounting = 0;
+            else
+                discounting = selProd.ProdPrice;
+
+            float result = paying - (paying * discounting / 100);
+            (auxDT.FindName("TotalCost", (ContentPresenter)FormGrid.Children[0]) as TextBlock).Text = "Total: " + result + "€";
         }
 
         private void AddDiscount_Click(object sender, RoutedEventArgs e)
@@ -202,12 +211,12 @@ namespace Desktop
 
             // Crear variable y conexión para el descuento.
             DiscountsConn dc = new DiscountsConn();
-            Discount discount;
+            // Discount discount;
 
             try
             {
-                discount = dc.Get(int.Parse(searchDiscounts.Text)); // Intentar buscar el ID transformado.
-                if (discount == null)
+                selDisc = dc.Get(int.Parse(searchDiscounts.Text)); // Intentar buscar el ID transformado.
+                if (selDisc == null)
                     throw new Exception();
             }
             catch
@@ -225,11 +234,57 @@ namespace Desktop
             discountSP.Children.Add(discountItem);
 
             // Refrescar contador de Total.
-            float paying = discount.PriceDisc;
-            float discounting = float.Parse((auxDT.FindName("Discounted", (ContentPresenter)FormGrid.Children[0]) as TextBox).Text);
 
-            float result = paying - discounting;
-            (auxDT.FindName("TotalCost", (ContentPresenter)FormGrid.Children[0]) as TextBox).Text = "Total: " + result + "€";
+            // Si es null Product ser 0.
+            float paying;
+            if (selProd == null)
+                paying = 0;
+            else
+                paying = selProd.ProdPrice;
+
+            float discounting = selDisc.PricePerc;
+
+            float result = paying - (paying * discounting / 100);
+
+            (auxDT.FindName("Discounted", (ContentPresenter)FormGrid.Children[0]) as TextBox).Text = discounting.ToString();
+            (auxDT.FindName("TotalCost", (ContentPresenter)FormGrid.Children[0]) as TextBlock).Text = "Total: " + result + "€";
+        }
+
+        private void SalesSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string search = (sender as TextBox).Text;
+
+            // Saltar en caso de que sea el primer cambio (al establecer el valor por defecto.)
+            if (ActivityList == null)
+                return;
+
+            int max = ActivityList.Items.Count;
+
+            ContentPresenter selCP;
+            // Si no hay nada mostrar todo y salir.
+            if (search.Length == 0)
+            {
+                for (int i = 0; i < max; i++)
+                {
+                    selCP = (ActivityList.Items[i] as ContentPresenter);
+                    selCP.Visibility = Visibility.Visible;
+                }
+                return;
+            }
+
+            for (int i = 0; i < max; i++)
+            {
+                selCP = (ActivityList.Items[i] as ContentPresenter);
+                if (! selCP.Content.Equals(search))
+                {
+                    selCP.Visibility = Visibility.Hidden; // Ocultar elemento si no coincide.
+                    // ActivityList.Items.Remove(selCP);
+                } else
+                {
+                    selCP.Visibility = Visibility.Visible; // Mostrar si coincide.
+                    // ActivityList.Items.Add(history.Keys.ToList().);
+                }
+            }
         }
     }
 }
