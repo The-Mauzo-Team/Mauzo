@@ -29,6 +29,7 @@ using System.Windows.Media.Imaging;
 
 namespace Desktop.Templates
 {
+    /// <remarks>@lluminar - Lidia Martínez</remarks>
     class Product
     {
         private int id;

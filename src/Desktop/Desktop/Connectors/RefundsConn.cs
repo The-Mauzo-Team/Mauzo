@@ -31,6 +31,7 @@ using System.Collections.Generic;
 
 namespace Desktop.Connectors
 {
+    /// <remarks>@lluminar - Lidia Martínez</remarks>
     class RefundsConn
     {
         private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/refunds";

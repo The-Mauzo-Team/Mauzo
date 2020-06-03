@@ -24,6 +24,7 @@
 
 namespace Desktop.Templates
 {
+    /// <remarks>@lluminar - Lidia Martínez</remarks>
     class Refund
     {
         private int id;
