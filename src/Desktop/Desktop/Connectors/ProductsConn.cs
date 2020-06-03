@@ -30,6 +30,7 @@ using System.Collections.Generic;
 
 namespace Desktop.Connectors
 {
+    /// <remarks>@lluminar - Lidia Martínez</remarks>
     class ProductsConn
     {
         private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/products";

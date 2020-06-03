@@ -50,7 +50,7 @@ namespace Desktop.Connectors
                 id = discount.Id,
                 codeDisc = discount.Code,
                 descDisc = discount.Desc,
-                pricePerc = discount.PriceDisc
+                pricePerc = discount.PricePerc
             });
 
             request.AddJsonBody(jsonRequest);
@@ -94,7 +94,7 @@ namespace Desktop.Connectors
                 id = discount.Id,
                 codeDisc = discount.Code,
                 descDisc = discount.Desc,
-                pricePerc = discount.PriceDisc
+                pricePerc = discount.PricePerc
             });
 
             request.AddJsonBody(jsonRequest);
