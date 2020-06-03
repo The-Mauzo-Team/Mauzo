@@ -95,7 +95,7 @@ namespace Desktop.Connectors
             return user;
         }
 
-        public List<User> GetList
+        public List<User> List
         {
             get
             {

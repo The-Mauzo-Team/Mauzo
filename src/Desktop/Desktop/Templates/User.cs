@@ -42,18 +42,28 @@ namespace Desktop.Templates
         private bool isAdmin;
         private Bitmap userPicArr;
 
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo id.
+        /// </summary>
         public int Id 
         {
             get { return id; }
             set { id = value; }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo username.
+        /// </summary>
         public string Username
         {
             get { return username; }
             set { username = value; }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set convirtiendo 
+        /// la cadena a MD5 del atributo password.
+        /// </summary>
         public string Password
         {
             get { return password; }
@@ -74,37 +84,60 @@ namespace Desktop.Templates
             }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo firstname.
+        /// </summary>
         public string Firstname 
         {
             get { return firstName; }
             set { firstName = value; }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo lastname.
+        /// </summary>
         public string Lastname
         {
             get { return lastName; }
             set { lastName = value; }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo email.
+        /// </summary>
         public string Email 
         {
             get { return email; }
             set { email = value; }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set sobre el atributo isAdmin.
+        /// </summary>
         public bool IsAdmin 
         {
             get { return isAdmin; }
             set { isAdmin = value; }
         }
 
+        /// <summary>
+        /// Propiedad que actua de conversor cuando le hacen un get o un ser 
+        /// sobre el atributo userPicArr.
+        /// </summary>
         public string UserPic
         {
             get {
                 string auxPic = null;
 
-                if (userPicArr != null) { 
-                    auxPic = Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(userPicArr, typeof(byte[])));
+                if (userPicArr != null)
+                {
+                    Bitmap auxBits = new Bitmap(userPicArr);
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        auxBits.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        auxPic = Convert.ToBase64String(ms.ToArray());
+                    }
                 }
 
                 return auxPic;
@@ -130,6 +163,9 @@ namespace Desktop.Templates
             }
         }
 
+        /// <summary>
+        /// Propiedad que hace un get o un set directo al atributo userPicArr.
+        /// </summary>
         public Bitmap UserPicArr
         {
             get { return userPicArr; }

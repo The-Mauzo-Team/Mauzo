@@ -92,7 +92,7 @@ namespace Desktop.Connectors
             return sale;
         }
 
-        public List<Sale> GetList
+        public List<Sale> List
         {
             get 
             {
