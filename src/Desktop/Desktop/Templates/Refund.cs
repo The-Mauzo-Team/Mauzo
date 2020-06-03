@@ -24,6 +24,9 @@
 
 namespace Desktop.Templates
 {
+    /// <summary>
+    /// Esta clase crea los atributos de refunds y crea las propiedades para hacer getters y setters
+    /// </summary>
     /// <remarks>@lluminar - Lidia Martínez</remarks>
     class Refund
     {

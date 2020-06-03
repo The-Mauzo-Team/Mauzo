@@ -5,6 +5,10 @@ using System.Windows.Media;
 
 namespace Desktop.Views.Dialogs
 {
+    /// <summary>
+    /// Esta clase se utiliza para crear la interfaz de la ventana de información y hace la función de Show.
+    /// </summary>
+    /// <remarks>@lluminar - Lidia Martínez</remarks>
     class Info
     {
         private readonly Window window;
