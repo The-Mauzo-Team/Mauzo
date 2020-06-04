@@ -95,6 +95,28 @@ namespace Desktop
             conItem.Content = "Nueva Venta";
             conItem.ContentTemplate = (DataTemplate)Resources["EditMenuItem"];
 
+            // Si lo último es una edición, reemplazar.
+            ContentPresenter tmpCP = (ActivityList.Items[ActivityList.Items.Count - 1] as ContentPresenter);
+            if (tmpCP.ContentTemplate == (DataTemplate)Resources["EditMenuItem"])
+            {
+                history[tmpCP] = new ContentPresenter
+                {
+                    ContentTemplate = (DataTemplate)Resources["SaleForm"]
+                };
+
+                FormGrid.Children.Clear();
+                FormGrid.Children.Add(history[tmpCP]);
+
+                relationProd[tmpCP] = null;
+                relationDisc[tmpCP] = null;
+
+                // Se actualiza el producto y el descuento seleccionado.
+                selProd = relationProd[tmpCP];
+                selDisc = relationDisc[tmpCP];
+
+                return;
+            }
+
             // Se crea su formulario
             ContentPresenter conForm = new ContentPresenter();
             conForm.ContentTemplate = (DataTemplate)Resources["SaleForm"];

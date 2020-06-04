@@ -12,11 +12,11 @@
         <SolidColorBrush x:Key="MasterForegroundColor" Color="Black" />
         <!--MainMenuContextMenu-->
         <ContextMenu x:Key="MenuItemContextMenu">
-            <MenuItem Header="Editar"  Click="ContextEdit_Click">
+            <!--<MenuItem Header="Editar"  Click="ContextEdit_Click">
                 <MenuItem.Icon>
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text=" &#xE70F;"/>
                 </MenuItem.Icon>
-            </MenuItem>
+            </MenuItem>-->
             <MenuItem Header="Devolver" Click="ContextRefund_Click">
                 <MenuItem.Icon>
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text=" &#xE777;"/>
