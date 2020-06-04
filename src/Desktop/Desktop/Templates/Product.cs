@@ -29,6 +29,10 @@ using System.Windows.Media.Imaging;
 
 namespace Desktop.Templates
 {
+    /// <summary>
+    /// Esta clase crea los atributos de products y crea las propiedades para hacer getters y setters
+    /// </summary>
+    /// <remarks>@lluminar - Lidia Martínez</remarks>
     class Product
     {
         private int id;

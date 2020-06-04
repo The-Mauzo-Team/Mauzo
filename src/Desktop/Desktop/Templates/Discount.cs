@@ -11,7 +11,7 @@ namespace Desktop.Templates
         private int id;
         private string code;
         private string desc;
-        private float priceDisc;
+        private float pricePerc;
 
         public int Id
         {
@@ -31,10 +31,10 @@ namespace Desktop.Templates
             set => desc = value;
         }
 
-        public float PriceDisc
+        public float PricePerc
         {
-            get => priceDisc;
-            set => priceDisc = value;
+            get => pricePerc;
+            set => pricePerc = value;
         }
     }
 }

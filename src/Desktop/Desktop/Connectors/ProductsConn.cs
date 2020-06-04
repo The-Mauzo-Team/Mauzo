@@ -30,6 +30,11 @@ using System.Collections.Generic;
 
 namespace Desktop.Connectors
 {
+
+    /// <summary>
+    /// Esta clase gestiona las peticiones al servidor de la clase Products
+    /// </summary>
+    /// <remarks>@lluminar - Lidia Martínez</remarks>
     class ProductsConn
     {
         private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/products";

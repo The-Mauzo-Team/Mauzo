@@ -31,6 +31,10 @@ using System.Windows.Media.Imaging;
 
 namespace Desktop.Templates
 {
+    /// <summary>
+    /// Template de usuario.
+    /// </summary>
+    /// <remarks>@Neirth - Sergio Martinez</remarks>
     class User
     {
         private int id;

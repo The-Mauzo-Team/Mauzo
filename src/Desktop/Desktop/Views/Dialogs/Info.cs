@@ -5,6 +5,10 @@ using System.Windows.Media;
 
 namespace Desktop.Views.Dialogs
 {
+    /// <summary>
+    /// Esta clase se utiliza para crear la interfaz de la ventana de información y hace la función de Show.
+    /// </summary>
+    /// <remarks>@lluminar - Lidia Martínez</remarks>
     class Info
     {
         private readonly Window window;
@@ -12,6 +16,10 @@ namespace Desktop.Views.Dialogs
 
         public event RoutedEventHandler Acceptance;
 
+        /// <summary>
+        /// Constructor para crear la interfaz
+        /// </summary>
+        /// <param name="message"></param>
         public Info(string message)
         {
             //Creamos la ventana
@@ -117,12 +125,13 @@ namespace Desktop.Views.Dialogs
             accept.VerticalAlignment = VerticalAlignment.Top;
             accept.HorizontalAlignment = HorizontalAlignment.Right;
 
-            // Establecemos la función lambda para cerrar la ventana.
+            // Establecemos la función lambda para cerrar la ventana al dar click en aceptar.
             accept.Click += (o, i) => {
                 window.Close();
                 Acceptance?.Invoke(this, i);
             };
 
+            //Añadimos los elementos al grid
             grid.Children.Add(icono);
             grid.Children.Add(text);
             grid.Children.Add(accept);
@@ -130,6 +139,9 @@ namespace Desktop.Views.Dialogs
             window.Content = grid;
         }
 
+        /// <summary>
+        /// Función para que aparezca la ventana
+        /// </summary>
         public void Show()
         { 
             window.Show();

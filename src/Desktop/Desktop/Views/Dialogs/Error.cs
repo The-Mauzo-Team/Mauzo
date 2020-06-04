@@ -38,6 +38,11 @@ namespace Desktop.Views.Dialogs
 
         public event RoutedEventHandler Acceptance;
 
+        /// <summary>
+        /// Creamos una ventana para mostrar información de error.
+        /// </summary>
+        /// <param name="message">Mensaje de error</param>
+        /// <remarks>@Neirth - Sergio Martinez</remarks>
         public Error(string message)
         {
             // Definimos la ventana.

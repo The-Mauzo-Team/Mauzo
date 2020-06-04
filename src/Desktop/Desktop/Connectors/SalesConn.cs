@@ -32,11 +32,20 @@ using Newtonsoft.Json;
 
 namespace Desktop.Connectors
 {
+    /// <summary>
+    /// Clase para gestionar las ventas  almacenados en el
+    /// servidor de API RESTful escrito en java.
+    /// </summary>
+    /// <remarks>@Neirth Sergio Martinez</remarks>
     class SalesConn
     {
         private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/sales";
         private string token = LoginConn.Token;
 
+        /// <summary>
+        /// Método para añadir una venta a la base de datos, a traves de la API RESTful.
+        /// </summary>
+        /// <param name="sale">El objeto de venta.</param>
         public void Add(Sale sale)
         {
             // Iniciamos la conexión.
@@ -66,6 +75,11 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado la venta");
         }
 
+        /// <summary>
+        /// Método para obtener del servidor, a partir del id, un objeto de venta.
+        /// </summary>
+        /// <param name="Id">El ID de la venta.</param>
+        /// <returns>Objeto de la venta.</returns>
         public Sale Get(int Id) 
         {
             // Iniciamos la conexión.
@@ -92,6 +106,9 @@ namespace Desktop.Connectors
             return sale;
         }
 
+        /// <summary>
+        /// Método para obtener todas las ventas del servidor.
+        /// </summary>
         public List<Sale> List
         {
             get 
@@ -121,6 +138,10 @@ namespace Desktop.Connectors
             }
         }
 
+        /// <summary>
+        /// Método que modifica un usuario en el servidor.
+        /// </summary>
+        /// <param name="sale">El objeto </param>
         public void Modify(Sale sale)
         {
             // Iniciamos la conexión.
@@ -151,6 +172,10 @@ namespace Desktop.Connectors
                 LoginConn.CalculateException(response, "No se ha encontrado la venta");
         }
 
+        /// <summary>
+        /// Método que elimina a un usuario en el servidor.
+        /// </summary>
+        /// <param name="sale">El objeto de venta.</param>
         public void Delete(Sale sale)
         {
             // Iniciamos la conexión.

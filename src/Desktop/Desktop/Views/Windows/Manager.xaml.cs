@@ -17,6 +17,7 @@ namespace Desktop.Views.Windows
     /// <summary>
     /// Lógica de interacción para Manager.xaml
     /// </summary>
+    /// <remarks>@Neirth Sergio Martinez</remarks>
     public partial class Manager : Window
     {
 
@@ -274,7 +275,7 @@ namespace Desktop.Views.Windows
             {
                 Code = CodeText.Text,
                 Desc = DiscountText.Text,
-                PriceDisc = float.Parse(PriceDiscountText.Text)
+                PricePerc = float.Parse(PriceDiscountText.Text)
             };
 
             try

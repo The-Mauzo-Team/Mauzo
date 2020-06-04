@@ -25,6 +25,11 @@ using System;
 
 namespace Desktop.Exceptions
 {
+    /// <summary>
+    /// Excepción para controlar si un usuario tiene privilegios 
+    /// o no para efectuar una operación.
+    /// </summary>
+    /// <remarks>@Neirth - Sergio Martinez</remarks>
     class AdminForbiddenException : Exception
     {
         public AdminForbiddenException(string message) : base(message) { }

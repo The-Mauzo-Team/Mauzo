@@ -25,6 +25,10 @@ using System;
 
 namespace Desktop.Exceptions
 {
+    /// <summary>
+    /// Excepción para controlar si el login ha expirado.
+    /// </summary>
+    /// <remarks>@Neirth - Sergio Martinez</remarks>
     class ExpiredLoginException : Exception
     {
         public ExpiredLoginException(string message) : base(message) { }

@@ -35,21 +35,36 @@ using System.Security.Claims;
 
 namespace Desktop.Connectors
 {
+    /// <summary>
+    /// Clase que gestiona el inicio de sesión de los usuarios.
+    /// </summary>
+    /// <remarks>@Neirth - Sergio Martinez</remarks>
     class LoginConn
     {
         private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/login";
         private static string token = null;
 
+        /// <summary>
+        /// Propiedad usada para obtener la información del usuario actual en forma de objecto.
+        /// </summary>
         public static User User
         {
             get; private set;
         }
 
+        /// <summary>
+        /// Propiedad para obtener el tiempo en el cual el token expira.
+        /// </summary>
         public static DateTime ExpirerToken
         {
             get; private set;
         }
 
+        /// <summary>
+        /// Propiedad que obtiene el token usado en esta instacia o lo agrega, parseando
+        /// los elementos que tiene dentro respecto a la información del usuario y la 
+        /// caducidad del mismo.
+        /// </summary>
         public static string Token
         {
             get { return token; }
@@ -77,6 +92,11 @@ namespace Desktop.Connectors
             }
         }
 
+        /// <summary>
+        /// Método que conecta con el servidor y autentifica al usuario, la respuesta esperada
+        /// será un 200 OK y se recibirá el token en la cabecera de Autenticación.
+        /// </summary>
+        /// <param name="user">El objeto de usuario.</param>
         public void LoginUser(User user) {
             // Iniciamos la conexión.
             Uri baseUrl = new Uri(mauzoUrl + "/");
@@ -119,6 +139,12 @@ namespace Desktop.Connectors
             }
         }
 
+        /// <summary>
+        /// Método para, a partir de la respuesta de una petición, se pueda determinar la causa
+        /// del error que luego será capturada por el controlador.
+        /// </summary>
+        /// <param name="response">Respuesta de la petición.</param>
+        /// <param name="defaultMessage">Mensaje por defecto.</param>
         public static void CalculateException(IRestResponse response, string defaultMessage)
         {
             if (response.StatusCode == HttpStatusCode.NotFound)

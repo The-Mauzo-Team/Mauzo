@@ -31,13 +31,17 @@ using System.Collections.Generic;
 
 namespace Desktop.Connectors
 {
+    /// <summary>
+    /// Esta clase gestiona las peticiones al servidor de la clase Refunds
+    /// </summary>
+    /// <remarks>@lluminar - Lidia Martínez</remarks>
     class RefundsConn
     {
         private readonly string mauzoUrl = Settings.Default.MauzoServer + "/api/refunds";
         private string token = LoginConn.Token;
 
         /// <summary>
-        /// Inicia la conexión y nos devuelve una lista de devoluciones
+        /// Inicia la conexión con el servidor y nos devuelve una lista de devoluciones
         /// </summary>
         public List<Refund> List
         {
@@ -69,7 +73,7 @@ namespace Desktop.Connectors
         }
 
         /// <summary>
-        /// Nos añade una devolución con todos sus atributos a la base de datos, en caso de no poder nos manda un mensaje de error.
+        /// Nos añade una devolución con todos sus atributos mediante una petición al servidor, en caso de no poder nos manda un mensaje de error.
         /// </summary>
         /// <param name="refund">El recibo a añadir a la base de datos </param>
         public void Add(Refund refund)
@@ -135,7 +139,7 @@ namespace Desktop.Connectors
         }
 
         /// <summary>
-        /// Nos permite modificar una devolución de la base de datos
+        /// Nos permite modificar una devolución mediante una petición al servidor
         /// </summary>
         /// <param name="refund"> La devolución a modificar</param>
         public void Modify(Refund refund)
@@ -168,7 +172,7 @@ namespace Desktop.Connectors
         }
 
         /// <summary>
-        /// Método para eliminar una devolución de la base de datos.
+        /// Método para eliminar una devolución mediante una petición al servidor
         /// </summary>
         /// <param name="refund"> La devolución a eliminar </param>
         public void Delete(Refund refund)
