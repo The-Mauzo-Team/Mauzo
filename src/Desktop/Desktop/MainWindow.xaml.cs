@@ -455,6 +455,7 @@ namespace Desktop
         private void Update()
         {
             ActivityList.Items.Clear();
+            FormGrid.Children.Clear();
 
             SalesConn sc = new SalesConn();
             RefundsConn rc = new RefundsConn();
@@ -468,6 +469,9 @@ namespace Desktop
             history.Clear();
             relationProd.Clear();
             relationDisc.Clear();
+
+            selProd = null;
+            selDisc = null;
 
             // Crear elementos.
             Sale selSale;
