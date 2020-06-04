@@ -26,6 +26,7 @@ namespace Desktop
     /// <summary>
     /// Lógica de interacción para MainWindow.xaml
     /// </summary>
+    /// <remarks>@ant04x Antonio Izquierdo</remarks>
     public partial class MainWindow : Window
     {
         Dictionary<ContentPresenter, ContentPresenter> history = new Dictionary<ContentPresenter, ContentPresenter>();
@@ -36,17 +37,30 @@ namespace Desktop
         Product selProd;
         Discount selDisc;
 
+        /// <summary>
+        /// Constructor que inicializa los componentes gráficos.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Acción al dar al botón de configuración.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Settings(object sender, RoutedEventArgs e)
         {
             Manager manager = new Manager();
             manager.Show();
         }
 
+        /// <summary>
+        /// Acción al dar al botón de actualizar.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Update(object sender, RoutedEventArgs e)
         {
             Warning warning = new Warning("Se va a sincronizar las ventas. Se perderán las ventas no guardadas.", "¿Estás seguro de que deseas continuar?");
@@ -126,7 +140,7 @@ namespace Desktop
                     StackPanel discounts = (StackPanel)auxDT.FindName("Discounts", conForm);
 
                     // Agregar producto
-                    if (selSale.ProdId != null)
+                    if (selSale.ProdId != null && selSale.ProdId != 0)
                     {
                         ContentPresenter productItem = new ContentPresenter();
                         productItem.Content = selSale.ProdId;
@@ -137,7 +151,7 @@ namespace Desktop
                     }
 
                     // Agregar descuento
-                    if (selSale.DiscId != null)
+                    if (selSale.DiscId != null && selSale.DiscId != 0)
                     {
                         ContentPresenter discountItem = new ContentPresenter();
                         discountItem.Content = selSale.DiscId;
@@ -155,11 +169,21 @@ namespace Desktop
             };
         }
 
+        /// <summary>
+        /// Acción al obtener foco un cuadro de texto.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             (sender as TextBox).SelectAll();
         }
 
+        /// <summary>
+        /// Acción al dar al botón de nuevo.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_New(object sender, RoutedEventArgs e)
         {
             // Se crea el elemento de menú.
@@ -186,6 +210,11 @@ namespace Desktop
             FormGrid.Children.Add(selConForm);
         }
 
+        /// <summary>
+        /// Acción al cambiar de venta en el menú master.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Si se ha limpiado las ventas.
@@ -207,6 +236,11 @@ namespace Desktop
             FormGrid.Children.Add(selConForm);
         }
 
+        /// <summary>
+        /// Acción al dar a devolver en una venta.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ContextRefund_Click(object sender, RoutedEventArgs e)
         {
             Warning warning = new Warning("Se va a proceder a devolver la venta seleccionada.", "¿Estás seguro de que deseas continuar?");
@@ -227,6 +261,11 @@ namespace Desktop
             };
         }
 
+        /// <summary>
+        /// Acción al dar a editar en una venta.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ContextEdit_Click(object sender, RoutedEventArgs e)
         {
             ContentPresenter conAux = (ActivityList.SelectedItem as ContentPresenter); // Obtener elemento de menú
@@ -240,19 +279,66 @@ namespace Desktop
             selDisc = relationDisc[conAux];
         }
 
+        /// <summary>
+        /// Acción al dar a vender en una venta.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaleButton(object sender, RoutedEventArgs e)
         {
             ContentPresenter conAux = (ActivityList.SelectedItem as ContentPresenter); // Obtener elemento de menú
-            conAux.ContentTemplate = (DataTemplate)Resources["SaleMenuItem"]; // Cambiar tipo visual
-
-            ContentPresenter conForm = history[conAux]; // Obtener formulario de elemento de menú.
-            conForm.IsEnabled = false; // Cambiar estado del formulario.
 
             // Se actualiza el producto y el descuento seleccionado.
             selProd = relationProd[conAux];
             selDisc = relationDisc[conAux];
+
+            if (selProd == null)
+            {
+                Error error = new Error("Se debe introducir un producto por venta.");
+                error.Show();
+                return;
+            }
+
+            // Se crea la conexión Sale
+            SalesConn sc = new SalesConn();
+
+            // Se crea el Sale
+            Sale sale = new Sale();
+
+            DateTime dateTime = DateTime.Now;
+            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            long unixDateTime = (long)(dateTime.ToUniversalTime() - epoch).TotalSeconds;
+
+            sale.StampRef = unixDateTime;
+
+            sale.ProdId = selProd.Id;
+            if (selDisc != null)
+                sale.DiscId = selDisc.Id;
+            sale.UserId = LoginConn.User.Id;
+
+            (ActivityList.SelectedItem as ContentPresenter).Content = "Venta realizada a las " + DateTime.Now.ToString("HH:mm"); ; // Establecer id de venta temporal.
+
+            try
+            {
+                sc.Add(sale);
+            } catch (Exception ex)
+            {
+                Error error = new Error("Venta no admitida." + ex.Message);
+                error.Show();
+                return;
+            }
+
+            conAux.ContentTemplate = (DataTemplate)Resources["SaleMenuItem"]; // Cambiar tipo visual
+
+            ContentPresenter conForm = history[conAux]; // Obtener formulario de elemento de menú.
+            conForm.IsEnabled = false; // Cambiar estado del formulario.
         }
 
+        /// <summary>
+        /// Acción al añadir un producto en una venta.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
             // Obtener contenedor.
@@ -271,6 +357,7 @@ namespace Desktop
                 selProd = pc.Get(int.Parse(searchProducts.Text)); // Intentar buscar el ID transformado.
                 if (selProd == null)
                     throw new Exception();
+                relationProd[(ActivityList.SelectedItem as ContentPresenter)] = selProd;
             } catch
             {
                 Error error = new Error("El ID del producto introducido no existe.");
@@ -300,6 +387,11 @@ namespace Desktop
             (auxDT.FindName("TotalCost", (ContentPresenter)FormGrid.Children[0]) as TextBlock).Text = "Total: " + result + "€";
         }
 
+        /// <summary>
+        /// Acción al añadir un descuento en una venta.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddDiscount_Click(object sender, RoutedEventArgs e)
         {
             // Obtener contenedor.
@@ -318,6 +410,7 @@ namespace Desktop
                 selDisc = dc.Get(int.Parse(searchDiscounts.Text)); // Intentar buscar el ID transformado.
                 if (selDisc == null)
                     throw new Exception();
+                relationDisc[(ActivityList.SelectedItem as ContentPresenter)] = selDisc;
             }
             catch
             {
@@ -350,6 +443,11 @@ namespace Desktop
             (auxDT.FindName("TotalCost", (ContentPresenter)FormGrid.Children[0]) as TextBlock).Text = "Total: " + result + "€";
         }
 
+        /// <summary>
+        /// Acción al cambiar la busqueda de una venta.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SalesSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             string search = (sender as TextBox).Text;
