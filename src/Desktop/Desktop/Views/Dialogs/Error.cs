@@ -28,6 +28,10 @@ using System.Windows.Media;
 
 namespace Desktop.Views.Dialogs
 {
+    /// <summary>
+    /// Creamos una ventana para mostrar información de error.
+    /// </summary>
+    /// <remarks>@Neirth - Sergio Martinez</remarks>
     class Error
     {
         private readonly Window root;
@@ -39,10 +43,9 @@ namespace Desktop.Views.Dialogs
         public event RoutedEventHandler Acceptance;
 
         /// <summary>
-        /// Creamos una ventana para mostrar información de error.
+        /// Constructor de la ventana de error.
         /// </summary>
         /// <param name="message">Mensaje de error</param>
-        /// <remarks>@Neirth - Sergio Martinez</remarks>
         public Error(string message)
         {
             // Definimos la ventana.

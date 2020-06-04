@@ -139,7 +139,7 @@ namespace Desktop.Connectors
         }
 
         /// <summary>
-        /// Método que modifica un usuario en el servidor.
+        /// Método que modifica una vebta en el servidor.
         /// </summary>
         /// <param name="sale">El objeto </param>
         public void Modify(Sale sale)
@@ -173,7 +173,7 @@ namespace Desktop.Connectors
         }
 
         /// <summary>
-        /// Método que elimina a un usuario en el servidor.
+        /// Método que elimina a una venta en el servidor.
         /// </summary>
         /// <param name="sale">El objeto de venta.</param>
         public void Delete(Sale sale)
