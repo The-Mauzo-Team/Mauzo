@@ -99,21 +99,25 @@ namespace Desktop
             ContentPresenter tmpCP = (ActivityList.Items[ActivityList.Items.Count - 1] as ContentPresenter);
             if (tmpCP.ContentTemplate == (DataTemplate)Resources["EditMenuItem"])
             {
-                history[tmpCP] = new ContentPresenter
+                Warning warning = new Warning("Se va a perder la venta anterior sin guardar.", "¿Estás seguro de que deseas continuar?");
+                warning.Show();
+                warning.Acceptance += (o, i) =>
                 {
-                    ContentTemplate = (DataTemplate)Resources["SaleForm"]
+                    history[tmpCP] = new ContentPresenter
+                    {
+                        ContentTemplate = (DataTemplate)Resources["SaleForm"]
+                    };
+
+                    FormGrid.Children.Clear();
+                    FormGrid.Children.Add(history[tmpCP]);
+
+                    relationProd[tmpCP] = null;
+                    relationDisc[tmpCP] = null;
+
+                    // Se actualiza el producto y el descuento seleccionado.
+                    selProd = relationProd[tmpCP];
+                    selDisc = relationDisc[tmpCP];
                 };
-
-                FormGrid.Children.Clear();
-                FormGrid.Children.Add(history[tmpCP]);
-
-                relationProd[tmpCP] = null;
-                relationDisc[tmpCP] = null;
-
-                // Se actualiza el producto y el descuento seleccionado.
-                selProd = relationProd[tmpCP];
-                selDisc = relationDisc[tmpCP];
-
                 return;
             }
 
