@@ -43,6 +43,7 @@ namespace Desktop
         public MainWindow()
         {
             InitializeComponent();
+            Update();
         }
 
         /// <summary>
@@ -68,104 +69,7 @@ namespace Desktop
 
             warning.Acceptance += (o, i) =>
             {
-                ActivityList.Items.Clear();
-
-                SalesConn sc = new SalesConn();
-                RefundsConn rc = new RefundsConn();
-
-                ProductsConn pc = new ProductsConn();
-                DiscountsConn dc = new DiscountsConn();
-
-                List<Sale> sales = sc.List;
-                List<Refund> refunds = rc.List;
-
-                history.Clear();
-                relationProd.Clear();
-                relationDisc.Clear();
-
-                // Crear elementos.
-                Sale selSale;
-                Product selProduct;
-                Discount selDiscount;
-
-                // Recuperar todas las ventas.
-                for (int j = 0; j < sales.Count; j++)
-                {
-                    ContentPresenter conItem = new ContentPresenter();
-                    conItem.Content = sales[j].Id.ToString();
-
-                    conItem.ContentTemplate = (DataTemplate)Resources["SaleMenuItem"];
-
-                    int max = refunds.Count;
-
-                    // Si coincide con alguna devolución convertir elemento de menu en Return.
-                    for (int k = 0; k < max; k++)
-                        if (sales[j].Id == refunds[k].Id)
-                            conItem.ContentTemplate = (DataTemplate)Resources["ReturnMenuItem"];
-
-                    // Añadimos el elemento.
-                    ActivityList.Items.Add(conItem);
-
-                    // Obtener Sale, Product y Discount.
-                    selSale = sales[j];
-
-                    try
-                    {
-                        selProduct = pc.Get(selSale.ProdId.Value);
-                    } catch
-                    {
-                        selProduct = null;
-                    }
-
-                    try
-                    {
-                        selDiscount = dc.Get(selSale.DiscId.Value);
-                    }
-                    catch
-                    {
-                        selDiscount = null;
-                    }
-
-                    // Se crea su formulario
-                    ContentPresenter conForm = new ContentPresenter();
-                    conForm.IsEnabled = false;
-                    conForm.ContentTemplate = (DataTemplate)Resources["SaleForm"];
-                    conForm.ApplyTemplate();
-
-                    // Obtener contenedor.
-                    DataTemplate auxDT = conForm.ContentTemplate;
-
-                    // Obtener elementos de la GUI
-                    StackPanel products = (StackPanel)auxDT.FindName("Products", conForm);
-                    StackPanel discounts = (StackPanel)auxDT.FindName("Discounts", conForm);
-
-                    // Agregar producto
-                    if (selSale.ProdId != null && selSale.ProdId != 0)
-                    {
-                        ContentPresenter productItem = new ContentPresenter();
-                        productItem.Content = selSale.ProdId;
-                        productItem.ContentTemplate = (DataTemplate)Resources["ProductItem"];
-
-                        products.Children.Clear();
-                        products.Children.Add(productItem);
-                    }
-
-                    // Agregar descuento
-                    if (selSale.DiscId != null && selSale.DiscId != 0)
-                    {
-                        ContentPresenter discountItem = new ContentPresenter();
-                        discountItem.Content = selSale.DiscId;
-                        discountItem.ContentTemplate = (DataTemplate)Resources["DiscountItem"];
-
-                        discounts.Children.Clear();
-                        discounts.Children.Add(discountItem);
-                    }
-
-                    // Dar de alta en History y Relations
-                    history.Add(conItem, conForm);
-                    relationProd.Add(conItem, selProduct);
-                    relationDisc.Add(conItem, selDiscount);
-                }
+                Update();
             };
         }
 
@@ -190,6 +94,32 @@ namespace Desktop
             ContentPresenter conItem = new ContentPresenter();
             conItem.Content = "Nueva Venta";
             conItem.ContentTemplate = (DataTemplate)Resources["EditMenuItem"];
+
+            // Si lo último es una edición, reemplazar.
+            ContentPresenter tmpCP = (ActivityList.Items[ActivityList.Items.Count - 1] as ContentPresenter);
+            if (tmpCP.ContentTemplate == (DataTemplate)Resources["EditMenuItem"])
+            {
+                Warning warning = new Warning("Se va a perder la venta anterior sin guardar.", "¿Estás seguro de que deseas continuar?");
+                warning.Show();
+                warning.Acceptance += (o, i) =>
+                {
+                    history[tmpCP] = new ContentPresenter
+                    {
+                        ContentTemplate = (DataTemplate)Resources["SaleForm"]
+                    };
+
+                    FormGrid.Children.Clear();
+                    FormGrid.Children.Add(history[tmpCP]);
+
+                    relationProd[tmpCP] = null;
+                    relationDisc[tmpCP] = null;
+
+                    // Se actualiza el producto y el descuento seleccionado.
+                    selProd = relationProd[tmpCP];
+                    selDisc = relationDisc[tmpCP];
+                };
+                return;
+            }
 
             // Se crea su formulario
             ContentPresenter conForm = new ContentPresenter();
@@ -249,15 +179,50 @@ namespace Desktop
             warning.Acceptance += (o, i) =>
             {
                 ContentPresenter conAux = (ActivityList.SelectedItem as ContentPresenter); // Obtener elemento de menú.
+
+                // INICIO DE ENVIO
+
+                // Se crea la conexión Sale
+                RefundsConn rc = new RefundsConn();
+
+                // Se crea el Sale
+                Refund refund = new Refund();
+
+                DateTime dateTime = DateTime.Now;
+                DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                long unixDateTime = (long)(dateTime.ToUniversalTime() - epoch).TotalSeconds;
+
+                refund.SaleId = int.Parse((ActivityList.SelectedItem as ContentPresenter).Content.ToString());
+                refund.DateRefund = unixDateTime;
+                refund.UserId = LoginConn.User.Id;
+
+                try
+                {
+                    rc.Add(refund);
+                }
+                catch (Exception ex)
+                {
+                    Error error = new Error("Devolución no admitida. " + ex.Message);
+                    error.Show();
+                    return;
+                }
+
+                // FIN DE ENVIO
+
+                (ActivityList.SelectedItem as ContentPresenter).Content = "Devolución realizada a las " + DateTime.Now.ToString("HH:mm"); // Establecer id de venta temporal.
+
+                // TODO
+                Update();
+
+                /*
                 conAux.ContentTemplate = (DataTemplate)Resources["ReturnMenuItem"]; // Modificar a devolución.
-
                 ContentPresenter conForm = history[conAux]; // Obtener formulario de elemento de menú.
-
                 conForm.IsEnabled = false; // Cambiar estado del formulario.
 
                 // Se actualiza el producto y el descuento seleccionado.
                 selProd = relationProd[conAux];
                 selDisc = relationDisc[conAux];
+                */
             };
         }
 
@@ -323,15 +288,20 @@ namespace Desktop
                 sc.Add(sale);
             } catch (Exception ex)
             {
-                Error error = new Error("Venta no admitida." + ex.Message);
+                Error error = new Error("Venta no admitida. " + ex.Message);
                 error.Show();
                 return;
             }
 
+            Update();
+            ActivityList.SelectedItem = ActivityList.Items[ActivityList.Items.Count - 1];
+
+            /*
             conAux.ContentTemplate = (DataTemplate)Resources["SaleMenuItem"]; // Cambiar tipo visual
 
             ContentPresenter conForm = history[conAux]; // Obtener formulario de elemento de menú.
             conForm.IsEnabled = false; // Cambiar estado del formulario.
+            */
         }
 
         /// <summary>
@@ -479,6 +449,128 @@ namespace Desktop
                 {
                     ActivityList.Items.Add(selCP);
                 }
+            }
+        }
+
+        private void Update()
+        {
+            ActivityList.Items.Clear();
+            FormGrid.Children.Clear();
+
+            SalesConn sc = new SalesConn();
+            RefundsConn rc = new RefundsConn();
+
+            ProductsConn pc = new ProductsConn();
+            DiscountsConn dc = new DiscountsConn();
+
+            List<Sale> sales = sc.List;
+            List<Refund> refunds = rc.List;
+
+            history.Clear();
+            relationProd.Clear();
+            relationDisc.Clear();
+
+            selProd = null;
+            selDisc = null;
+
+            // Crear elementos.
+            Sale selSale;
+            Product selProduct;
+            Discount selDiscount;
+
+            // Recuperar todas las ventas.
+            for (int j = 0; j < sales.Count; j++)
+            {
+                ContentPresenter conItem = new ContentPresenter();
+                conItem.Content = sales[j].Id.ToString();
+
+                conItem.ContentTemplate = (DataTemplate)Resources["SaleMenuItem"];
+
+                int max = refunds.Count;
+
+                // Si coincide con alguna devolución convertir elemento de menu en Return.
+                for (int k = 0; k < max; k++)
+                    if (sales[j].Id == refunds[k].SaleId)
+                        conItem.ContentTemplate = (DataTemplate)Resources["ReturnMenuItem"];
+
+                // Añadimos el elemento.
+                ActivityList.Items.Add(conItem);
+
+                // Obtener Sale, Product y Discount.
+                selSale = sales[j];
+
+                try
+                {
+                    selProduct = pc.Get(selSale.ProdId.Value);
+                }
+                catch
+                {
+                    selProduct = null;
+                }
+
+                try
+                {
+                    selDiscount = dc.Get(selSale.DiscId.Value);
+                }
+                catch
+                {
+                    selDiscount = null;
+                }
+
+                // Se crea su formulario
+                ContentPresenter conForm = new ContentPresenter();
+                conForm.IsEnabled = false;
+                conForm.ContentTemplate = (DataTemplate)Resources["SaleForm"];
+                conForm.ApplyTemplate();
+
+                // Obtener contenedor.
+                DataTemplate auxDT = conForm.ContentTemplate;
+
+                // Obtener elementos de la GUI
+                StackPanel products = (StackPanel)auxDT.FindName("Products", conForm);
+                StackPanel discounts = (StackPanel)auxDT.FindName("Discounts", conForm);
+
+                float paying = 0;
+                // Agregar producto
+                if (selSale.ProdId != null && selSale.ProdId != 0)
+                {
+                    ContentPresenter productItem = new ContentPresenter();
+                    productItem.Content = selSale.ProdId;
+                    productItem.ContentTemplate = (DataTemplate)Resources["ProductItem"];
+
+                    products.Children.Clear();
+                    products.Children.Add(productItem);
+
+                    Product tmpProduct = pc.Get(int.Parse(productItem.Content.ToString()));
+                    paying = tmpProduct.ProdPrice;
+                }
+
+                float discounting = 0;
+                // Agregar descuento
+                if (selSale.DiscId != null && selSale.DiscId != 0)
+                {
+                    ContentPresenter discountItem = new ContentPresenter();
+                    discountItem.Content = selSale.DiscId;
+                    discountItem.ContentTemplate = (DataTemplate)Resources["DiscountItem"];
+
+                    discounts.Children.Clear();
+                    discounts.Children.Add(discountItem);
+
+                    Discount tmpDiscount = dc.Get(int.Parse(discountItem.Content.ToString()));
+                    discounting = tmpDiscount.PricePerc;
+
+                    (auxDT.FindName("Discounted", conForm) as TextBox).Text = discounting.ToString();
+                }
+
+                // INSERTAR TODOS LOS DATOS NUMERICOS
+
+                float result = paying - (paying * discounting / 100);
+                (auxDT.FindName("TotalCost", conForm) as TextBlock).Text = "Total: " + result + "€";
+
+                // Dar de alta en History y Relations
+                history.Add(conItem, conForm);
+                relationProd.Add(conItem, selProduct);
+                relationDisc.Add(conItem, selDiscount);
             }
         }
     }
