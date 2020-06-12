@@ -4,6 +4,3 @@
 [submodule "src/Desktop"]
 	path = src/Desktop
 	url = git@github.com:TheMauzoTeam/mauzo_desktop.git
-[submodule "docs"]
-	path = docs
-	url = git@github.com:TheMauzoTeam/mauzo_docs.git
